@@ -1,0 +1,29 @@
+<!-- universities-table.component.html -->
+<div class="universities-table">
+  <h3>Universities</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email Domain</th>
+        <th>Logo</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let university of universities">
+        <td>{{ university.id }}</td>
+        <td>{{ university.name }}</td>
+        <td>{{ university.domain }}</td>
+        <td>
+          <img [src]="university.logo" alt="Logo" class="logo-img">
+        </td>
+        <td>
+          <button class="btn edit">Edit</button>
+          <button class="btn delete">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

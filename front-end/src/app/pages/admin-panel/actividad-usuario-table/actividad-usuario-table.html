@@ -1,0 +1,31 @@
+<!-- actividad-usuario-table.component.html -->
+<div class="actividad-usuario-table">
+  <h3>Actividad Usuario</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Usuario ID</th>
+        <th>Tipo Actividad</th>
+        <th>Objeto ID</th>
+        <th>Contexto</th>
+        <th>Fecha</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let actividad of actividades">
+        <td>{{ actividad.id }}</td>
+        <td>{{ actividad.usuario_id }}</td>
+        <td>{{ actividad.tipo_actividad }}</td>
+        <td>{{ actividad.objeto_id }}</td>
+        <td>{{ actividad.contexto }}</td>
+        <td>{{ actividad.fecha }}</td>
+        <td>
+          <button class="btn edit">Edit</button>
+          <button class="btn delete">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
