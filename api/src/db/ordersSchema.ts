@@ -5,8 +5,8 @@ import {
   timestamp,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { usersTable } from './usersSchema.js';
-import { productsTable } from './productsSchema.js';
+import { usersTable } from './usersSchema';
+import { productsTable } from './productsSchema';
 import { z } from 'zod';
 
 export const ordersTable = pgTable('orders', {

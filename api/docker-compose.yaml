@@ -1,0 +1,12 @@
+version: "4"
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "TryThisOne531"
+      POSTGRES_USER: "PoStGrEs432"
+      POSTGRES_DB: union
+    app:
+      image:
+      ports:
+        - 13000:3000

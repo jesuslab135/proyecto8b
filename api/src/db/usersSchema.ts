@@ -24,7 +24,6 @@ export const createUserSchema = z.object({
   address: z.string().optional(),
 }).omit({
     id: true,
-    role: true,
 });
 
 export const loginSchema = z.object({
