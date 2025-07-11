@@ -12,7 +12,7 @@ import {
   createProductSchema,
   updateProductSchema,
 } from '../../db/productsSchema.js';
-import { verifySeller, verifyToken } from '../../middlewares/authMiddleware.js';
+import { verifyAdmin, verifyToken } from '../../middlewares/authMiddleware.js';
 
 const router = Router();
 
@@ -21,17 +21,17 @@ router.get('/:id', getProductById);
 router.post(
   '/',
   verifyToken,
-  verifySeller,
+  verifyAdmin,
   validateData(createProductSchema),
   createProduct
 );
 router.put(
   '/:id',
   verifyToken,
-  verifySeller,
+  verifyAdmin,
   validateData(updateProductSchema),
   updateProduct
 );
-router.delete('/:id', verifyToken, verifySeller, deleteProduct);
+router.delete('/:id', verifyToken, verifyAdmin, deleteProduct);
 
 export default router;

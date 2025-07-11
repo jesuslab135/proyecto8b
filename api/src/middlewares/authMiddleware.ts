@@ -24,9 +24,9 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export function verifySeller(req: Request, res: Response, next: NextFunction) {
+export function verifyAdmin(req: Request, res: Response, next: NextFunction) {
   const role = req.role;
-  if (role !== 'seller') {
+  if (role !== 'admin') {
     res.status(401).json({ error: 'Access denied' });
     return;
   }
