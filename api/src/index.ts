@@ -31,21 +31,21 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.use('/products', productsRoutes);
-app.use('/auth', authRoutes);
-app.use('/orders', ordersRoutes);
-app.use('/universidades', universidadesRoutes);
-app.use('/foros', forosRoutes);
-app.use('/tags', tagsRoutes);
-app.use('/roles-usuario', rolesUsuarioRoutes);
-app.use('/roles-proyecto', rolesProyectoRoutes);
-app.use('/actividad-usuario', actividadUsuarioRoutes);
-app.use('/eventos', eventosRoutes);
-app.use('/asistencias-eventos', asistenciasEventoRoutes);
-app.use('/conversaciones', conversacionesRoutes);
-app.use('/users', usersRoutes);
-app.use('/mensajes', mensajesRoutes);
-app.use('/oportunidades', oportunidadesRoutes);
+app.use('/api/products', productsRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/orders', ordersRoutes);
+app.use('/api/universidades', universidadesRoutes);
+app.use('/api/foros', forosRoutes);
+app.use('/api/tags', tagsRoutes);
+app.use('/api/roles-usuario', rolesUsuarioRoutes);
+app.use('/api/roles-proyecto', rolesProyectoRoutes);
+app.use('/api/actividad-usuario', actividadUsuarioRoutes);
+app.use('/api/eventos', eventosRoutes);
+app.use('/api/asistencias-eventos', asistenciasEventoRoutes);
+app.use('/api/conversaciones', conversacionesRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/mensajes', mensajesRoutes);
+app.use('/api/oportunidades', oportunidadesRoutes);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

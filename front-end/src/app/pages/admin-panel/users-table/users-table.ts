@@ -1,17 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-users-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule], // ✅ No se incluye HttpClientModule
   templateUrl: './users-table.html',
   styleUrls: ['./users-table.css']
 })
-export class UsersTableComponent {
-  users = [
-    { id: 1, name: 'Alice Martínez', email: 'alice@example.com', role: 'Admin' },
-    { id: 2, name: 'Bob Sánchez', email: 'bob@example.com', role: 'User' },
-    { id: 3, name: 'Carol García', email: 'carol@example.com', role: 'Moderator' },
-  ];
+export class UsersTableComponent implements OnInit {
+  users: any[] = [];
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit(): void {
+    this.http.get<any[]>('/api/users').subscribe(data => {
+      this.users = data;
+    });
+  }
 }
