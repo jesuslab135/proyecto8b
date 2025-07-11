@@ -13,6 +13,7 @@ import asistenciasEventoRoutes from './routes/asistenciasEvento/index';
 import conversacionesRoutes from './routes/conversaciones/index';
 import usersRoutes from './routes/users/index';
 import mensajesRoutes from './routes/mensajes/index';
+import oportunidadesRoutes from './routes/oportunidades/index';
 
 const port = 3000;
 const app = express();
@@ -44,6 +45,7 @@ app.use('/asistencias-eventos', asistenciasEventoRoutes);
 app.use('/conversaciones', conversacionesRoutes);
 app.use('/users', usersRoutes);
 app.use('/mensajes', mensajesRoutes);
+app.use('/oportunidades', oportunidadesRoutes);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
