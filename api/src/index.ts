@@ -10,6 +10,9 @@ import rolesProyectoRoutes from './routes/rolesProyecto/index';
 import actividadUsuarioRoutes from './routes/actividadUsuario/index';
 import eventosRoutes from './routes/eventos/index';
 import asistenciasEventoRoutes from './routes/asistenciasEvento/index';
+import conversacionesRoutes from './routes/conversaciones/index';
+import usersRoutes from './routes/users/index';
+import mensajesRoutes from './routes/mensajes/index';
 
 const port = 3000;
 const app = express();
@@ -38,6 +41,9 @@ app.use('/roles-proyecto', rolesProyectoRoutes);
 app.use('/actividad-usuario', actividadUsuarioRoutes);
 app.use('/eventos', eventosRoutes);
 app.use('/asistencias-eventos', asistenciasEventoRoutes);
+app.use('/conversaciones', conversacionesRoutes);
+app.use('/users', usersRoutes);
+app.use('/mensajes', mensajesRoutes);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
