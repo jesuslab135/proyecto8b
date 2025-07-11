@@ -5,6 +5,7 @@ import ordersRoutes from './routes/orders/index';
 import universidadesRoutes from './routes/universidades/index';
 import forosRoutes from './routes/foros/index';
 import tagsRoutes from './routes/tags/index';
+import rolesUsuarioRoutes from './routes/rolesUsuario/index';
 
 const port = 3000;
 const app = express();
@@ -28,7 +29,7 @@ app.use('/orders', ordersRoutes);
 app.use('/universidades', universidadesRoutes);
 app.use('/foros', forosRoutes);
 app.use('/tags', tagsRoutes);
-
+app.use('/roles-usuario', rolesUsuarioRoutes);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
