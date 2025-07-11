@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express, { json, urlencoded, Request } from 'express';
 import productsRoutes from './routes/products/index';
 import authRoutes from './routes/auth/index';
@@ -17,6 +18,7 @@ import oportunidadesRoutes from './routes/oportunidades/index';
 
 const port = 3000;
 const app = express();
+app.use(cors());
 
 app.use(urlencoded({ extended: false }));
 app.use(
