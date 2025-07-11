@@ -6,6 +6,7 @@ import universidadesRoutes from './routes/universidades/index';
 import forosRoutes from './routes/foros/index';
 import tagsRoutes from './routes/tags/index';
 import rolesUsuarioRoutes from './routes/rolesUsuario/index';
+import rolesProyectoRoutes from './routes/rolesProyecto/index';
 
 const port = 3000;
 const app = express();
@@ -30,6 +31,7 @@ app.use('/universidades', universidadesRoutes);
 app.use('/foros', forosRoutes);
 app.use('/tags', tagsRoutes);
 app.use('/roles-usuario', rolesUsuarioRoutes);
+app.use('/roles-proyecto', rolesProyectoRoutes);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
