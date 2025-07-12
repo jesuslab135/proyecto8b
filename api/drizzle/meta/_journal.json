@@ -15,6 +15,13 @@
       "when": 1752227176631,
       "tag": "0001_curious_yellow_claw",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1752240184451,
+      "tag": "0002_vengeful_tattoo",
+      "breakpoints": true
     }
   ]
 }

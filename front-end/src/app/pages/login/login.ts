@@ -1,38 +1,41 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { login } from '../../api/auth-api';
 
 @Component({
   selector: 'app-login',
   standalone: true,
+  imports: [FormsModule],
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
 export class Login {
-  constructor(private router: Router, private http: HttpClient) {}
+  email = '';
+  password = '';
 
-  login() {
-    const email = (document.getElementById('email') as HTMLInputElement)?.value;
-    const password = (document.getElementById('password') as HTMLInputElement)?.value;
+  constructor(private router: Router) {}
 
-    if (!email || !password) {
+  async login() {
+    if (!this.email || !this.password) {
       alert('Please enter email and password');
       return;
     }
 
-    this.http.post<any>('/api/auth/login', { email, password }).subscribe({
-      next: (res) => {
-        if (res.token) {
-          localStorage.setItem('token', res.token);        // 🔐 Guardamos el JWT
-          localStorage.setItem('user', JSON.stringify(res.user)); // 👤 Opcional: guardar info del usuario
-          this.router.navigate(['/admin/users']);
-        } else {
-          alert('Login failed: no token returned');
-        }
-      },
-      error: (err) => {
-        alert(err.error?.error || 'Invalid credentials');
+    try {
+      const res = await login(this.email, this.password);
+      console.log('Login response:', res); // 👈 pon esto temporalmente
+
+      // ✅ guardar token si existe
+      if (res.token) {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('user', JSON.stringify(res.user));
+        this.router.navigate(['/admin/users']);
+      } else {
+        alert('No token returned');
       }
-    });
+    } catch (err: any) {
+      alert(err.message || 'Invalid credentials');
+    }
   }
 }

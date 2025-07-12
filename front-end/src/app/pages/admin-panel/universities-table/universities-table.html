@@ -1,12 +1,11 @@
-<!-- universities-table.component.html -->
 <div class="universities-table">
   <h3>Universities</h3>
   <table class="data-table">
     <thead>
       <tr>
         <th>ID</th>
-        <th>Name</th>
-        <th>Email Domain</th>
+        <th>Nombre</th>
+        <th>Dominio</th>
         <th>Logo</th>
         <th>Actions</th>
       </tr>
@@ -14,10 +13,10 @@
     <tbody>
       <tr *ngFor="let university of universities">
         <td>{{ university.id }}</td>
-        <td>{{ university.name }}</td>
-        <td>{{ university.domain }}</td>
+        <td>{{ university.nombre }}</td>
+        <td>{{ university.dominio_correo }}</td>
         <td>
-          <img [src]="university.logo" alt="Logo" class="logo-img">
+          <img [src]="university.logo_url || 'https://via.placeholder.com/40'" alt="Logo" class="logo-img" />
         </td>
         <td>
           <button class="btn edit">Edit</button>
