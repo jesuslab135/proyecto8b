@@ -1,4 +1,3 @@
-// src/app/api/universidades-api.ts
 import { environment } from '../../environments/environment';
 
 const API_URL = environment.apiUrl;
@@ -8,11 +7,23 @@ export async function fetchUniversidades() {
   const token = localStorage.getItem('token');
   const res = await fetch(UNIVERSIDADES_ENDPOINT, {
     headers: {
-      'Authorization': `${token}`,
+      'Authorization': token!,
     },
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data?.error || 'Error al obtener universidades');
+  return data;
+}
+
+export async function getUniversidadById(id: number) {
+  const token = localStorage.getItem('token');
+  const res = await fetch(`${UNIVERSIDADES_ENDPOINT}/${id}`, {
+    headers: {
+      'Authorization': token!,
+    },
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.error || 'Error al obtener universidad');
   return data;
 }
 
@@ -25,7 +36,7 @@ export async function createUniversidad(input: {
   const res = await fetch(UNIVERSIDADES_ENDPOINT, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${token}`,
+      'Authorization': token!,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(input),
@@ -44,7 +55,7 @@ export async function updateUniversidad(id: number, input: {
   const res = await fetch(`${UNIVERSIDADES_ENDPOINT}/${id}`, {
     method: 'PUT',
     headers: {
-      'Authorization': `Bearer ${token}`,
+      'Authorization': token!,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(input),
@@ -59,7 +70,7 @@ export async function deleteUniversidad(id: number) {
   const res = await fetch(`${UNIVERSIDADES_ENDPOINT}/${id}`, {
     method: 'DELETE',
     headers: {
-      'Authorization': `Bearer ${token}`,
+      'Authorization': token!,
     },
   });
   const data = await res.json();

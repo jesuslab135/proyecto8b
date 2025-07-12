@@ -1,4 +1,3 @@
-// src/app/api/tags-api.ts
 import { environment } from '../../environments/environment';
 
 const API_URL = environment.apiUrl;
@@ -14,6 +13,19 @@ export async function fetchTags() {
 
   const data = await res.json();
   if (!res.ok) throw new Error(data?.error || 'Error al obtener tags');
+  return data;
+}
+
+export async function getTagById(id: number) {
+  const token = localStorage.getItem('token');
+  const res = await fetch(`${TAGS_ENDPOINT}/${id}`, {
+    headers: {
+      Authorization: token!,
+    },
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.error || 'Error al obtener tag');
   return data;
 }
 

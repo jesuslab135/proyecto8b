@@ -1,4 +1,3 @@
-// src/app/api/actividad-usuario-api.ts
 import { environment } from '../../environments/environment';
 
 const API_URL = environment.apiUrl;
@@ -14,6 +13,19 @@ export async function fetchActividadUsuario() {
 
   const data = await res.json();
   if (!res.ok) throw new Error(data?.error || 'Error al obtener actividad de usuario');
+  return data;
+}
+
+export async function getActividadUsuarioById(id: number) {
+  const token = localStorage.getItem('token');
+  const res = await fetch(`${ACTIVIDAD_ENDPOINT}/${id}`, {
+    headers: {
+      Authorization: token!,
+    },
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.error || 'Error al obtener actividad');
   return data;
 }
 

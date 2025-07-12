@@ -5,7 +5,8 @@ import { AdminPanel } from './pages/admin-panel/admin-panel';
 import { UniversitiesTableComponent } from './pages/admin-panel/universities-table/universities-table';
 import { UsersTableComponent } from './pages/admin-panel/users-table/users-table';
 import { ActividadUsuarioTableComponent } from './pages/admin-panel/actividad-usuario-table/actividad-usuario-table';
-import { TagsTableComponent } from './pages/admin-panel/tags/tags-table';
+import { TagsTableComponent } from './pages/admin-panel/tags/tags';
+import { AsistenciasEventos } from './pages/admin-panel/asistencias-eventos/asistencias-eventos';
 
 export const routes: Routes = [
     { path: '', component: Login },
@@ -19,6 +20,7 @@ export const routes: Routes = [
             { path: 'users', component: UsersTableComponent },
             { path: 'actividad', component: ActividadUsuarioTableComponent },
             { path: 'tags', component: TagsTableComponent },
+            { path: 'asistenciasEventos', component: AsistenciasEventos },
         ]
     },
 ];

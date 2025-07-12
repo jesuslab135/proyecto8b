@@ -7,8 +7,8 @@ import { fetchTags } from '../../../api/tags-api';
   selector: 'app-tags-table',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './tags-table.html',
-  styleUrls: ['./tags-table.css']
+  templateUrl: './tags.html',
+  styleUrls: ['./tags.css']
 })
 export class TagsTableComponent implements OnInit {
   tags: any[] = [];
