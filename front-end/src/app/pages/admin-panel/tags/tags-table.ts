@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { fetchActividadUsuario } from '../../../api/actividad-usuario-api'; // ajusta si es necesario
+import { fetchTags } from '../../../api/tags-api';
 
 @Component({
-  selector: 'app-actividad-usuario-table',
+  selector: 'app-tags-table',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './actividad-usuario-table.html',
-  styleUrls: ['./actividad-usuario-table.css']
+  templateUrl: './tags-table.html',
+  styleUrls: ['./tags-table.css']
 })
-export class ActividadUsuarioTableComponent implements OnInit {
-  actividades: any[] = [];
+export class TagsTableComponent implements OnInit {
+  tags: any[] = [];
 
   constructor(private router: Router) {}
 
@@ -23,9 +23,9 @@ export class ActividadUsuarioTableComponent implements OnInit {
     }
 
     try {
-      this.actividades = await fetchActividadUsuario();
+      this.tags = await fetchTags();
     } catch (err) {
-      console.error('Error al obtener actividad de usuario:', err);
+      console.error('Error al obtener tags:', err);
       this.router.navigate(['/login']);
     }
   }
