@@ -16,6 +16,7 @@ import usersRoutes from './routes/users/index';
 import mensajesRoutes from './routes/mensajes/index';
 import oportunidadesRoutes from './routes/oportunidades/index';
 import hilosRoutes from './routes/hilos/index';
+import experienciaUsuarioRoutes from './routes/experienciaUsuario/index';
 
 const port = 3000;
 const app = express();
@@ -58,6 +59,7 @@ app.use('/api/users', usersRoutes);
 app.use('/api/mensajes', mensajesRoutes);
 app.use('/api/oportunidades', oportunidadesRoutes);
 app.use('/api/hilos', hilosRoutes);
+app.use('/api/experiencia-usuario', experienciaUsuarioRoutes);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

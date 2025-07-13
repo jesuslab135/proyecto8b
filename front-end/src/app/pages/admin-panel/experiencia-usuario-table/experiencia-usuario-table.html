@@ -1,0 +1,32 @@
+<div class="experiencia-usuario-table">
+  <h3>Experiencia del Usuario</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Usuario ID</th>
+        <th>Tipo</th>
+        <th>Título</th>
+        <th>Descripción</th>
+        <th>Inicio</th>
+        <th>Fin</th>
+        <th>Acciones</th> <!-- Nueva columna -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let exp of experiencias">
+        <td>{{ exp.id }}</td>
+        <td>{{ exp.usuario_id }}</td>
+        <td>{{ exp.tipo }}</td>
+        <td>{{ exp.titulo }}</td>
+        <td>{{ exp.descripcion }}</td>
+        <td>{{ exp.fecha_inicio }}</td>
+        <td>{{ exp.fecha_fin }}</td>
+        <td>
+          <button class="btn edit" >Editar</button>
+          <button class="btn delete" >Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

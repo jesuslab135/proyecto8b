@@ -15,6 +15,7 @@ import { OportunidadesTableComponent } from './pages/admin-panel/oportunidades-t
 import { RolesProyectoTableComponent } from './pages/admin-panel/roles-proyecto-table/roles-proyecto-table';
 import { RolesUsuarioTableComponent } from './pages/admin-panel/roles-usuario-table/roles-usuario-table';
 import { HilosTableComponent } from './pages/admin-panel/hilos-table/hilos-table';
+import { ExperienciaUsuarioTableComponent } from './pages/admin-panel/experiencia-usuario-table/experiencia-usuario-table';
 
 export const routes: Routes = [
     { path: '', component: Login },
@@ -37,6 +38,7 @@ export const routes: Routes = [
             { path: 'roles-proyecto', component: RolesProyectoTableComponent },
             { path: 'roles-usuario', component: RolesUsuarioTableComponent },
             { path: 'hilos', component: HilosTableComponent },
+            { path: 'experiencias-usuario', component: ExperienciaUsuarioTableComponent },
         ]
     },
 ];
