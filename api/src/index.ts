@@ -25,6 +25,7 @@ import taggaglesRoutes from './routes/taggables/index';
 import seguimientosRoutes from './routes/seguimientos/index';
 import respuestasHiloRoutes from './routes/respuestasHilo/index';
 import postulacionesRoutes from './routes/postulaciones/index';
+import participacionesProyectoRoutes from './routes/participacionesProyecto/index';
 
 const port = 3000;
 const app = express();
@@ -76,6 +77,7 @@ app.use('/api/taggables', taggaglesRoutes);
 app.use('/api/seguimientos', seguimientosRoutes);
 app.use('/api/respuestas-hilo', respuestasHiloRoutes);
 app.use('/api/postulaciones', postulacionesRoutes);
+app.use('/api/participaciones-proyecto', participacionesProyectoRoutes);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

@@ -11,7 +11,7 @@ export async function createPostulacion(req: Request, res: Response) {
     res.status(201).json(nueva);
   } catch (e) {
     console.error(e);
-    res.status(500).json({ error: 'Error al crear la oportunidad' });
+    res.status(500).json({ error: 'Error al crear la postulaciones' });
   }
 }
 

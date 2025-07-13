@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { fetchPostulaciones } from '../../../api/postulaciones-api';
 
 @Component({
-  selector: 'app-oportunidades-table',
+  selector: 'app-postulaciones-table',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './postulaciones-table.html',

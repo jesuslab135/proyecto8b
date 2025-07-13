@@ -1,4 +1,3 @@
-// src/db/postulacionesSchema.ts
 import { pgTable, integer, text, varchar, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { usersTable } from './usersSchema';
