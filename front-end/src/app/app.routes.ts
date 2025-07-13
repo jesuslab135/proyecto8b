@@ -13,6 +13,7 @@ import { ForosTableComponent } from './pages/admin-panel/foros-table/foros-table
 import { MensajesTableComponent } from './pages/admin-panel/mensajes-table/mensajes-table';
 import { OportunidadesTableComponent } from './pages/admin-panel/oportunidades-table/oportunidades-table';
 import { RolesProyectoTableComponent } from './pages/admin-panel/roles-proyecto-table/roles-proyecto-table';
+import { RolesUsuarioTableComponent } from './pages/admin-panel/roles-usuario-table/roles-usuario-table';
 
 export const routes: Routes = [
     { path: '', component: Login },
@@ -33,6 +34,7 @@ export const routes: Routes = [
             { path: 'mensajes', component: MensajesTableComponent },
             { path: 'oportunidades', component: OportunidadesTableComponent },
             { path: 'roles-proyecto', component: RolesProyectoTableComponent },
+            { path: 'roles-usuario', component: RolesUsuarioTableComponent },
         ]
     },
 ];
