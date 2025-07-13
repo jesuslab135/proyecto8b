@@ -7,6 +7,11 @@ import { UsersTableComponent } from './pages/admin-panel/users-table/users-table
 import { ActividadUsuarioTableComponent } from './pages/admin-panel/actividad-usuario-table/actividad-usuario-table';
 import { TagsTableComponent } from './pages/admin-panel/tags/tags';
 import { AsistenciasEventos } from './pages/admin-panel/asistencias-eventos/asistencias-eventos';
+import { Conversaciones } from './pages/admin-panel/conversaciones/conversaciones';
+import { EventosTableComponent } from './pages/admin-panel/eventos-table/eventos-table';
+import { ForosTableComponent } from './pages/admin-panel/foros-table/foros-table';
+import { MensajesTableComponent } from './pages/admin-panel/mensajes-table/mensajes-table';
+import { OportunidadesTableComponent } from './pages/admin-panel/oportunidades-table/oportunidades-table';
 
 export const routes: Routes = [
     { path: '', component: Login },
@@ -21,6 +26,11 @@ export const routes: Routes = [
             { path: 'actividad', component: ActividadUsuarioTableComponent },
             { path: 'tags', component: TagsTableComponent },
             { path: 'asistenciasEventos', component: AsistenciasEventos },
+            { path: 'conversaciones', component: Conversaciones },
+            { path: 'eventos', component: EventosTableComponent },
+            { path: 'foros', component: ForosTableComponent },
+            { path: 'mensajes', component: MensajesTableComponent },
+            { path: 'oportunidades', component: OportunidadesTableComponent },
         ]
     },
 ];

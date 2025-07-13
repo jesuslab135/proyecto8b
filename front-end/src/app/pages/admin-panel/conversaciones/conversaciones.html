@@ -1,0 +1,26 @@
+<div class="conversaciones-table">
+  <h3>Universities</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Usuario 1</th>
+        <th>Usuario 2</th>
+        <th>Creado En</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let conversacion of conversaciones">
+        <td>{{ conversacion.id }}</td>
+        <td>{{ conversacion.usuario_1_id }}</td>
+        <td>{{ conversacion.usuario_2_id }}</td>
+        <td>{{ conversacion.creado_en }}</td>
+        <td>
+          <button class="btn edit">Edit</button>
+          <button class="btn delete">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

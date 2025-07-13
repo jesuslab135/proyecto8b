@@ -24,9 +24,8 @@ export class Login {
 
     try {
       const res = await login(this.email, this.password);
-      console.log('Login response:', res); // 👈 pon esto temporalmente
+      console.log('Login response:', res); 
 
-      // ✅ guardar token si existe
       if (res.token) {
         localStorage.setItem('token', res.token);
         localStorage.setItem('user', JSON.stringify(res.user));

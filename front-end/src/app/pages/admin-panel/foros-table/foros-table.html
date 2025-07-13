@@ -1,0 +1,24 @@
+<div class="foros-table">
+  <h3>Foros</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let foro of foros">
+        <td>{{ foro.id }}</td>
+        <td>{{ foro.nombre }}</td>
+        <td>{{ foro.descripcion }}</td>
+        <td>
+          <button class="btn edit">Edit</button>
+          <button class="btn delete">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
