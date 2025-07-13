@@ -27,6 +27,8 @@ import respuestasHiloRoutes from './routes/respuestasHilo/index';
 import postulacionesRoutes from './routes/postulaciones/index';
 import participacionesProyectoRoutes from './routes/participacionesProyecto/index';
 import paginasColaborativasRoutes from './routes/paginasColaborativas/index';
+import bloquesRoutes from './routes/bloques/index';
+import relacionesBloquesRoutes from './routes/relacionesBloques/index';
 
 const port = 3000;
 const app = express();
@@ -80,6 +82,8 @@ app.use('/api/respuestas-hilo', respuestasHiloRoutes);
 app.use('/api/postulaciones', postulacionesRoutes);
 app.use('/api/participaciones-proyecto', participacionesProyectoRoutes);
 app.use('/api/paginas-colaborativas', paginasColaborativasRoutes);
+app.use('/api/bloques', bloquesRoutes);
+app.use('/api/relaciones-bloques', relacionesBloquesRoutes);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

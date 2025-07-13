@@ -26,6 +26,8 @@ import { RespuestasHiloTableComponent } from './pages/admin-panel/respuestas-hil
 import { PostulacionesTableComponent } from './pages/admin-panel/postulaciones-table/postulaciones-table';
 import { ParticipacionesProyectosTableComponent } from './pages/admin-panel/participaciones-proyectos-table/participaciones-proyectos-table';
 import { PaginasColaborativasTableComponent } from './pages/admin-panel/paginas-colaborativas-table/paginas-colaborativas-table';
+import { BloquesTableComponent } from './pages/admin-panel/bloques-table/bloques-table';
+import { RelacionesBloquesTableComponent } from './pages/admin-panel/relaciones-bloques-table/relaciones-bloques-table';
 
 export const routes: Routes = [
     { path: '', component: Login },
@@ -59,6 +61,8 @@ export const routes: Routes = [
             { path: 'postulaciones', component: PostulacionesTableComponent },
             { path: 'participaciones-proyectos', component: ParticipacionesProyectosTableComponent },
             { path: 'paginas-colaborativas', component: PaginasColaborativasTableComponent },
+            { path: 'bloques', component: BloquesTableComponent },
+            { path: 'relaciones-bloques', component: RelacionesBloquesTableComponent },
         ]
     },
 ];
