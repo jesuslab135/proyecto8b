@@ -19,6 +19,7 @@ import { ExperienciaUsuarioTableComponent } from './pages/admin-panel/experienci
 import { ProyectosTableComponent } from './pages/admin-panel/proyectos-table/proyectos-table';
 import { ProyectosValidacionesTableComponent } from './pages/admin-panel/proyectos-validaciones-table/proyectos-validaciones-table';
 import { ReportesTableComponent } from './pages/admin-panel/reportes-table/reportes-table';
+import { PerfilesTableComponent } from './pages/admin-panel/perfiles-table/perfiles-table';
 
 export const routes: Routes = [
     { path: '', component: Login },
@@ -45,6 +46,7 @@ export const routes: Routes = [
             { path: 'proyectos', component: ProyectosTableComponent },
             { path: 'proyectos-validaciones', component: ProyectosValidacionesTableComponent },
             { path: 'reportes', component: ReportesTableComponent },
+            { path: 'perfiles', component: PerfilesTableComponent },
         ]
     },
 ];
