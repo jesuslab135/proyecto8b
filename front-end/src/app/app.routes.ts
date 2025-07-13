@@ -16,6 +16,7 @@ import { RolesProyectoTableComponent } from './pages/admin-panel/roles-proyecto-
 import { RolesUsuarioTableComponent } from './pages/admin-panel/roles-usuario-table/roles-usuario-table';
 import { HilosTableComponent } from './pages/admin-panel/hilos-table/hilos-table';
 import { ExperienciaUsuarioTableComponent } from './pages/admin-panel/experiencia-usuario-table/experiencia-usuario-table';
+import { ProyectosTableComponent } from './pages/admin-panel/proyectos-table/proyectos-table';
 
 export const routes: Routes = [
     { path: '', component: Login },
@@ -39,6 +40,7 @@ export const routes: Routes = [
             { path: 'roles-usuario', component: RolesUsuarioTableComponent },
             { path: 'hilos', component: HilosTableComponent },
             { path: 'experiencias-usuario', component: ExperienciaUsuarioTableComponent },
+            { path: 'proyectos', component: ProyectosTableComponent },
         ]
     },
 ];
