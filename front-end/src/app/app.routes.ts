@@ -18,6 +18,7 @@ import { HilosTableComponent } from './pages/admin-panel/hilos-table/hilos-table
 import { ExperienciaUsuarioTableComponent } from './pages/admin-panel/experiencia-usuario-table/experiencia-usuario-table';
 import { ProyectosTableComponent } from './pages/admin-panel/proyectos-table/proyectos-table';
 import { ProyectosValidacionesTableComponent } from './pages/admin-panel/proyectos-validaciones-table/proyectos-validaciones-table';
+import { ReportesTableComponent } from './pages/admin-panel/reportes-table/reportes-table';
 
 export const routes: Routes = [
     { path: '', component: Login },
@@ -43,6 +44,7 @@ export const routes: Routes = [
             { path: 'experiencias-usuario', component: ExperienciaUsuarioTableComponent },
             { path: 'proyectos', component: ProyectosTableComponent },
             { path: 'proyectos-validaciones', component: ProyectosValidacionesTableComponent },
+            { path: 'reportes', component: ReportesTableComponent },
         ]
     },
 ];

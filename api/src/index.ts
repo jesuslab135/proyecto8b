@@ -19,6 +19,7 @@ import hilosRoutes from './routes/hilos/index';
 import experienciaUsuarioRoutes from './routes/experienciaUsuario/index';
 import proyectosRoutes from './routes/proyectos/index';
 import proyectosValidacionesRoutes from './routes/proyectosValidaciones/index';
+import reportesRoutes from './routes/reportes/index';
 
 const port = 3000;
 const app = express();
@@ -64,6 +65,7 @@ app.use('/api/hilos', hilosRoutes);
 app.use('/api/experiencia-usuario', experienciaUsuarioRoutes);
 app.use('/api/proyectos', proyectosRoutes);
 app.use('/api/proyectos-validaciones', proyectosValidacionesRoutes);
+app.use('/api/reportes', reportesRoutes);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
