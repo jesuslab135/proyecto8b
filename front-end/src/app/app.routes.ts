@@ -23,6 +23,7 @@ import { PerfilesTableComponent } from './pages/admin-panel/perfiles-table/perfi
 import { TaggablesTableComponent } from './pages/admin-panel/taggables-table/taggables-table';
 import { SeguimientosTableComponent } from './pages/admin-panel/seguimientos-table/seguimientos-table';
 import { RespuestasHiloTableComponent } from './pages/admin-panel/respuestas-hilo-table/respuestas-hilo-table';
+import { PostulacionesTableComponent } from './pages/admin-panel/postulaciones-table/postulaciones-table';
 
 export const routes: Routes = [
     { path: '', component: Login },
@@ -53,6 +54,7 @@ export const routes: Routes = [
             { path: 'taggables', component: TaggablesTableComponent },
             { path: 'seguimientos', component: SeguimientosTableComponent },
             { path: 'respuestas-hilos', component: RespuestasHiloTableComponent },
+            { path: 'postulaciones', component: PostulacionesTableComponent },
         ]
     },
 ];
