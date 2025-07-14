@@ -29,6 +29,7 @@ import participacionesProyectoRoutes from './routes/participacionesProyecto/inde
 import paginasColaborativasRoutes from './routes/paginasColaborativas/index';
 import bloquesRoutes from './routes/bloques/index';
 import relacionesBloquesRoutes from './routes/relacionesBloques/index';
+import versionesBloquesRoutes from './routes/versionesBloques/index';
 
 const port = 3000;
 const app = express();
@@ -84,6 +85,7 @@ app.use('/api/participaciones-proyecto', participacionesProyectoRoutes);
 app.use('/api/paginas-colaborativas', paginasColaborativasRoutes);
 app.use('/api/bloques', bloquesRoutes);
 app.use('/api/relaciones-bloques', relacionesBloquesRoutes);
+app.use('/api/versiones-bloques', versionesBloquesRoutes);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

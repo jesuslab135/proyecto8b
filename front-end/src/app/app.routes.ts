@@ -28,6 +28,7 @@ import { ParticipacionesProyectosTableComponent } from './pages/admin-panel/part
 import { PaginasColaborativasTableComponent } from './pages/admin-panel/paginas-colaborativas-table/paginas-colaborativas-table';
 import { BloquesTableComponent } from './pages/admin-panel/bloques-table/bloques-table';
 import { RelacionesBloquesTableComponent } from './pages/admin-panel/relaciones-bloques-table/relaciones-bloques-table';
+import { VersionesBloquesTableComponent } from './pages/admin-panel/versiones-bloques-table/versiones-bloques-table';
 
 export const routes: Routes = [
     { path: '', component: Login },
@@ -63,6 +64,7 @@ export const routes: Routes = [
             { path: 'paginas-colaborativas', component: PaginasColaborativasTableComponent },
             { path: 'bloques', component: BloquesTableComponent },
             { path: 'relaciones-bloques', component: RelacionesBloquesTableComponent },
+            { path: 'versiones-bloques', component: VersionesBloquesTableComponent },
         ]
     },
 ];
