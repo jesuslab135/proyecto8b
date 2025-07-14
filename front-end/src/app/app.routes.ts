@@ -29,6 +29,7 @@ import { PaginasColaborativasTableComponent } from './pages/admin-panel/paginas-
 import { BloquesTableComponent } from './pages/admin-panel/bloques-table/bloques-table';
 import { RelacionesBloquesTableComponent } from './pages/admin-panel/relaciones-bloques-table/relaciones-bloques-table';
 import { VersionesBloquesTableComponent } from './pages/admin-panel/versiones-bloques-table/versiones-bloques-table';
+import { TokensInicialesAccesoTableComponent } from './pages/admin-panel/tokens-iniciales-acceso-table/tokens-iniciales-acceso-table';
 
 export const routes: Routes = [
     { path: '', component: Login },
@@ -65,6 +66,7 @@ export const routes: Routes = [
             { path: 'bloques', component: BloquesTableComponent },
             { path: 'relaciones-bloques', component: RelacionesBloquesTableComponent },
             { path: 'versiones-bloques', component: VersionesBloquesTableComponent },
+            { path: 'tokens-iniciales-acceso', component: TokensInicialesAccesoTableComponent },
         ]
     },
 ];
