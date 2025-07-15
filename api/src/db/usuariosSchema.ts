@@ -34,10 +34,10 @@ export const insertUsuarioSchema = z.object({
   telefono: z.string().max(20),
   verificado: z.boolean().optional(),
   debe_cambiar_contraseña: z.boolean().optional(),
-  github_url: z.string().url().optional(),
-  linkedin_url: z.string().url().optional(),
+  github_url: z.string().optional(),
+  linkedin_url: z.string().optional(),
   biografia: z.string().optional(),
-  cv_url: z.string().url().optional(),
+  cv_url: z.string().optional(),
   cv_publico: z.boolean().optional(),
   creado_en: z.date().optional()
 }).omit({
@@ -56,10 +56,10 @@ export const updateUsuarioSchema = z.object({
   telefono: z.string().max(20),
   verificado: z.boolean().optional(),
   debe_cambiar_contraseña: z.boolean().optional(),
-  github_url: z.string().url().optional(),
-  linkedin_url: z.string().url().optional(),
+  github_url: z.string().optional(),
+  linkedin_url: z.string().optional(),
   biografia: z.string().optional(),
-  cv_url: z.string().url().optional(),
+  cv_url: z.string().optional(),
   cv_publico: z.boolean().optional(),
   creado_en: z.date().optional()
 }).omit({

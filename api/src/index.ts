@@ -31,6 +31,7 @@ import bloquesRoutes from './routes/bloques/index';
 import relacionesBloquesRoutes from './routes/relacionesBloques/index';
 import versionesBloquesRoutes from './routes/versionesBloques/index';
 import tokensInicialesRoutes from './routes/tokensInicialesAcceso/index';
+import usuariosRoutes from './routes/usuarios/index';
 
 const port = 3000;
 const app = express();
@@ -88,6 +89,7 @@ app.use('/api/bloques', bloquesRoutes);
 app.use('/api/relaciones-bloques', relacionesBloquesRoutes);
 app.use('/api/versiones-bloques', versionesBloquesRoutes);
 app.use('/api/tokens-iniciales-acceso', tokensInicialesRoutes);
+app.use('/api/usuarios', usuariosRoutes);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

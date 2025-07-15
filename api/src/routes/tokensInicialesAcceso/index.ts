@@ -9,8 +9,8 @@ import {
 } from './tokensInicialesAccesoController';
 import { validateData } from '../../middlewares/validationMiddleware';
 import {
-  insertTokenInicialAccesoSchema,
-  updateTokenInicialAccesoSchema,
+  insertTokenAccesoSchema,
+  updateTokenAccesoSchema,
 } from '../../db/tokensInicialesAccesoSchema';
 import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
@@ -20,7 +20,7 @@ router.post(
   '/',
   verifyToken,
   verifyAdmin,
-  validateData(insertTokenInicialAccesoSchema),
+  validateData(insertTokenAccesoSchema),
   createTokenInicialAcceso
 );
 router.get('/', verifyToken, listTokensInicialesAcceso);
@@ -29,7 +29,7 @@ router.put(
   '/:id',
   verifyToken,
   verifyAdmin,
-  validateData(updateTokenInicialAccesoSchema),
+  validateData(updateTokenAccesoSchema),
   updateTokenInicialAcceso
 );
 router.delete('/:id', verifyToken, verifyAdmin, deleteTokenInicialAcceso);
