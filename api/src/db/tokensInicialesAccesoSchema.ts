@@ -1,29 +1,33 @@
-// src/db/tokensInicialesAccesoSchema.ts
+// db/tokensInicialesAccesoSchema.ts
 import { pgTable, integer, varchar, boolean, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { usersTable } from './usersSchema';
 
 export const tokensInicialesAccesoTable = pgTable('tokens_iniciales_acceso', {
-  id: integer('id').primaryKey().notNull(),
-  usuario_id: integer('usuario_id')
-    .references(() => usersTable.id),
-  token_acceso: varchar('token_acceso', { length: 100 }),
-  usado: boolean('usado').default(false),
-  generado_en: timestamp('generado_en').defaultNow(),
+  id: integer().primaryKey().notNull(),
+  usuario_id: integer().references(() => usersTable.id),
+  token_acceso: varchar({ length: 100 }),
+  usado: boolean().default(false),
+  generado_en: timestamp().defaultNow(),
+  correo: varchar({ length: 150 }),
 });
 
-// Zod schemas
-export const insertTokenInicialAccesoSchema = z.object({
+// Zod para inserción (omitimos ID)
+export const insertTokenAccesoSchema = z.object({
   id: z.number(),
-  usuario_id: z.number().int(),
+  usuario_id: z.number().optional(), // puede estar vacío si el usuario aún no existe
   token_acceso: z.string().max(100),
   usado: z.boolean().optional(),
   generado_en: z.date().optional(),
-}).omit({id:true});
+  correo: z.string().max(150),
+}).omit({ id: true });
 
-export const updateTokenInicialAccesoSchema = z.object({
+// Zod para actualización parcial
+export const updateTokenAccesoSchema = z.object({
   id: z.number(),
   token_acceso: z.string().max(100).optional(),
+  usuario_id: z.number().optional(),
   usado: z.boolean().optional(),
   generado_en: z.date().optional(),
-}).omit({id:true}).partial();
+  correo: z.string().email().max(150).optional(),
+}).omit({id: true}).partial();
