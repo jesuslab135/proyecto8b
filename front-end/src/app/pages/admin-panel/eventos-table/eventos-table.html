@@ -1,5 +1,6 @@
 <div class="eventos-table">
   <h3>Eventos</h3>
+  <button class="btn create" (click)="onCreate()">+ Crear Nuevo Evento</button>
   <table class="data-table">
     <thead>
       <tr>
@@ -25,8 +26,8 @@
           <a *ngIf="evento.enlace_acceso" [href]="evento.enlace_acceso" target="_blank">Acceso</a>
         </td>
         <td>
-          <button class="btn edit">Edit</button>
-          <button class="btn delete">Delete</button>
+          <button class="btn edit" (click)="onEdit(evento.id)">Edit</button>
+          <button class="btn delete" (click)="onDelete(evento.id)">Delete</button>
         </td>
       </tr>
     </tbody>

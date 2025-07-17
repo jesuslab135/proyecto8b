@@ -50,7 +50,7 @@ export async function createEvento(input: {
     body: JSON.stringify(input),
   });
 
-  const data = await res.json();
+  const {id, ...data} = await res.json();
   if (!res.ok) throw new Error(data?.error || 'Error al crear evento');
   return data;
 }

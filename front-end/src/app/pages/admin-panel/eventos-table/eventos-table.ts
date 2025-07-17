@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { fetchEventos } from '../../../api/eventos-api';
+import { fetchEventos, deleteEvento } from '../../../api/eventos-api';
 
 @Component({
   selector: 'app-eventos-table',
@@ -28,6 +28,27 @@ export class EventosTableComponent implements OnInit {
     } catch (err) {
       console.error('Error al obtener eventos:', err);
       this.router.navigate(['/login']);
+    }
+  }
+
+  onCreate() {
+    this.router.navigate(['/admin/eventos/create']);
+  }
+
+  onEdit(id: number) {
+    this.router.navigate(['/admin/eventos/edit', id]);
+  }
+
+  async onDelete(id: number) {
+    const confirmDelete = confirm('¿Estás seguro de que deseas eliminar este evento?');
+    if (!confirmDelete) return;
+
+    try {
+      await deleteEvento(id);
+      await this.ngOnInit();
+    } catch (err) {
+      console.error(err);
+      alert('Error al eliminar evento');
     }
   }
 }

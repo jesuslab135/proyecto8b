@@ -44,6 +44,8 @@ import { PostulacionesCreateComponent } from './pages/admin-panel/postulaciones-
 import { PostulacionesFormComponent } from './pages/admin-panel/postulaciones-table/postulaciones-form.component';
 import { ActividadUsuarioCreateComponent } from './pages/admin-panel/actividad-usuario-table/actividad-usuario-create.component';
 import { ActividadUsuarioFormComponent } from './pages/admin-panel/actividad-usuario-table/actividad-usuario-form.component';
+import { EventosCreateComponent } from './pages/admin-panel/eventos-table/eventos-create.component';
+import { EventosFormComponent } from './pages/admin-panel/eventos-table/eventos-form.component';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -66,6 +68,8 @@ export const routes: Routes = [
       { path: 'asistenciasEventos', component: AsistenciasEventos },
       { path: 'conversaciones', component: Conversaciones },
       { path: 'eventos', component: EventosTableComponent },
+      { path: 'eventos/create', component: EventosCreateComponent },
+      { path: 'eventos/edit/:id', component: EventosFormComponent },
       { path: 'foros', component: ForosTableComponent },
       { path: 'foros/create', component: ForosCreateComponent },
       { path: 'foros/edit/:id', component: ForosFormComponent },

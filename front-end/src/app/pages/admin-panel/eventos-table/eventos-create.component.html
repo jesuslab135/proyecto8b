@@ -1,0 +1,39 @@
+<div class="form-container">
+  <h2>Crear Evento</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label>Título:
+      <input type="text" formControlName="titulo" required />
+    </label>
+
+    <label>Descripción:
+      <textarea formControlName="descripcion"></textarea>
+    </label>
+
+    <label>Tipo:
+      <input type="text" formControlName="tipo" required />
+    </label>
+
+    <label>Creador ID:
+      <input type="number" formControlName="creador_id" required />
+    </label>
+
+    <label>Universidad ID:
+      <input type="number" formControlName="universidad_id" required />
+    </label>
+
+    <label>Fecha Inicio:
+      <input type="datetime-local" formControlName="fecha_inicio" required/>
+    </label>
+
+    <label>Fecha Fin:
+      <input type="datetime-local" formControlName="fecha_fin" required />
+    </label>
+
+    <label>Enlace Acceso:
+      <input type="text" formControlName="enlace_acceso" />
+    </label>
+
+    <button type="submit" [disabled]="form.invalid">Crear</button>
+    <button type="button" (click)="onCancel()">Cancelar</button>
+  </form>
+</div>
