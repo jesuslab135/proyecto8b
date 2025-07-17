@@ -41,7 +41,7 @@ export async function createRolUsuario(input: { nombre: string }) {
     body: JSON.stringify(input),
   });
 
-  const data = await res.json();
+  const {id, ...data} = await res.json();
   if (!res.ok) throw new Error(data?.error || 'Error al crear rol');
   return data;
 }

@@ -1,5 +1,8 @@
 <div class="roles-usuario-table">
   <h3>Roles de Usuario</h3>
+
+  <button class="btn create" (click)="onCreate()">+ Crear Nuevo Rol</button>
+
   <table class="data-table">
     <thead>
       <tr>
@@ -13,8 +16,8 @@
         <td>{{ rol.id }}</td>
         <td>{{ rol.nombre }}</td>
         <td>
-          <button class="btn edit">Edit</button>
-          <button class="btn delete">Delete</button>
+          <button class="btn edit" (click)="onEdit(rol.id)">Edit</button>
+          <button class="btn delete" (click)="onDelete(rol.id)">Delete</button>
         </td>
       </tr>
     </tbody>
