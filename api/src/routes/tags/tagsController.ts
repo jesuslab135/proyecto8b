@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm';
 
 export async function createTag(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const {id, ...data} = req.cleanBody;
     const [newTag] = await db.insert(tagsTable).values(data).returning();
     res.status(201).json(newTag);
   } catch (e) {

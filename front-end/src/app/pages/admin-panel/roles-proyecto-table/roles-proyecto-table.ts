@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { fetchRolesProyecto } from '../../../api/roles-proyecto-api';
+import { fetchRolesProyecto, deleteRolProyecto } from '../../../api/roles-proyecto-api';
 
 @Component({
   selector: 'app-roles-proyecto-table',
@@ -27,6 +27,27 @@ export class RolesProyectoTableComponent implements OnInit {
     } catch (err) {
       console.error('Error al obtener roles de proyecto:', err);
       this.router.navigate(['/login']);
+    }
+  }
+
+  onCreate() {
+    this.router.navigate(['/admin/roles-proyecto/create']);
+  }
+
+  onEdit(id: number) {
+    this.router.navigate(['/admin/roles-proyecto/edit', id]);
+  }
+
+  async onDelete(id: number) {
+    const confirmed = confirm('¿Estás seguro de que deseas eliminar este rol de proyecto?');
+    if (!confirmed) return;
+
+    try {
+      await deleteRolProyecto(id);
+      await this.ngOnInit(); // recargar lista actualizada
+    } catch (err) {
+      console.error('Error al eliminar rol de proyecto:', err);
+      alert('Error al eliminar rol de proyecto');
     }
   }
 }

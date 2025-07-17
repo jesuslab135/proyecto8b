@@ -1,5 +1,8 @@
 <div class="roles-proyecto-table">
   <h3>Roles de Proyecto</h3>
+
+  <button class="btn create" (click)="onCreate()">+ Crear Nuevo Rol</button>
+
   <table class="data-table">
     <thead>
       <tr>
@@ -21,8 +24,8 @@
         <td>{{ rol.puede_subir_archivos ? 'Sí' : 'No' }}</td>
         <td>{{ rol.puede_validar ? 'Sí' : 'No' }}</td>
         <td>
-          <button class="btn edit">Edit</button>
-          <button class="btn delete">Delete</button>
+          <button class="btn edit" (click)="onEdit(rol.id)">Edit</button>
+          <button class="btn delete" (click)="onDelete(rol.id)">Delete</button>
         </td>
       </tr>
     </tbody>

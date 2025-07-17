@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm';
 
 export async function createForo(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const {id, ...data} = req.cleanBody;
     const [newForo] = await db.insert(forosTable).values(data).returning();
     res.status(201).json(newForo);
   } catch (e) {

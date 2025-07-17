@@ -36,6 +36,8 @@ import { TagsCreateComponent } from './pages/admin-panel/tags/tags-create.compon
 import { TagsFormComponent } from './pages/admin-panel/tags/tags-form.component';
 import { ForosCreateComponent } from './pages/admin-panel/foros-table/foros-create.component';
 import { ForosFormComponent } from './pages/admin-panel/foros-table/foros-form.component';
+import { RolesProyectoCreateComponent } from './pages/admin-panel/roles-proyecto-table/roles-proyecto-create.component';
+import { RolesProyectoFormComponent } from './pages/admin-panel/roles-proyecto-table/roles-proyecto-form.component';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -62,6 +64,8 @@ export const routes: Routes = [
       { path: 'mensajes', component: MensajesTableComponent },
       { path: 'oportunidades', component: OportunidadesTableComponent },
       { path: 'roles-proyecto', component: RolesProyectoTableComponent },
+      { path: 'roles-proyecto/create', component: RolesProyectoCreateComponent },
+      { path: 'roles-proyecto/edit/:id', component: RolesProyectoFormComponent },
       { path: 'roles-usuario', component: RolesUsuarioTableComponent },
       { path: 'hilos', component: HilosTableComponent },
       { path: 'experiencias-usuario', component: ExperienciaUsuarioTableComponent },

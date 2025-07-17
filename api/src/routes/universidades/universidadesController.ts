@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm';
 
 export async function createUniversidad(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const {id, ...data} = req.cleanBody;
     const [newUniversidad] = await db
       .insert(universidadesTable)
       .values(data)

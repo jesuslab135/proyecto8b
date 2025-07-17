@@ -1,0 +1,16 @@
+<div class="form-container">
+  <h2>Editar Rol de Proyecto</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label>Nombre:
+      <input type="text" formControlName="nombre" />
+    </label>
+
+    <label><input type="checkbox" formControlName="puede_editar" /> Puede Editar</label>
+    <label><input type="checkbox" formControlName="puede_comentar" /> Puede Comentar</label>
+    <label><input type="checkbox" formControlName="puede_subir_archivos" /> Puede Subir Archivos</label>
+    <label><input type="checkbox" formControlName="puede_validar" /> Puede Validar</label>
+
+    <button type="submit">Guardar</button>
+    <button type="button" (click)="onCancel()">Cancelar</button>
+  </form>
+</div>
