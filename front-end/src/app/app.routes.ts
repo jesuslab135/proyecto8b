@@ -42,6 +42,8 @@ import { RolesUsuarioCreateComponent } from './pages/admin-panel/roles-usuario-t
 import { RolesUsuarioFormComponent } from './pages/admin-panel/roles-usuario-table/roles-usuario-form.component';
 import { PostulacionesCreateComponent } from './pages/admin-panel/postulaciones-table/postulaciones-create.component';
 import { PostulacionesFormComponent } from './pages/admin-panel/postulaciones-table/postulaciones-form.component';
+import { ActividadUsuarioCreateComponent } from './pages/admin-panel/actividad-usuario-table/actividad-usuario-create.component';
+import { ActividadUsuarioFormComponent } from './pages/admin-panel/actividad-usuario-table/actividad-usuario-form.component';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -56,6 +58,8 @@ export const routes: Routes = [
       { path: 'universities/edit/:id', component: UniversitiesFormComponent },
       { path: 'users', component: UsersTableComponent },
       { path: 'actividad', component: ActividadUsuarioTableComponent },
+      { path: 'actividad/create', component: ActividadUsuarioCreateComponent },
+      { path: 'actividad/edit/:id', component: ActividadUsuarioFormComponent },
       { path: 'tags', component: TagsTableComponent },
       { path: 'tags/create', component: TagsCreateComponent },
       { path: 'tags/edit/:id', component: TagsFormComponent },

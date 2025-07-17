@@ -1,5 +1,6 @@
 <div class="actividad-usuario-table">
   <h3>Actividad de Usuario</h3>
+  <button class="btn create" (click)="onCreate()">+ Crear Nueva Actividad</button>
   <table class="data-table">
     <thead>
       <tr>
@@ -21,8 +22,8 @@
         <td>{{ act.contexto }}</td>
         <td>{{ act.fecha | date: 'short' }}</td>
         <td>
-          <button class="btn edit">Edit</button>
-          <button class="btn delete">Delete</button>
+          <button class="btn edit" (click)="onEdit(act.id)">Edit</button>
+          <button class="btn delete" (click)="onDelete(act.id)">Delete</button>
         </td>
       </tr>
     </tbody>

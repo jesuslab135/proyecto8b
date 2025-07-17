@@ -15,14 +15,12 @@ export const insertActividadUsuarioSchema = z.object({
   usuario_id: z.number().int(),
   tipo_actividad: z.string().max(100),
   objeto_id: z.number().int(),
-  contexto: z.string().max(50),
-  fecha: z.date().optional(),
+  contexto: z.string().max(50)
 });
 
 export const updateActividadUsuarioSchema = z.object({
   usuario_id: z.number().int().optional(),
   tipo_actividad: z.string().max(100).optional(),
   objeto_id: z.number().int().optional(),
-  contexto: z.string().max(50).optional(),
-  fecha: z.date().optional(),
+  contexto: z.string().max(50).optional()
 }).partial();

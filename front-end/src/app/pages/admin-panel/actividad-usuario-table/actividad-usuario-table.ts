@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { fetchActividadUsuario } from '../../../api/actividad-usuario-api'; // ajusta si es necesario
+import { fetchActividadUsuario, deleteActividadUsuario } from '../../../api/actividad-usuario-api'; // ajusta si es necesario
 
 @Component({
   selector: 'app-actividad-usuario-table',
@@ -29,4 +29,26 @@ export class ActividadUsuarioTableComponent implements OnInit {
       this.router.navigate(['/login']);
     }
   }
+
+  onCreate() {
+  this.router.navigate(['/admin/actividad/create']);
+}
+
+onEdit(id: number) {
+  this.router.navigate(['/admin/actividad/edit', id]);
+}
+
+async onDelete(id: number) {
+  const confirmDelete = confirm('¿Estás seguro de que deseas eliminar esta actividad?');
+  if (!confirmDelete) return;
+
+  try {
+    await deleteActividadUsuario(id);
+    await this.ngOnInit();
+  } catch (err) {
+    console.error(err);
+    alert('Error al eliminar actividad');
+  }
+}
+
 }

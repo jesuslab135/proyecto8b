@@ -16,14 +16,12 @@ export const insertPostulacionSchema = z.object({
   usuario_id: z.number().int(),
   oportunidad_id: z.number().int(),
   mensaje: z.string(),
-  estado: z.string().max(50).optional(),
-  fecha: z.date().optional()
+  estado: z.string().max(50).optional()
 });
 
 export const updatePostulacionSchema = z.object({
   usuario_id: z.number().int().optional(),
   oportunidad_id: z.number().int().optional(),
   mensaje: z.string().optional(),
-  estado: z.string().max(50).optional(),
-  fecha: z.date().optional()
+  estado: z.string().max(50).optional()
 }).partial();
