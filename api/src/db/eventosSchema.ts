@@ -1,4 +1,3 @@
-// db/eventosSchema.ts
 import { pgTable, integer, varchar, text, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { usersTable } from './usersSchema';
@@ -18,7 +17,6 @@ export const eventosTable = pgTable('eventos', {
 });
 
 export const insertEventoSchema = z.object({
-  id: z.number().int(),
   titulo: z.string().max(200),
   descripcion: z.string(),
   tipo: z.string().max(100),
@@ -28,12 +26,9 @@ export const insertEventoSchema = z.object({
   fecha_fin: z.date(),
   enlace_acceso: z.string().nullable().optional(),
   creado_en: z.date().optional(),
-}).omit({
-  id: true,
 });
 
 export const updateEventoSchema = z.object({
-  id: z.number().int(),
   titulo: z.string().max(200).optional(),
   descripcion: z.string().optional(),
   tipo: z.string().max(100).optional(),
@@ -43,6 +38,4 @@ export const updateEventoSchema = z.object({
   fecha_fin: z.date().optional(),
   enlace_acceso: z.string().nullable().optional(),
   creado_en: z.date().optional(),
-}).omit({
-  id: true,
 }).partial();

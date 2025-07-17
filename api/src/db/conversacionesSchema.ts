@@ -1,4 +1,3 @@
-// db/conversacionesSchema.ts
 import { pgTable, integer, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { usersTable } from './usersSchema';
@@ -11,19 +10,13 @@ export const conversacionesTable = pgTable('conversaciones', {
 });
 
 export const insertConversacionSchema = z.object({
-  id: z.number().int(),
   usuario_1_id: z.number().int(),
   usuario_2_id: z.number().int(),
   creado_en: z.date().optional(),
-}).omit({
-  id: true,
 });
 
 export const updateConversacionSchema = z.object({
-  id: z.number().int(),
   usuario_1_id: z.number().int().optional(),
   usuario_2_id: z.number().int().optional(),
   creado_en: z.date().optional(),
-}).omit({
-  id: true,
 }).partial();

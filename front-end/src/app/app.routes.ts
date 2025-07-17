@@ -32,6 +32,8 @@ import { BloquesTableComponent } from './pages/admin-panel/bloques-table/bloques
 import { RelacionesBloquesTableComponent } from './pages/admin-panel/relaciones-bloques-table/relaciones-bloques-table';
 import { VersionesBloquesTableComponent } from './pages/admin-panel/versiones-bloques-table/versiones-bloques-table';
 import { TokensInicialesAccesoTableComponent } from './pages/admin-panel/tokens-iniciales-acceso-table/tokens-iniciales-acceso-table';
+import { TagsCreateComponent } from './pages/admin-panel/tags/tags-create.component';
+import { TagsFormComponent } from './pages/admin-panel/tags/tags-form.component';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -47,6 +49,8 @@ export const routes: Routes = [
       { path: 'users', component: UsersTableComponent },
       { path: 'actividad', component: ActividadUsuarioTableComponent },
       { path: 'tags', component: TagsTableComponent },
+      { path: 'tags/create', component: TagsCreateComponent },
+      { path: 'tags/edit/:id', component: TagsFormComponent },
       { path: 'asistenciasEventos', component: AsistenciasEventos },
       { path: 'conversaciones', component: Conversaciones },
       { path: 'eventos', component: EventosTableComponent },
