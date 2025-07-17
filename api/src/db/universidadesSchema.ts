@@ -9,20 +9,16 @@ export const universidadesTable = pgTable('universidades', {
   logo_url: text(),
 });
 
+// Schema para crear (sin id)
 export const insertUniversidadSchema = z.object({
-  id: z.number().int(),
   nombre: z.string().max(150),
   dominio_correo: z.string().max(100),
   logo_url: z.string().nullable().optional(),
-}).omit({
-    id: true,
 });
 
+// Schema para actualizar (sin id y parcial)
 export const updateUniversidadSchema = z.object({
-  id: z.number().int(),
   nombre: z.string().max(150),
   dominio_correo: z.string().max(100),
   logo_url: z.string().nullable().optional(),
-}).omit({
-    id: true,
 }).partial();

@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { usersTable } from './usersSchema';
 
 export const tokensInicialesAccesoTable = pgTable('tokens_iniciales_acceso', {
-  id: integer().primaryKey().notNull(),
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
   usuario_id: integer().references(() => usersTable.id),
   token_acceso: varchar({ length: 100 }),
   usado: boolean().default(false),

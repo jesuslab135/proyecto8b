@@ -3,6 +3,8 @@ import { Register } from './pages/register/register';
 import { Login } from './pages/login/login';
 import { AdminPanel } from './pages/admin-panel/admin-panel';
 import { UniversitiesTableComponent } from './pages/admin-panel/universities-table/universities-table';
+import { UniversitiesFormComponent } from './pages/admin-panel/universities-table/universities-form.component';
+import { UniversitiesCreateComponent } from './pages/admin-panel/universities-table/universities-create.component';
 import { UsersTableComponent } from './pages/admin-panel/users-table/users-table';
 import { ActividadUsuarioTableComponent } from './pages/admin-panel/actividad-usuario-table/actividad-usuario-table';
 import { TagsTableComponent } from './pages/admin-panel/tags/tags';
@@ -32,41 +34,43 @@ import { VersionesBloquesTableComponent } from './pages/admin-panel/versiones-bl
 import { TokensInicialesAccesoTableComponent } from './pages/admin-panel/tokens-iniciales-acceso-table/tokens-iniciales-acceso-table';
 
 export const routes: Routes = [
-    { path: '', component: Login },
-    { path: 'login', component: Login },
-    { path:'register', component: Register },
-    { 
-        path: 'admin', 
-        component: AdminPanel,
-        children: [
-            { path: 'universities', component: UniversitiesTableComponent },
-            { path: 'users', component: UsersTableComponent },
-            { path: 'actividad', component: ActividadUsuarioTableComponent },
-            { path: 'tags', component: TagsTableComponent },
-            { path: 'asistenciasEventos', component: AsistenciasEventos },
-            { path: 'conversaciones', component: Conversaciones },
-            { path: 'eventos', component: EventosTableComponent },
-            { path: 'foros', component: ForosTableComponent },
-            { path: 'mensajes', component: MensajesTableComponent },
-            { path: 'oportunidades', component: OportunidadesTableComponent },
-            { path: 'roles-proyecto', component: RolesProyectoTableComponent },
-            { path: 'roles-usuario', component: RolesUsuarioTableComponent },
-            { path: 'hilos', component: HilosTableComponent },
-            { path: 'experiencias-usuario', component: ExperienciaUsuarioTableComponent },
-            { path: 'proyectos', component: ProyectosTableComponent },
-            { path: 'proyectos-validaciones', component: ProyectosValidacionesTableComponent },
-            { path: 'reportes', component: ReportesTableComponent },
-            { path: 'perfiles', component: PerfilesTableComponent },
-            { path: 'taggables', component: TaggablesTableComponent },
-            { path: 'seguimientos', component: SeguimientosTableComponent },
-            { path: 'respuestas-hilos', component: RespuestasHiloTableComponent },
-            { path: 'postulaciones', component: PostulacionesTableComponent },
-            { path: 'participaciones-proyectos', component: ParticipacionesProyectosTableComponent },
-            { path: 'paginas-colaborativas', component: PaginasColaborativasTableComponent },
-            { path: 'bloques', component: BloquesTableComponent },
-            { path: 'relaciones-bloques', component: RelacionesBloquesTableComponent },
-            { path: 'versiones-bloques', component: VersionesBloquesTableComponent },
-            { path: 'tokens-iniciales-acceso', component: TokensInicialesAccesoTableComponent },
-        ]
-    },
+  { path: '', component: Login },
+  { path: 'login', component: Login },
+  { path: 'register', component: Register },
+  {
+    path: 'admin',
+    component: AdminPanel,
+    children: [
+      { path: 'universities', component: UniversitiesTableComponent },
+      { path: 'universities/create', component: UniversitiesCreateComponent },
+      { path: 'universities/edit/:id', component: UniversitiesFormComponent },
+      { path: 'users', component: UsersTableComponent },
+      { path: 'actividad', component: ActividadUsuarioTableComponent },
+      { path: 'tags', component: TagsTableComponent },
+      { path: 'asistenciasEventos', component: AsistenciasEventos },
+      { path: 'conversaciones', component: Conversaciones },
+      { path: 'eventos', component: EventosTableComponent },
+      { path: 'foros', component: ForosTableComponent },
+      { path: 'mensajes', component: MensajesTableComponent },
+      { path: 'oportunidades', component: OportunidadesTableComponent },
+      { path: 'roles-proyecto', component: RolesProyectoTableComponent },
+      { path: 'roles-usuario', component: RolesUsuarioTableComponent },
+      { path: 'hilos', component: HilosTableComponent },
+      { path: 'experiencias-usuario', component: ExperienciaUsuarioTableComponent },
+      { path: 'proyectos', component: ProyectosTableComponent },
+      { path: 'proyectos-validaciones', component: ProyectosValidacionesTableComponent },
+      { path: 'reportes', component: ReportesTableComponent },
+      { path: 'perfiles', component: PerfilesTableComponent },
+      { path: 'taggables', component: TaggablesTableComponent },
+      { path: 'seguimientos', component: SeguimientosTableComponent },
+      { path: 'respuestas-hilos', component: RespuestasHiloTableComponent },
+      { path: 'postulaciones', component: PostulacionesTableComponent },
+      { path: 'participaciones-proyectos', component: ParticipacionesProyectosTableComponent },
+      { path: 'paginas-colaborativas', component: PaginasColaborativasTableComponent },
+      { path: 'bloques', component: BloquesTableComponent },
+      { path: 'relaciones-bloques', component: RelacionesBloquesTableComponent },
+      { path: 'versiones-bloques', component: VersionesBloquesTableComponent },
+      { path: 'tokens-iniciales-acceso', component: TokensInicialesAccesoTableComponent },
+    ]
+  }
 ];

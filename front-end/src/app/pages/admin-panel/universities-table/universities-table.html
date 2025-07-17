@@ -1,5 +1,8 @@
 <div class="universities-table">
   <h3>Universities</h3>
+
+  <button class="btn create" (click)="onCreate()">+ Crear Nueva Universidad</button>
+
   <table class="data-table">
     <thead>
       <tr>
@@ -19,8 +22,8 @@
           <img [src]="university.logo_url || 'https://via.placeholder.com/40'" alt="Logo" class="logo-img" />
         </td>
         <td>
-          <button class="btn edit">Edit</button>
-          <button class="btn delete">Delete</button>
+          <button class="btn edit" (click)="onEdit(university.id)">Edit</button>
+          <button class="btn delete" (click)="onDelete(university.id)">Delete</button>
         </td>
       </tr>
     </tbody>
