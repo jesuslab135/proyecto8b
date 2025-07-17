@@ -1,0 +1,29 @@
+<div class="mensajes-table">
+  <h3>Mensajes</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Conversacion id</th>
+        <th>Emisor id</th>
+        <th>Contenido</th>
+        <th>Enviado en</th>
+        <th>Leído</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let mensaje of mensajes">
+        <td>{{ mensaje.id }}</td>
+        <td>{{ mensaje.conversacion_id }}</td>
+        <td>{{ mensaje.emisor_id }}</td>
+        <td>{{ mensaje.contenido }}</td>
+        <td>{{ mensaje.enviado_en }}</td>
+        <td>{{ mensaje.leido }}</td>
+        <td>
+          <button class="btn edit">Edit</button>
+          <button class="btn delete">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

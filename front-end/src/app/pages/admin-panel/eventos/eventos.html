@@ -1,0 +1,37 @@
+<div class="eventos-table">
+  <h3>Eventos</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Titulo</th>
+        <th>Descripcion</th>
+        <th>Tipo</th>
+        <th>Creador_id</th>
+        <th>Universidad id</th>
+        <th>Fecha inicio</th>
+        <th>Fecha fin</th>
+        <th>Enlace acceso</th>
+        <th>Creado en</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let evento of eventos">
+        <td>{{ evento.id }}</td>
+        <td>{{ evento.titulo }}</td>
+        <td>{{ evento.descripcion }}</td>
+        <td>{{ evento.tipo }}</td>
+        <td>{{ evento.creador_id }}</td>
+        <td>{{ evento.universidad_id }}</td>
+        <td>{{ evento.fecha_inicio | date: 'short' }}</td>
+        <td>{{ evento.fecha_fin | date: 'short' }}</td>
+        <td>{{ evento.enlace_acceso }}</td>
+        <td>{{ evento.creado_en | date: 'short' }}</td>
+        <td>
+          <button class="btn edit">Edit</button>
+          <button class="btn delete">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

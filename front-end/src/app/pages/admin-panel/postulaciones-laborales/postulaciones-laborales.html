@@ -1,0 +1,29 @@
+<div class="oportunidades-table">
+  <h3>Oportunidades</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Usuario_id</th>
+        <th>Mensaje</th>
+        <th>Estado</th>
+        <th>Fecha id</th>
+        <th>Oferta laboral id</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let postulacionLaboral of postulacionesLaborales">
+        <td>{{ postulacionLaboral.id }}</td>
+        <td>{{ postulacionLaboral.usuario_id }}</td>
+        <td>{{ postulacionLaboral.mensaje }}</td>
+        <td>{{ postulacionLaboral.estado }}</td>
+        <td>{{ postulacionLaboral.fecha }}</td>
+        <td>{{ postulacionLaboral.oferta_laboral_id }}</td>
+        <td>
+          <button class="btn edit">Edit</button>
+          <button class="btn delete">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

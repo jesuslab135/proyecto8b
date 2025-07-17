@@ -1,0 +1,29 @@
+<div class="oportunidades-table">
+  <h3>Oportunidades</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Titulo</th>
+        <th>Descripcion</th>
+        <th>Tipo</th>
+        <th>Universidad ID</th>
+        <th>Fecha límite</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let oportunidad of oportunidades">
+        <td>{{ oportunidad.id }}</td>
+        <td>{{ oportunidad.titulo }}</td>
+        <td>{{ oportunidad.descripcion }}</td>
+        <td>{{ oportunidad.tipo }}</td>
+        <td>{{ oportunidad.universidad_id }}</td>
+        <td>{{ oportunidad.fecha_limite }}</td>
+        <td>
+          <button class="btn edit">Edit</button>
+          <button class="btn delete">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

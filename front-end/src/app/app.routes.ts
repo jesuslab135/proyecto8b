@@ -7,6 +7,13 @@ import { UsersTableComponent } from './pages/admin-panel/users-table/users-table
 import { ActividadUsuarioTableComponent } from './pages/admin-panel/actividad-usuario-table/actividad-usuario-table';
 import { TagsTableComponent } from './pages/admin-panel/tags/tags';
 import { AsistenciasEventos } from './pages/admin-panel/asistencias-eventos/asistencias-eventos';
+import { Conversaciones } from './pages/admin-panel/conversaciones/conversaciones';
+import { Eventos } from './pages/admin-panel/eventos/eventos';
+import { Foros } from './pages/admin-panel/foros/foros';
+import { Mensajes } from './pages/admin-panel/mensajes/mensajes';
+import { OfertasLaborales } from './pages/admin-panel/ofertas-laborales/ofertas-laborales';
+import { Oportunidades } from './pages/admin-panel/oportunidades/oportunidades';
+import { PostulacionesLaborales } from './pages/admin-panel/postulaciones-laborales/postulaciones-laborales';
 
 export const routes: Routes = [
     { path: '', component: Login },
@@ -21,6 +28,14 @@ export const routes: Routes = [
             { path: 'actividad', component: ActividadUsuarioTableComponent },
             { path: 'tags', component: TagsTableComponent },
             { path: 'asistenciasEventos', component: AsistenciasEventos },
+            { path: 'conversaciones', component: Conversaciones },
+            { path: 'eventos', component: Eventos },
+            { path: 'foros', component: Foros },
+            { path: 'mensajes', component: Mensajes },
+            { path: 'ofertasLaborales', component: OfertasLaborales },
+            { path: 'oportunidades', component: Oportunidades },
+            { path: 'postulacionesLaborales', component: PostulacionesLaborales }
+
         ]
     },
 ];

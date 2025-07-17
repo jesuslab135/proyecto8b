@@ -1,0 +1,34 @@
+<div class="ofertas-laborales-table">
+  <h3>Ofertas Laborales</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Titulo</th>
+        <th>Empresa</th>
+        <th>Ubicación</th>
+        <th>Tipo de contrato</th>
+        <th>Salario</th>
+        <th>Fecha de publicación</th>
+        <th>Fecha límite</th>
+        <th>Creado por</th>
+        <th>Estado</th>
+        <th>Logo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ofertaLaboral of ofertasLaborales">
+        <td>{{ ofertaLaboral.id }}</td>
+        <td>{{ ofertaLaboral.conversacion_id }}</td>
+        <td>{{ ofertaLaboral.emisor_id }}</td>
+        <td>{{ ofertaLaboral.contenido }}</td>
+        <td>{{ ofertaLaboral.enviado_en }}</td>
+        <td>{{ ofertaLaboral.leido }}</td>
+        <td>
+          <button class="btn edit">Edit</button>
+          <button class="btn delete">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
