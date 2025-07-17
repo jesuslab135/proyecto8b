@@ -47,7 +47,7 @@ export async function createPostulacion(input: {
     body: JSON.stringify(input),
   });
 
-  const data = await res.json();
+  const {id, fecha, ...data} = await res.json();
   if (!res.ok) throw new Error(data?.error || 'Error al crear postulacion');
   return data;
 }

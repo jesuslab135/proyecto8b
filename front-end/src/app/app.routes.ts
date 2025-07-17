@@ -40,6 +40,8 @@ import { RolesProyectoCreateComponent } from './pages/admin-panel/roles-proyecto
 import { RolesProyectoFormComponent } from './pages/admin-panel/roles-proyecto-table/roles-proyecto-form.component';
 import { RolesUsuarioCreateComponent } from './pages/admin-panel/roles-usuario-table/roles-usuario-create.component';
 import { RolesUsuarioFormComponent } from './pages/admin-panel/roles-usuario-table/roles-usuario-form.component';
+import { PostulacionesCreateComponent } from './pages/admin-panel/postulaciones-table/postulaciones-create.component';
+import { PostulacionesFormComponent } from './pages/admin-panel/postulaciones-table/postulaciones-form.component';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -81,6 +83,8 @@ export const routes: Routes = [
       { path: 'seguimientos', component: SeguimientosTableComponent },
       { path: 'respuestas-hilos', component: RespuestasHiloTableComponent },
       { path: 'postulaciones', component: PostulacionesTableComponent },
+      { path: 'postulaciones/create', component: PostulacionesCreateComponent },
+      { path: 'postulaciones/edit/:id', component: PostulacionesFormComponent },
       { path: 'participaciones-proyectos', component: ParticipacionesProyectosTableComponent },
       { path: 'paginas-colaborativas', component: PaginasColaborativasTableComponent },
       { path: 'bloques', component: BloquesTableComponent },

@@ -5,7 +5,7 @@ import { eq } from 'drizzle-orm';
 
 export async function createPostulacionLaboral(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const {id, fecha, ...data} = req.cleanBody;
     const [nuevaPostulacion] = await db.insert(postulacioneslaboralesTable).values(data).returning();
     res.status(201).json(nuevaPostulacion);
   } catch (e) {

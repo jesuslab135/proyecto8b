@@ -12,21 +12,18 @@ export const postulacionesTable = pgTable('postulaciones', {
   fecha: timestamp().defaultNow(),
 });
 
-// Zod Schemas
 export const insertPostulacionSchema = z.object({
-  id: z.number().int(),
   usuario_id: z.number().int(),
   oportunidad_id: z.number().int(),
   mensaje: z.string(),
-  estado: z.string().max(50),
-  fecha: z.date().optional(),
-}).omit({ id: true });
+  estado: z.string().max(50).optional(),
+  fecha: z.date().optional()
+});
 
 export const updatePostulacionSchema = z.object({
-  id: z.number().int(),
   usuario_id: z.number().int().optional(),
   oportunidad_id: z.number().int().optional(),
   mensaje: z.string().optional(),
   estado: z.string().max(50).optional(),
-  fecha: z.date().optional(),
-}).omit({ id: true }).partial();
+  fecha: z.date().optional()
+}).partial();

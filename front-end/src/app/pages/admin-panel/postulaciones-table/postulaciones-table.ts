@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { fetchPostulaciones } from '../../../api/postulaciones-api';
+import { fetchPostulaciones, deletePostulacion } from '../../../api/postulaciones-api';
 
 @Component({
   selector: 'app-postulaciones-table',
@@ -27,6 +27,27 @@ export class PostulacionesTableComponent implements OnInit {
     } catch (err) {
       console.error('Error al obtener postulaciones:', err);
       this.router.navigate(['/login']);
+    }
+  }
+
+  onCreate() {
+    this.router.navigate(['/admin/postulaciones/create']);
+  }
+
+  onEdit(id: number) {
+    this.router.navigate(['/admin/postulaciones/edit', id]);
+  }
+
+  async onDelete(id: number) {
+    const confirmDelete = confirm('¿Estás seguro de que deseas eliminar esta postulación?');
+    if (!confirmDelete) return;
+
+    try {
+      await deletePostulacion(id);
+      await this.ngOnInit();
+    } catch (err) {
+      console.error(err);
+      alert('Error al eliminar postulación');
     }
   }
 }
