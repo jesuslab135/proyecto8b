@@ -34,6 +34,8 @@ import { VersionesBloquesTableComponent } from './pages/admin-panel/versiones-bl
 import { TokensInicialesAccesoTableComponent } from './pages/admin-panel/tokens-iniciales-acceso-table/tokens-iniciales-acceso-table';
 import { TagsCreateComponent } from './pages/admin-panel/tags/tags-create.component';
 import { TagsFormComponent } from './pages/admin-panel/tags/tags-form.component';
+import { ForosCreateComponent } from './pages/admin-panel/foros-table/foros-create.component';
+import { ForosFormComponent } from './pages/admin-panel/foros-table/foros-form.component';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -55,6 +57,8 @@ export const routes: Routes = [
       { path: 'conversaciones', component: Conversaciones },
       { path: 'eventos', component: EventosTableComponent },
       { path: 'foros', component: ForosTableComponent },
+      { path: 'foros/create', component: ForosCreateComponent },
+      { path: 'foros/edit/:id', component: ForosFormComponent },
       { path: 'mensajes', component: MensajesTableComponent },
       { path: 'oportunidades', component: OportunidadesTableComponent },
       { path: 'roles-proyecto', component: RolesProyectoTableComponent },

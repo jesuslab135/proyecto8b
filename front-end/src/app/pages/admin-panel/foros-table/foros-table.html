@@ -1,5 +1,8 @@
 <div class="foros-table">
   <h3>Foros</h3>
+
+  <button class="btn create" (click)="onCreate()">+ Crear Nuevo Foro</button>
+
   <table class="data-table">
     <thead>
       <tr>
@@ -15,8 +18,8 @@
         <td>{{ foro.nombre }}</td>
         <td>{{ foro.descripcion }}</td>
         <td>
-          <button class="btn edit">Edit</button>
-          <button class="btn delete">Delete</button>
+          <button class="btn edit" (click)="onEdit(foro.id)">Edit</button>
+          <button class="btn delete" (click)="onDelete(foro.id)">Delete</button>
         </td>
       </tr>
     </tbody>
