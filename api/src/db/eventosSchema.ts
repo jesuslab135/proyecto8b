@@ -1,4 +1,3 @@
-// db/eventosSchema.ts
 import { pgTable, integer, varchar, text, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { usersTable } from './usersSchema';
@@ -18,31 +17,35 @@ export const eventosTable = pgTable('eventos', {
 });
 
 export const insertEventoSchema = z.object({
-  id: z.number().int(),
   titulo: z.string().max(200),
   descripcion: z.string(),
   tipo: z.string().max(100),
   creador_id: z.number().int(),
   universidad_id: z.number().int(),
-  fecha_inicio: z.date(),
-  fecha_fin: z.date(),
+  fecha_inicio: z.string().refine(val => !isNaN(Date.parse(val)), {
+  message: 'fecha_inicio debe ser una fecha válida'
+}).transform(val => new Date(val)),
+
+fecha_fin: z.string().refine(val => !isNaN(Date.parse(val)), {
+  message: 'fecha_fin debe ser una fecha válida'
+}).transform(val => new Date(val)),
+
   enlace_acceso: z.string().nullable().optional(),
-  creado_en: z.date().optional(),
-}).omit({
-  id: true,
 });
 
 export const updateEventoSchema = z.object({
-  id: z.number().int(),
   titulo: z.string().max(200).optional(),
   descripcion: z.string().optional(),
   tipo: z.string().max(100).optional(),
   creador_id: z.number().int().optional(),
   universidad_id: z.number().int().optional(),
-  fecha_inicio: z.date().optional(),
-  fecha_fin: z.date().optional(),
+  fecha_inicio: z.string().refine(val => !isNaN(Date.parse(val)), {
+  message: 'fecha_inicio debe ser una fecha válida'
+}).transform(val => new Date(val)),
+
+fecha_fin: z.string().refine(val => !isNaN(Date.parse(val)), {
+  message: 'fecha_fin debe ser una fecha válida'
+}).transform(val => new Date(val)),
+
   enlace_acceso: z.string().nullable().optional(),
-  creado_en: z.date().optional(),
-}).omit({
-  id: true,
 }).partial();

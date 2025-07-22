@@ -1,0 +1,23 @@
+<div class="form-container">
+  <h2>Crear Actividad de Usuario</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label>Usuario ID:
+      <input type="number" formControlName="usuario_id" required />
+    </label>
+
+    <label>Tipo de Actividad:
+      <input type="text" formControlName="tipo_actividad" required />
+    </label>
+
+    <label>Objeto ID:
+      <input type="number" formControlName="objeto_id" required />
+    </label>
+
+    <label>Contexto:
+      <input type="text" formControlName="contexto" required />
+    </label>
+
+    <button type="submit" [disabled]="form.invalid">Crear</button>
+    <button type="button" (click)="onCancel()">Cancelar</button>
+  </form>
+</div>

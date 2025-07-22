@@ -8,13 +8,12 @@ import {
 } from './conversacionesController';
 import { validateData } from '../../middlewares/validationMiddleware';
 import { insertConversacionSchema } from '../../db/conversacionesSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertConversacionSchema), createConversacion);
-router.get('/', verifyToken, listConversaciones);
-router.get('/:id', verifyToken, getConversacion);
-router.delete('/:id', verifyToken, verifyAdmin, deleteConversacion);
+router.post('/',validateData(insertConversacionSchema), createConversacion);
+router.get('/', listConversaciones);
+router.get('/:id', getConversacion);
+router.delete('/:id',deleteConversacion);
 
 export default router;

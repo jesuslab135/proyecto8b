@@ -1,0 +1,24 @@
+<div class="relaciones-bloques-table">
+  <h3>Relaciones entre Bloques</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Bloque Padre ID</th>
+        <th>Bloque Hijo ID</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rel of relaciones">
+        <td>{{ rel.id }}</td>
+        <td>{{ rel.bloque_padre_id }}</td>
+        <td>{{ rel.bloque_hijo_id }}</td>
+        <td>
+          <button class="btn edit">Editar</button>
+          <button class="btn delete">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

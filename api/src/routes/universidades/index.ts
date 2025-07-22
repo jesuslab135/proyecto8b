@@ -12,30 +12,23 @@ import {
   insertUniversidadSchema,
   updateUniversidadSchema,
 } from '../../db/universidadesSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
 // Rutas protegidas con JWT
 router.post(
-  '/',
-  verifyToken,
-  verifyAdmin,
-  validateData(insertUniversidadSchema),
+  '/', validateData(insertUniversidadSchema),
   createUniversidad
 );
 
-router.get('/', verifyToken, listUniversidades);
-router.get('/:id', verifyToken, getUniversidad);
+router.get('/', listUniversidades);
+router.get('/:id', getUniversidad);
 
 router.put(
-  '/:id',
-  verifyToken,
-  verifyAdmin,
-  validateData(updateUniversidadSchema),
+  '/:id', validateData(updateUniversidadSchema),
   updateUniversidad
 );
 
-router.delete('/:id', verifyToken, verifyAdmin, deleteUniversidad);
+router.delete('/:id',deleteUniversidad);
 
 export default router;

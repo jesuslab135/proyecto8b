@@ -12,14 +12,13 @@ import {
   insertMensajeSchema,
   updateMensajeSchema,
 } from '../../db/mensajesSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertMensajeSchema), createMensaje);
-router.get('/', verifyToken, listMensajes);
-router.get('/:id', verifyToken, getMensaje);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updateMensajeSchema), updateMensaje);
-router.delete('/:id', verifyToken, verifyAdmin, deleteMensaje);
+router.post('/',validateData(insertMensajeSchema), createMensaje);
+router.get('/', listMensajes);
+router.get('/:id', getMensaje);
+router.put('/:id',validateData(updateMensajeSchema), updateMensaje);
+router.delete('/:id',deleteMensaje);
 
 export default router;

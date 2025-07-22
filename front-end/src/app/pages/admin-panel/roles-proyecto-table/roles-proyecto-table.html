@@ -1,0 +1,33 @@
+<div class="roles-proyecto-table">
+  <h3>Roles de Proyecto</h3>
+
+  <button class="btn create" (click)="onCreate()">+ Crear Nuevo Rol</button>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Editar</th>
+        <th>Comentar</th>
+        <th>Subir Archivos</th>
+        <th>Validar</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rol of roles">
+        <td>{{ rol.id }}</td>
+        <td>{{ rol.nombre }}</td>
+        <td>{{ rol.puede_editar ? 'Sí' : 'No' }}</td>
+        <td>{{ rol.puede_comentar ? 'Sí' : 'No' }}</td>
+        <td>{{ rol.puede_subir_archivos ? 'Sí' : 'No' }}</td>
+        <td>{{ rol.puede_validar ? 'Sí' : 'No' }}</td>
+        <td>
+          <button class="btn edit" (click)="onEdit(rol.id)">Edit</button>
+          <button class="btn delete" (click)="onDelete(rol.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

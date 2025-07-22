@@ -1,4 +1,3 @@
-// db/actividadUsuarioSchema.ts
 import { pgTable, integer, varchar, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { usersTable } from './usersSchema';
@@ -13,23 +12,15 @@ export const actividadUsuarioTable = pgTable('actividad_usuario', {
 });
 
 export const insertActividadUsuarioSchema = z.object({
-  id: z.number().int(),
   usuario_id: z.number().int(),
   tipo_actividad: z.string().max(100),
   objeto_id: z.number().int(),
-  contexto: z.string().max(50),
-  fecha: z.date().optional(),
-}).omit({
-  id: true,
+  contexto: z.string().max(50)
 });
 
 export const updateActividadUsuarioSchema = z.object({
-  id: z.number().int(),
   usuario_id: z.number().int().optional(),
   tipo_actividad: z.string().max(100).optional(),
   objeto_id: z.number().int().optional(),
-  contexto: z.string().max(50).optional(),
-  fecha: z.date().optional(),
-}).omit({
-  id: true,
+  contexto: z.string().max(50).optional()
 }).partial();

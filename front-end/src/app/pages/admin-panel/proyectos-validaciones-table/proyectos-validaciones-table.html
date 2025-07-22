@@ -1,0 +1,30 @@
+<div class="proyectos-validaciones-table">
+  <h3>Validaciones de Proyectos</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Proyecto ID</th>
+        <th>Admin ID</th>
+        <th>Estado</th>
+        <th>Comentarios</th>
+        <th>Fecha</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let val of validaciones">
+        <td>{{ val.id }}</td>
+        <td>{{ val.proyecto_id }}</td>
+        <td>{{ val.admin_id }}</td>
+        <td>{{ val.estado }}</td>
+        <td>{{ val.comentarios }}</td>
+        <td>{{ val.fecha_validacion }}</td>
+        <td>
+          <button class="btn edit">Editar</button>
+          <button class="btn delete">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

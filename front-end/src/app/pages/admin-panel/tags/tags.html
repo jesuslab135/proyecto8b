@@ -1,5 +1,7 @@
 <div class="tags-table">
   <h3>Tags</h3>
+  <button class="btn create" (click)="onCreate()">+ Crear Nuevo Tag</button>
+
   <table class="data-table">
     <thead>
       <tr>
@@ -13,8 +15,8 @@
         <td>{{ tag.id }}</td>
         <td>{{ tag.nombre }}</td>
         <td>
-          <button class="btn edit">Edit</button>
-          <button class="btn delete">Delete</button>
+          <button class="btn edit" (click)="onEdit(tag.id)">Edit</button>
+          <button class="btn delete" (click)="onDelete(tag.id)">Delete</button>
         </td>
       </tr>
     </tbody>

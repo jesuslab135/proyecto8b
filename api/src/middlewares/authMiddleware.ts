@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-export function verifyToken(req: Request, res: Response, next: NextFunction) {
+export function (req: Request, res: Response, next: NextFunction) {
   const token = req.header('Authorization');
 
   if (!token) {
@@ -24,9 +24,18 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export function verifyAdmin(req: Request, res: Response, next: NextFunction) {
+export function (req: Request, res: Response, next: NextFunction) {
   const role = req.role;
   if (role !== 'admin') {
+    res.status(401).json({ error: 'Access denied' });
+    return;
+  }
+  next();
+}
+
+export function verifyUni(req: Request, res: Response, next: NextFunction) {
+  const role = req.role;
+  if (role !== 'admin_uni') {
     res.status(401).json({ error: 'Access denied' });
     return;
   }

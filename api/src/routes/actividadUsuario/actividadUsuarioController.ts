@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm';
 
 export async function createActividadUsuario(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const {id, fecha, ...data} = req.cleanBody;
     const [nuevaActividad] = await db.insert(actividadUsuarioTable).values(data).returning();
     res.status(201).json(nuevaActividad);
   } catch (e) {

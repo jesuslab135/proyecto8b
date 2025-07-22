@@ -1,0 +1,33 @@
+<div class="postulaciones-table">
+  <h3>Postulaciones</h3>
+
+  <button class="btn create" (click)="onCreate()">+ Crear Nueva Postulación</button>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Usuario ID</th>
+        <th>Oportunidad ID</th>
+        <th>Mensaje</th>
+        <th>Estado</th>
+        <th>Fecha</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of postulaciones">
+        <td>{{ p.id }}</td>
+        <td>{{ p.usuario_id }}</td>
+        <td>{{ p.oportunidad_id }}</td>
+        <td>{{ p.mensaje }}</td>
+        <td>{{ p.estado }}</td>
+        <td>{{ p.fecha | date: 'shortDate' }}</td>
+        <td>
+          <button class="btn edit" (click)="onEdit(p.id)">Edit</button>
+          <button class="btn delete" (click)="onDelete(p.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

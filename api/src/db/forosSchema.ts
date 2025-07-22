@@ -8,17 +8,11 @@ export const forosTable = pgTable('foros', {
 });
 
 export const insertForoSchema = z.object({
-  id: z.number().int(),
   nombre: z.string().max(100),
   descripcion: z.string().nullable().optional(),
-}).omit({
-  id: true,
 });
 
 export const updateForoSchema = z.object({
-  id: z.number().int(),
-  nombre: z.string().max(100),
+  nombre: z.string().max(100).optional(),
   descripcion: z.string().nullable().optional(),
-}).omit({
-  id: true,
 }).partial();

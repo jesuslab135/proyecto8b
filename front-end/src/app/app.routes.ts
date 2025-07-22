@@ -3,6 +3,8 @@ import { Register } from './pages/register/register';
 import { Login } from './pages/login/login';
 import { AdminPanel } from './pages/admin-panel/admin-panel';
 import { UniversitiesTableComponent } from './pages/admin-panel/universities-table/universities-table';
+import { UniversitiesFormComponent } from './pages/admin-panel/universities-table/universities-form.component';
+import { UniversitiesCreateComponent } from './pages/admin-panel/universities-table/universities-create.component';
 import { UsersTableComponent } from './pages/admin-panel/users-table/users-table';
 import { ActividadUsuarioTableComponent } from './pages/admin-panel/actividad-usuario-table/actividad-usuario-table';
 import { TagsTableComponent } from './pages/admin-panel/tags/tags';

@@ -1,0 +1,33 @@
+<!-- src/app/pages/admin-panel/bloques-table.html -->
+<div class="bloques-table">
+  <h3>Bloques</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Página</th>
+        <th>Tipo</th>
+        <th>Contenido</th>
+        <th>Orden</th>
+        <th>Creado Por</th>
+        <th>Creado En</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let b of bloques">
+        <td>{{ b.id }}</td>
+        <td>{{ b.pagina_id }}</td>
+        <td>{{ b.tipo }}</td>
+        <td>{{ b.contenido | json }}</td>
+        <td>{{ b.orden }}</td>
+        <td>{{ b.creado_por }}</td>
+        <td>{{ b.creado_en }}</td>
+        <td>
+          <button class="btn edit">Editar</button>
+          <button class="btn delete">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

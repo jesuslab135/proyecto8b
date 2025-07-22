@@ -12,14 +12,13 @@ import {
   insertEventoSchema,
   updateEventoSchema,
 } from '../../db/eventosSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertEventoSchema), createEvento);
-router.get('/', verifyToken, listEventos);
-router.get('/:id', verifyToken, getEvento);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updateEventoSchema), updateEvento);
-router.delete('/:id', verifyToken, verifyAdmin, deleteEvento);
+router.post('/', validateData(insertEventoSchema), createEvento);
+router.get('/', listEventos);
+router.get('/:id', getEvento);
+router.put('/:id', validateData(updateEventoSchema), updateEvento);
+router.delete('/:id', deleteEvento);
 
 export default router;

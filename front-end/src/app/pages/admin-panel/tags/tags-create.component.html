@@ -1,0 +1,12 @@
+<div class="form-container">
+  <h2>Crear Nuevo Tag</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label>
+      Nombre:
+      <input type="text" formControlName="nombre" required />
+    </label>
+
+    <button type="submit" [disabled]="form.invalid">Crear</button>
+    <button type="button" (click)="onCancel()">Cancelar</button>
+  </form>
+</div>

@@ -8,15 +8,10 @@ export const rolesUsuarioTable = pgTable('roles_usuario', {
 });
 
 export const insertRolUsuarioSchema = z.object({
-  id: z.number().int(),
   nombre: z.string().max(50),
-}).omit({
-  id: true,
 });
 
 export const updateRolUsuarioSchema = z.object({
-  id: z.number().int(),
-  nombre: z.string().max(50),
-}).omit({
-  id: true,
+  nombre: z.string().max(50).optional(),
 }).partial();
+

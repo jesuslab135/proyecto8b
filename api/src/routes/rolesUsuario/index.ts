@@ -12,14 +12,13 @@ import {
   insertRolUsuarioSchema,
   updateRolUsuarioSchema,
 } from '../../db/rolesUsuarioSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertRolUsuarioSchema), createRolUsuario);
-router.get('/', verifyToken, listRolesUsuario);
-router.get('/:id', verifyToken, getRolUsuario);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updateRolUsuarioSchema), updateRolUsuario);
-router.delete('/:id', verifyToken, verifyAdmin, deleteRolUsuario);
+router.post('/',validateData(insertRolUsuarioSchema), createRolUsuario);
+router.get('/', listRolesUsuario);
+router.get('/:id', getRolUsuario);
+router.put('/:id',validateData(updateRolUsuarioSchema), updateRolUsuario);
+router.delete('/:id',deleteRolUsuario);
 
 export default router;

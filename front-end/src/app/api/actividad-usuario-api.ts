@@ -46,7 +46,7 @@ export async function createActividadUsuario(input: {
     body: JSON.stringify(input),
   });
 
-  const data = await res.json();
+  const {id, fecha, ...data} = await res.json();
   if (!res.ok) throw new Error(data?.error || 'Error al crear actividad');
   return data;
 }
@@ -68,7 +68,7 @@ export async function updateActividadUsuario(id: number, input: {
     body: JSON.stringify(input),
   });
 
-  const data = await res.json();
+  const {fecha, ...data} = await res.json();
   if (!res.ok) throw new Error(data?.error || 'Error al actualizar actividad');
   return data;
 }

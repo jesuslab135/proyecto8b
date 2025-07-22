@@ -3,7 +3,9 @@
   display: flex;
   height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden; /* evitar scroll en el layout principal */
 }
+
 
 /* Sidebar */
 .sidebar {
@@ -12,7 +14,12 @@
   color: #fff;
   padding: 2rem 1rem;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  overflow-y: auto;     
+  height: 100vh;         
+  position: sticky;       
+  top: 0;
 }
+
 
 .sidebar h2 {
   font-size: 1.4rem;

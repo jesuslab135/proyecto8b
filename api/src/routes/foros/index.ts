@@ -12,14 +12,13 @@ import {
   insertForoSchema,
   updateForoSchema,
 } from '../../db/forosSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertForoSchema), createForo);
-router.get('/', verifyToken, listForos);
-router.get('/:id', verifyToken, getForo);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updateForoSchema), updateForo);
-router.delete('/:id', verifyToken, verifyAdmin, deleteForo);
+router.post('/',validateData(insertForoSchema), createForo);
+router.get('/', listForos);
+router.get('/:id', getForo);
+router.put('/:id',validateData(updateForoSchema), updateForo);
+router.delete('/:id',deleteForo);
 
 export default router;

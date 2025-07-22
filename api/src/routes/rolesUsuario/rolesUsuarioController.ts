@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm';
 
 export async function createRolUsuario(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const {id, ...data} = req.cleanBody;
     const [newRol] = await db.insert(rolesUsuarioTable).values(data).returning();
     res.status(201).json(newRol);
   } catch (e) {

@@ -12,23 +12,17 @@ export const rolesProyectoTable = pgTable('roles_proyecto', {
 });
 
 export const insertRolProyectoSchema = z.object({
-  id: z.number().int(),
   nombre: z.string().max(50),
   puede_editar: z.boolean().optional(),
   puede_comentar: z.boolean().optional(),
   puede_subir_archivos: z.boolean().optional(),
   puede_validar: z.boolean().optional(),
-}).omit({
-  id: true,
 });
 
 export const updateRolProyectoSchema = z.object({
-  id: z.number().int(),
   nombre: z.string().max(50).optional(),
   puede_editar: z.boolean().optional(),
   puede_comentar: z.boolean().optional(),
   puede_subir_archivos: z.boolean().optional(),
   puede_validar: z.boolean().optional(),
-}).omit({
-  id: true,
-});
+}).partial();

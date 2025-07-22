@@ -4,7 +4,6 @@ import { z } from 'zod';
 import { usersTable } from './usersSchema';
 import { proyectosTable } from './proyectosSchema';
 
-
 export const proyectosValidacionesTable = pgTable('proyectos_validaciones', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   proyecto_id: integer().references(() => proyectosTable.id),
