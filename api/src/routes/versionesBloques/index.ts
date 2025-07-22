@@ -10,14 +10,14 @@ import {
 
 import { validateData } from '../../middlewares/validationMiddleware';
 import { insertVersionBloqueSchema, updateVersionBloqueSchema } from '../../db/versionesBloquesSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
+import { ,  } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertVersionBloqueSchema), createVersionBloque);
-router.get('/', verifyToken, listVersionesBloques);
-router.get('/:id', verifyToken, getVersionBloque);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updateVersionBloqueSchema), updateVersionBloque);
-router.delete('/:id', verifyToken, verifyAdmin, deleteVersionBloque);
+router.post('/',validateData(insertVersionBloqueSchema), createVersionBloque);
+router.get('/', , listVersionesBloques);
+router.get('/:id', , getVersionBloque);
+router.put('/:id',validateData(updateVersionBloqueSchema), updateVersionBloque);
+router.delete('/:id',deleteVersionBloque);
 
 export default router;

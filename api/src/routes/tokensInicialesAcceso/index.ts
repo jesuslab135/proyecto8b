@@ -12,26 +12,26 @@ import {
   insertTokenAccesoSchema,
   updateTokenAccesoSchema,
 } from '../../db/tokensInicialesAccesoSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
+import { ,  } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
 router.post(
   '/',
-  verifyToken,
-  verifyAdmin,
+  ,
+  ,
   validateData(insertTokenAccesoSchema),
   createTokenInicialAcceso
 );
-router.get('/', verifyToken, listTokensInicialesAcceso);
-router.get('/:id', verifyToken, getTokenInicialAcceso);
+router.get('/', , listTokensInicialesAcceso);
+router.get('/:id', , getTokenInicialAcceso);
 router.put(
   '/:id',
-  verifyToken,
-  verifyAdmin,
+  ,
+  ,
   validateData(updateTokenAccesoSchema),
   updateTokenInicialAcceso
 );
-router.delete('/:id', verifyToken, verifyAdmin, deleteTokenInicialAcceso);
+router.delete('/:id',deleteTokenInicialAcceso);
 
 export default router;

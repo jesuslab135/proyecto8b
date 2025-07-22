@@ -12,14 +12,13 @@ import {
   insertOfertasLaboralesSchema,
   updateOfertasLaboralesSchema,
 } from '../../db/ofertasLaboralesSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertOfertasLaboralesSchema), createOfertaLaboral);
-router.get('/', verifyToken, listOfertaLaboral);
-router.get('/:id', verifyToken, getOfertaLaboral);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updateOfertasLaboralesSchema), updateOfertaLaboral);
-router.delete('/:id', verifyToken, verifyAdmin, deleteOfertaLaboral);
+router.post('/',validateData(insertOfertasLaboralesSchema), createOfertaLaboral);
+router.get('/', listOfertaLaboral);
+router.get('/:id', getOfertaLaboral);
+router.put('/:id',validateData(updateOfertasLaboralesSchema), updateOfertaLaboral);
+router.delete('/:id',deleteOfertaLaboral);
 
 export default router;

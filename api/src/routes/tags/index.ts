@@ -12,14 +12,13 @@ import {
   insertTagSchema,
   updateTagSchema,
 } from '../../db/tagsSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertTagSchema), createTag);
-router.get('/', verifyToken, listTags);
-router.get('/:id', verifyToken, getTag);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updateTagSchema), updateTag);
-router.delete('/:id', verifyToken, verifyAdmin, deleteTag);
+router.post('/',validateData(insertTagSchema), createTag);
+router.get('/', listTags);
+router.get('/:id', getTag);
+router.put('/:id',validateData(updateTagSchema), updateTag);
+router.delete('/:id',deleteTag);
 
 export default router;

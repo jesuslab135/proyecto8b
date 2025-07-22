@@ -12,14 +12,13 @@ import {
   insertParticipacionesProyectoSchema,
   updateParticipacionesProyectoSchema,
 } from '../../db/participacionesProyectoSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertParticipacionesProyectoSchema), createParticipacionProyecto);
-router.get('/', verifyToken, listParticipacionesProyecto);
-router.get('/:id', verifyToken, getParticipacionProyecto);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updateParticipacionesProyectoSchema), updateParticipacionProyecto);
-router.delete('/:id', verifyToken, verifyAdmin, deleteParticipacionProyecto);
+router.post('/',validateData(insertParticipacionesProyectoSchema), createParticipacionProyecto);
+router.get('/', listParticipacionesProyecto);
+router.get('/:id', getParticipacionProyecto);
+router.put('/:id',validateData(updateParticipacionesProyectoSchema), updateParticipacionProyecto);
+router.delete('/:id',deleteParticipacionProyecto);
 
 export default router;

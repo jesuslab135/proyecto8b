@@ -12,14 +12,13 @@ import {
   insertAsistenciaEventoSchema,
   updateAsistenciaEventoSchema,
 } from '../../db/asistenciasEventoSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertAsistenciaEventoSchema), createAsistenciaEvento);
-router.get('/', verifyToken, listAsistenciasEvento);
-router.get('/:id', verifyToken, getAsistenciaEvento);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updateAsistenciaEventoSchema), updateAsistenciaEvento);
-router.delete('/:id', verifyToken, verifyAdmin, deleteAsistenciaEvento);
+router.post('/',validateData(insertAsistenciaEventoSchema), createAsistenciaEvento);
+router.get('/', listAsistenciasEvento);
+router.get('/:id', getAsistenciaEvento);
+router.put('/:id',validateData(updateAsistenciaEventoSchema), updateAsistenciaEvento);
+router.delete('/:id',deleteAsistenciaEvento);
 
 export default router;

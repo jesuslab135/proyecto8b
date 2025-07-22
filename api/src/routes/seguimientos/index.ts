@@ -14,14 +14,13 @@ import {
   updateSeguimientoSchema
 } from '../../db/seguimientosSchema';
 
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertSeguimientoSchema), createSeguimiento);
-router.get('/', verifyToken, listSeguimientos);
-router.get('/:id', verifyToken, getSeguimiento);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updateSeguimientoSchema), updateSeguimiento);
-router.delete('/:id', verifyToken, verifyAdmin, deleteSeguimiento);
+router.post('/',validateData(insertSeguimientoSchema), createSeguimiento);
+router.get('/', listSeguimientos);
+router.get('/:id', getSeguimiento);
+router.put('/:id',validateData(updateSeguimientoSchema), updateSeguimiento);
+router.delete('/:id',deleteSeguimiento);
 
 export default router;

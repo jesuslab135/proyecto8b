@@ -12,7 +12,6 @@ import {
   insertEventoSchema,
   updateEventoSchema,
 } from '../../db/eventosSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 

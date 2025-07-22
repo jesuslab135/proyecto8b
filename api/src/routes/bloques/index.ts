@@ -12,14 +12,13 @@ import {
   insertBloqueSchema,
   updateBloqueSchema,
 } from '../../db/bloquesSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertBloqueSchema), createBloque);
-router.get('/', verifyToken, listBloques);
-router.get('/:id', verifyToken, getBloque);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updateBloqueSchema), updateBloque);
-router.delete('/:id', verifyToken, verifyAdmin, deleteBloque);
+router.post('/',validateData(insertBloqueSchema), createBloque);
+router.get('/', listBloques);
+router.get('/:id', getBloque);
+router.put('/:id',validateData(updateBloqueSchema), updateBloque);
+router.delete('/:id',deleteBloque);
 
 export default router;

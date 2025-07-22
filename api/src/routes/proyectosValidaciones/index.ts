@@ -13,31 +13,24 @@ import {
   updateProyectoValidacionSchema,
 } from '../../db/proyectosValidacionesSchema';
 
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
 // Protegidas
-router.get('/', verifyToken, listProyectosValidaciones);
-router.get('/:id', verifyToken, getProyectoValidacion);
+router.get('/', listProyectosValidaciones);
+router.get('/:id', getProyectoValidacion);
 
 // Solo admins pueden modificar
 router.post(
-  '/',
-  verifyToken,
-  verifyAdmin,
-  validateData(insertProyectoValidacionSchema),
+  '/',validateData(insertProyectoValidacionSchema),
   createProyectoValidacion
 );
 
 router.put(
-  '/:id',
-  verifyToken,
-  verifyAdmin,
-  validateData(updateProyectoValidacionSchema),
+  '/:id',validateData(updateProyectoValidacionSchema),
   updateProyectoValidacion
 );
 
-router.delete('/:id', verifyToken, verifyAdmin, deleteProyectoValidacion);
+router.delete('/:id',deleteProyectoValidacion);
 
 export default router;

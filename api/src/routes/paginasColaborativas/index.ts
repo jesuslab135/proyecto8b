@@ -11,14 +11,13 @@ import {
   insertPaginaColaborativaSchema,
   updatePaginaColaborativaSchema
 } from '../../db/paginasColaborativasSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertPaginaColaborativaSchema), createPaginaColaborativa);
-router.get('/', verifyToken, listPaginasColaborativas);
-router.get('/:id', verifyToken, getPaginaColaborativa);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updatePaginaColaborativaSchema), updatePaginaColaborativa);
-router.delete('/:id', verifyToken, verifyAdmin, deletePaginaColaborativa);
+router.post('/',validateData(insertPaginaColaborativaSchema), createPaginaColaborativa);
+router.get('/', listPaginasColaborativas);
+router.get('/:id', getPaginaColaborativa);
+router.put('/:id',validateData(updatePaginaColaborativaSchema), updatePaginaColaborativa);
+router.delete('/:id',deletePaginaColaborativa);
 
 export default router;

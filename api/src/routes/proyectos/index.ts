@@ -13,14 +13,13 @@ import {
   updateProyectoSchema,
 } from '../../db/proyectosSchema';
 
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.get('/', verifyToken, listProyectos);
-router.get('/:id', verifyToken, getProyecto);
-router.post('/', verifyToken, verifyAdmin, validateData(insertProyectoSchema), createProyecto);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updateProyectoSchema), updateProyecto);
-router.delete('/:id', verifyToken, verifyAdmin, deleteProyecto);
+router.get('/', listProyectos);
+router.get('/:id', getProyecto);
+router.post('/',validateData(insertProyectoSchema), createProyecto);
+router.put('/:id',validateData(updateProyectoSchema), updateProyecto);
+router.delete('/:id',deleteProyecto);
 
 export default router;

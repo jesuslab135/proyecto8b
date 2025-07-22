@@ -12,14 +12,13 @@ import {
   insertActividadUsuarioSchema,
   updateActividadUsuarioSchema,
 } from '../../db/actividadUsuarioSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertActividadUsuarioSchema), createActividadUsuario);
-router.get('/', verifyToken, listActividadUsuario);
-router.get('/:id', verifyToken, getActividadUsuario);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updateActividadUsuarioSchema), updateActividadUsuario);
-router.delete('/:id', verifyToken, verifyAdmin, deleteActividadUsuario);
+router.post('/', validateData(insertActividadUsuarioSchema), createActividadUsuario);
+router.get('/', listActividadUsuario);
+router.get('/:id', getActividadUsuario);
+router.put('/:id', validateData(updateActividadUsuarioSchema), updateActividadUsuario);
+router.delete('/:id',deleteActividadUsuario);
 
 export default router;

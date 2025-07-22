@@ -12,14 +12,13 @@ import {
   insertTaggableSchema,
   updateTaggableSchema,
 } from '../../db/taggablesSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertTaggableSchema), createTaggable);
-router.get('/', verifyToken, listTaggables);
-router.get('/:id', verifyToken, getTaggable);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updateTaggableSchema), updateTaggable);
-router.delete('/:id', verifyToken, verifyAdmin, deleteTaggable);
+router.post('/',validateData(insertTaggableSchema), createTaggable);
+router.get('/', listTaggables);
+router.get('/:id', getTaggable);
+router.put('/:id',validateData(updateTaggableSchema), updateTaggable);
+router.delete('/:id',deleteTaggable);
 
 export default router;

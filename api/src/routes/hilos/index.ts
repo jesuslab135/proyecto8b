@@ -12,14 +12,13 @@ import {
   insertHiloSchema,
   updateHiloSchema,
 } from '../../db/hilosSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertHiloSchema), createHilo);
-router.get('/', verifyToken, listHilos);
-router.get('/:id', verifyToken, getHilo);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updateHiloSchema), updateHilo);
-router.delete('/:id', verifyToken, verifyAdmin, deleteHilo);
+router.post('/',validateData(insertHiloSchema), createHilo);
+router.get('/', listHilos);
+router.get('/:id', getHilo);
+router.put('/:id',validateData(updateHiloSchema), updateHilo);
+router.delete('/:id',deleteHilo);
 
 export default router;

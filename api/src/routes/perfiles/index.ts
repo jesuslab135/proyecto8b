@@ -9,14 +9,13 @@ import {
 
 import { insertPerfilSchema, updatePerfilSchema } from '../../db/perfilesSchema';
 import { validateData } from '../../middlewares/validationMiddleware';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertPerfilSchema), createPerfil);
-router.get('/', verifyToken, listPerfiles);
-router.get('/:id', verifyToken, getPerfil);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updatePerfilSchema), updatePerfil);
-router.delete('/:id', verifyToken, verifyAdmin, deletePerfil);
+router.post('/',validateData(insertPerfilSchema), createPerfil);
+router.get('/', listPerfiles);
+router.get('/:id', getPerfil);
+router.put('/:id',validateData(updatePerfilSchema), updatePerfil);
+router.delete('/:id',deletePerfil);
 
 export default router;

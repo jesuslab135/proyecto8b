@@ -12,13 +12,12 @@ import {
   insertOportunidadSchema,
   updateOportunidadSchema,
 } from '../../db/oportunidadesSchema';
-import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
 router.post('/', validateData(insertOportunidadSchema), createOportunidad);
 router.get('/', listOportunidades);
-router.get('/:id', verifyToken, getOportunidad);
+router.get('/:id', getOportunidad);
 router.put('/:id', validateData(updateOportunidadSchema), updateOportunidad);
 router.delete('/:id', deleteOportunidad);
 
