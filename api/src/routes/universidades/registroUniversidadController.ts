@@ -4,7 +4,7 @@ import { db } from '../../db';
 import { usuariosTable } from '../../db/usuariosSchema';
 import { tokensInicialesAccesoTable } from '../../db/tokensInicialesAccesoSchema';
 import { generateToken } from '../../utils/tokenGenerator';
-import { sendTokenEmail } from '../../utils/mailer';
+import { sendTokenEmail } from '../../utils/emailSender';
 
 export async function registrarUsuariosDesdeCSV(req: Request, res: Response) {
   try {

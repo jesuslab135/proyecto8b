@@ -19,10 +19,12 @@ export const insertExperienciaUsuarioSchema = z.object({
   tipo: z.string().max(50),
   titulo: z.string().max(100),
   descripcion: z.string(),
-  fecha_inicio: z.string(),
-  fecha_fin: z.string(),
-}).omit({
-    id: true,
+  fecha_inicio: z.string().refine(val => !isNaN(Date.parse(val)), {
+  message: 'fecha_inicio debe ser una fecha válida'
+}).transform(val => new Date(val)),
+fecha_fin: z.string().refine(val => !isNaN(Date.parse(val)), {
+  message: 'fecha_fin debe ser una fecha válida'
+}).transform(val => new Date(val)),
 });
 
 export const updateExperienciaUsuarioSchema = z.object({
@@ -31,8 +33,10 @@ export const updateExperienciaUsuarioSchema = z.object({
   tipo: z.string().max(50),
   titulo: z.string().max(100),
   descripcion: z.string(),
-  fecha_inicio: z.string(),
-  fecha_fin: z.string(),
-}).omit({
-    id: true,
-}).partial();
+  fecha_inicio: z.string().refine(val => !isNaN(Date.parse(val)), {
+  message: 'fecha_inicio debe ser una fecha válida'
+}).transform(val => new Date(val)),
+fecha_fin: z.string().refine(val => !isNaN(Date.parse(val)), {
+  message: 'fecha_fin debe ser una fecha válida'
+}).transform(val => new Date(val)),
+});

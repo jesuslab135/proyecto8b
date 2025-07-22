@@ -16,10 +16,10 @@ import { verifyToken, verifyAdmin } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post('/', verifyToken, verifyAdmin, validateData(insertOportunidadSchema), createOportunidad);
-router.get('/', verifyToken, listOportunidades);
+router.post('/', validateData(insertOportunidadSchema), createOportunidad);
+router.get('/', listOportunidades);
 router.get('/:id', verifyToken, getOportunidad);
-router.put('/:id', verifyToken, verifyAdmin, validateData(updateOportunidadSchema), updateOportunidad);
-router.delete('/:id', verifyToken, verifyAdmin, deleteOportunidad);
+router.put('/:id', validateData(updateOportunidadSchema), updateOportunidad);
+router.delete('/:id', deleteOportunidad);
 
 export default router;

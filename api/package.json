@@ -26,6 +26,7 @@
     "nodemailer": "^7.0.5",
     "pg": "^8.16.3",
     "uuid": "^11.1.0",
+    "xlsx": "^0.18.5",
     "zod": "^4.0.5"
   },
   "devDependencies": {

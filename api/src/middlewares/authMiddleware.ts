@@ -32,3 +32,12 @@ export function verifyAdmin(req: Request, res: Response, next: NextFunction) {
   }
   next();
 }
+
+export function verifyUni(req: Request, res: Response, next: NextFunction) {
+  const role = req.role;
+  if (role !== 'admin_uni') {
+    res.status(401).json({ error: 'Access denied' });
+    return;
+  }
+  next();
+}
