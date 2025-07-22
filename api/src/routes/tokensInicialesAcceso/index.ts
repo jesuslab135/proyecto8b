@@ -12,23 +12,17 @@ import {
   insertTokenAccesoSchema,
   updateTokenAccesoSchema,
 } from '../../db/tokensInicialesAccesoSchema';
-import { ,  } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
 router.post(
-  '/',
-  ,
-  ,
-  validateData(insertTokenAccesoSchema),
+  '/',validateData(insertTokenAccesoSchema),
   createTokenInicialAcceso
 );
-router.get('/', , listTokensInicialesAcceso);
-router.get('/:id', , getTokenInicialAcceso);
+router.get('/', listTokensInicialesAcceso);
+router.get('/:id', getTokenInicialAcceso);
 router.put(
   '/:id',
-  ,
-  ,
   validateData(updateTokenAccesoSchema),
   updateTokenInicialAcceso
 );

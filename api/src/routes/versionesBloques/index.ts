@@ -10,13 +10,12 @@ import {
 
 import { validateData } from '../../middlewares/validationMiddleware';
 import { insertVersionBloqueSchema, updateVersionBloqueSchema } from '../../db/versionesBloquesSchema';
-import { ,  } from '../../middlewares/authMiddleware';
 
 const router = Router();
 
 router.post('/',validateData(insertVersionBloqueSchema), createVersionBloque);
-router.get('/', , listVersionesBloques);
-router.get('/:id', , getVersionBloque);
+router.get('/', listVersionesBloques);
+router.get('/:id', getVersionBloque);
 router.put('/:id',validateData(updateVersionBloqueSchema), updateVersionBloque);
 router.delete('/:id',deleteVersionBloque);
 
