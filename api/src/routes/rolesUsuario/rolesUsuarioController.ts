@@ -1,12 +1,34 @@
-// src/routes/rolesUsuarioController.ts
 import { Request, Response } from 'express';
 import { db } from '../../db/index';
 import { rolesUsuarioTable } from '../../db/rolesUsuarioSchema';
 import { eq } from 'drizzle-orm';
 
+/**
+ * @swagger
+ * /roles-usuario:
+ *   post:
+ *     summary: Crear un nuevo rol de usuario
+ *     tags: [rolesUsuario]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - nombre
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Rol de usuario creado correctamente
+ *       500:
+ *         description: Error al crear el rol de usuario
+ */
 export async function createRolUsuario(req: Request, res: Response) {
   try {
-    const {id, ...data} = req.cleanBody;
+    const { id, ...data } = req.cleanBody;
     const [newRol] = await db.insert(rolesUsuarioTable).values(data).returning();
     res.status(201).json(newRol);
   } catch (e) {
@@ -15,6 +37,18 @@ export async function createRolUsuario(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /roles-usuario:
+ *   get:
+ *     summary: Obtener todos los roles de usuario
+ *     tags: [rolesUsuario]
+ *     responses:
+ *       200:
+ *         description: Lista de roles obtenida correctamente
+ *       500:
+ *         description: Error al obtener los roles de usuario
+ */
 export async function listRolesUsuario(_req: Request, res: Response) {
   try {
     const roles = await db.select().from(rolesUsuarioTable);
@@ -25,6 +59,27 @@ export async function listRolesUsuario(_req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /roles-usuario/{id}:
+ *   get:
+ *     summary: Obtener un rol de usuario por ID
+ *     tags: [rolesUsuario]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID del rol de usuario
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Rol encontrado
+ *       404:
+ *         description: Rol de usuario no encontrado
+ *       500:
+ *         description: Error al obtener el rol de usuario
+ */
 export async function getRolUsuario(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -44,6 +99,36 @@ export async function getRolUsuario(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /roles-usuario/{id}:
+ *   put:
+ *     summary: Actualizar un rol de usuario
+ *     tags: [rolesUsuario]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID del rol de usuario
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Rol actualizado correctamente
+ *       404:
+ *         description: Rol de usuario no encontrado
+ *       500:
+ *         description: Error al actualizar el rol de usuario
+ */
 export async function updateRolUsuario(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -64,6 +149,27 @@ export async function updateRolUsuario(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /roles-usuario/{id}:
+ *   delete:
+ *     summary: Eliminar un rol de usuario
+ *     tags: [rolesUsuario]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID del rol de usuario
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Rol eliminado correctamente
+ *       404:
+ *         description: Rol de usuario no encontrado
+ *       500:
+ *         description: Error al eliminar el rol de usuario
+ */
 export async function deleteRolUsuario(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);

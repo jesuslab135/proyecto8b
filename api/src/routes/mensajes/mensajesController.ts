@@ -4,6 +4,35 @@ import { db } from '../../db/index';
 import { mensajesTable } from '../../db/mensajesSchema';
 import { eq } from 'drizzle-orm';
 
+/**
+ * @swagger
+ * /mensajes:
+ *   post:
+ *     summary: Crear y enviar un nuevo mensaje
+ *     tags: [mensajes]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - conversacion_id
+ *               - emisor_id
+ *               - contenido
+ *             properties:
+ *               conversacion_id:
+ *                 type: integer
+ *               emisor_id:
+ *                 type: integer
+ *               contenido:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Mensaje enviado exitosamente
+ *       500:
+ *         description: Error al enviar mensaje
+ */
 export async function createMensaje(req: Request, res: Response) {
   try {
     const data = req.cleanBody;
@@ -15,6 +44,18 @@ export async function createMensaje(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /mensajes:
+ *   get:
+ *     summary: Obtener todos los mensajes
+ *     tags: [mensajes]
+ *     responses:
+ *       200:
+ *         description: Lista de mensajes
+ *       500:
+ *         description: Error al obtener mensajes
+ */
 export async function listMensajes(_req: Request, res: Response) {
   try {
     const mensajes = await db.select().from(mensajesTable);
@@ -25,6 +66,27 @@ export async function listMensajes(_req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /mensajes/{id}:
+ *   get:
+ *     summary: Obtener un mensaje por ID
+ *     tags: [mensajes]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del mensaje
+ *     responses:
+ *       200:
+ *         description: Mensaje encontrado
+ *       404:
+ *         description: Mensaje no encontrado
+ *       500:
+ *         description: Error al obtener el mensaje
+ */
 export async function getMensaje(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -37,6 +99,38 @@ export async function getMensaje(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /mensajes/{id}:
+ *   put:
+ *     summary: Actualizar el contenido de un mensaje
+ *     tags: [mensajes]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del mensaje a actualizar
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               contenido:
+ *                 type: string
+ *               leido:
+ *                 type: boolean
+ *     responses:
+ *       200:
+ *         description: Mensaje actualizado
+ *       404:
+ *         description: Mensaje no encontrado
+ *       500:
+ *         description: Error al actualizar el mensaje
+ */
 export async function updateMensaje(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -54,6 +148,27 @@ export async function updateMensaje(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /mensajes/{id}:
+ *   delete:
+ *     summary: Eliminar un mensaje por ID
+ *     tags: [mensajes]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del mensaje a eliminar
+ *     responses:
+ *       200:
+ *         description: Mensaje eliminado correctamente
+ *       404:
+ *         description: Mensaje no encontrado
+ *       500:
+ *         description: Error al eliminar el mensaje
+ */
 export async function deleteMensaje(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);

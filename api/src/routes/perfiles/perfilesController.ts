@@ -3,6 +3,33 @@ import { db } from '../../db/index';
 import { perfilesTable } from '../../db/perfilesSchema';
 import { eq } from 'drizzle-orm';
 
+/**
+ * @swagger
+ * /perfiles:
+ *   post:
+ *     summary: Crear un nuevo perfil
+ *     tags: [perfiles]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - usuario_id
+ *             properties:
+ *               usuario_id:
+ *                 type: integer
+ *               descripcion:
+ *                 type: string
+ *               foto_url:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Perfil creado exitosamente
+ *       500:
+ *         description: Error al crear perfil
+ */
 export async function createPerfil(req: Request, res: Response) {
   try {
     const data = req.cleanBody;
@@ -14,6 +41,18 @@ export async function createPerfil(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /perfiles:
+ *   get:
+ *     summary: Obtener todos los perfiles
+ *     tags: [perfiles]
+ *     responses:
+ *       200:
+ *         description: Lista de perfiles
+ *       500:
+ *         description: Error al obtener perfiles
+ */
 export async function listPerfiles(_req: Request, res: Response) {
   try {
     const resultados = await db.select().from(perfilesTable);
@@ -24,6 +63,27 @@ export async function listPerfiles(_req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /perfiles/{id}:
+ *   get:
+ *     summary: Obtener un perfil por ID
+ *     tags: [perfiles]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID del perfil
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Perfil encontrado
+ *       404:
+ *         description: Perfil no encontrado
+ *       500:
+ *         description: Error al obtener perfil
+ */
 export async function getPerfil(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -43,6 +103,38 @@ export async function getPerfil(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /perfiles/{id}:
+ *   put:
+ *     summary: Actualizar un perfil por ID
+ *     tags: [perfiles]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID del perfil
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               descripcion:
+ *                 type: string
+ *               foto_url:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Perfil actualizado correctamente
+ *       404:
+ *         description: Perfil no encontrado
+ *       500:
+ *         description: Error al actualizar perfil
+ */
 export async function updatePerfil(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -65,6 +157,27 @@ export async function updatePerfil(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /perfiles/{id}:
+ *   delete:
+ *     summary: Eliminar un perfil por ID
+ *     tags: [perfiles]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID del perfil
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Perfil eliminado correctamente
+ *       404:
+ *         description: Perfil no encontrado
+ *       500:
+ *         description: Error al eliminar perfil
+ */
 export async function deletePerfil(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);

@@ -18,7 +18,6 @@ export const paginasColaborativasTable = pgTable('paginas_colaborativas', {
 
 // Zod schemas
 export const insertPaginaColaborativaSchema = z.object({
-  id: z.number().int(),
   proyecto_id: z.number().int(),
   titulo: z.string().max(200),
   descripcion: z.string(),
@@ -27,12 +26,9 @@ export const insertPaginaColaborativaSchema = z.object({
   permisos_escritura: z.array(z.string()),
   orden: z.number().optional(),
   creada_en: z.date().optional()
-}).omit({
-  id: true
 });
 
 export const updatePaginaColaborativaSchema = z.object({
-  id: z.number().int(),
   proyecto_id: z.number().int().optional(),
   titulo: z.string().max(200).optional(),
   descripcion: z.string().optional(),
@@ -41,6 +37,4 @@ export const updatePaginaColaborativaSchema = z.object({
   permisos_escritura: z.array(z.string()).optional(),
   orden: z.number().optional(),
   creada_en: z.date().optional()
-}).omit({
-  id: true
 }).partial();

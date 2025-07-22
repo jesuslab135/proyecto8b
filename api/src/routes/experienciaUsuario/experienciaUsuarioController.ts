@@ -4,13 +4,49 @@ import { db } from '../../db/index';
 import { experienciaUsuarioTable } from '../../db/experienciaUsuarioSchema';
 import { eq } from 'drizzle-orm';
 
+/**
+ * @swagger
+ * /experiencia-usuario:
+ *   post:
+ *     summary: Crear una experiencia de usuario
+ *     tags: [experienciaUsuario]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - usuario_id
+ *               - tipo
+ *               - titulo
+ *               - descripcion
+ *               - fecha_inicio
+ *               - fecha_fin
+ *             properties:
+ *               usuario_id:
+ *                 type: integer
+ *               tipo:
+ *                 type: string
+ *               titulo:
+ *                 type: string
+ *               descripcion:
+ *                 type: string
+ *               fecha_inicio:
+ *                 type: string
+ *                 format: date
+ *               fecha_fin:
+ *                 type: string
+ *                 format: date
+ *     responses:
+ *       201:
+ *         description: Experiencia creada
+ *       500:
+ *         description: Error al crear experiencia
+ */
 export async function createExperiencia(req: Request, res: Response) {
   try {
-    const {id, ...data} = req.cleanBody;
-
-    console.log('typeof fecha_inicio:', typeof data.fecha_inicio);
-    console.log('fecha_inicio instanceof Date:', data.fecha_inicio instanceof Date);
-        // Forzar conversión a Date
+    const { id, ...data } = req.cleanBody;
     data.fecha_inicio = new Date(data.fecha_inicio);
     data.fecha_fin = new Date(data.fecha_fin);
     const [newExp] = await db.insert(experienciaUsuarioTable).values(data).returning();
@@ -21,6 +57,18 @@ export async function createExperiencia(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /experiencia-usuario:
+ *   get:
+ *     summary: Obtener todas las experiencias de usuario
+ *     tags: [experienciaUsuario]
+ *     responses:
+ *       200:
+ *         description: Lista de experiencias
+ *       500:
+ *         description: Error al obtener experiencias
+ */
 export async function listExperiencias(_req: Request, res: Response) {
   try {
     const experiencias = await db.select().from(experienciaUsuarioTable);
@@ -31,6 +79,27 @@ export async function listExperiencias(_req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /experiencia-usuario/{id}:
+ *   get:
+ *     summary: Obtener una experiencia por ID
+ *     tags: [experienciaUsuario]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la experiencia
+ *     responses:
+ *       200:
+ *         description: Experiencia encontrada
+ *       404:
+ *         description: Experiencia no encontrada
+ *       500:
+ *         description: Error al obtener experiencia
+ */
 export async function getExperiencia(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -43,12 +112,51 @@ export async function getExperiencia(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /experiencia-usuario/{id}:
+ *   put:
+ *     summary: Actualizar una experiencia de usuario por ID
+ *     tags: [experienciaUsuario]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la experiencia a actualizar
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tipo:
+ *                 type: string
+ *               titulo:
+ *                 type: string
+ *               descripcion:
+ *                 type: string
+ *               fecha_inicio:
+ *                 type: string
+ *                 format: date
+ *               fecha_fin:
+ *                 type: string
+ *                 format: date
+ *     responses:
+ *       200:
+ *         description: Experiencia actualizada
+ *       404:
+ *         description: Experiencia no encontrada
+ *       500:
+ *         description: Error al actualizar experiencia
+ */
 export async function updateExperiencia(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
     const data = req.cleanBody;
 
-        // Convertir fechas si vienen en update también
     if (data.fecha_inicio) data.fecha_inicio = new Date(data.fecha_inicio);
     if (data.fecha_fin) data.fecha_fin = new Date(data.fecha_fin);
 
@@ -66,6 +174,27 @@ export async function updateExperiencia(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /experiencia-usuario/{id}:
+ *   delete:
+ *     summary: Eliminar una experiencia por ID
+ *     tags: [experienciaUsuario]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la experiencia a eliminar
+ *     responses:
+ *       200:
+ *         description: Experiencia eliminada correctamente
+ *       404:
+ *         description: Experiencia no encontrada
+ *       500:
+ *         description: Error al eliminar experiencia
+ */
 export async function deleteExperiencia(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);

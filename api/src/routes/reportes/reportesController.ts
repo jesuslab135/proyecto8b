@@ -1,9 +1,40 @@
-// src/routes/reportesController.ts
 import { Request, Response } from 'express';
 import { db } from '../../db/index';
 import { reportesTable } from '../../db/reportesSchema';
 import { eq } from 'drizzle-orm';
 
+/**
+ * @swagger
+ * /reportes:
+ *   post:
+ *     summary: Crear un nuevo reporte
+ *     tags: [reportes]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tipo
+ *               - descripcion
+ *               - emisor_id
+ *               - objeto_id
+ *             properties:
+ *               tipo:
+ *                 type: string
+ *               descripcion:
+ *                 type: string
+ *               emisor_id:
+ *                 type: integer
+ *               objeto_id:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Reporte creado correctamente
+ *       500:
+ *         description: Error al crear el reporte
+ */
 export async function createReporte(req: Request, res: Response) {
   try {
     const data = req.cleanBody;
@@ -15,6 +46,18 @@ export async function createReporte(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /reportes:
+ *   get:
+ *     summary: Obtener todos los reportes
+ *     tags: [reportes]
+ *     responses:
+ *       200:
+ *         description: Lista de reportes
+ *       500:
+ *         description: Error al obtener los reportes
+ */
 export async function listReportes(_req: Request, res: Response) {
   try {
     const reportes = await db.select().from(reportesTable);
@@ -25,6 +68,27 @@ export async function listReportes(_req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /reportes/{id}:
+ *   get:
+ *     summary: Obtener un reporte por ID
+ *     tags: [reportes]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del reporte
+ *     responses:
+ *       200:
+ *         description: Reporte encontrado
+ *       404:
+ *         description: Reporte no encontrado
+ *       500:
+ *         description: Error al obtener el reporte
+ */
 export async function getReporte(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -40,6 +104,42 @@ export async function getReporte(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /reportes/{id}:
+ *   put:
+ *     summary: Actualizar un reporte por ID
+ *     tags: [reportes]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID del reporte
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tipo:
+ *                 type: string
+ *               descripcion:
+ *                 type: string
+ *               emisor_id:
+ *                 type: integer
+ *               objeto_id:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Reporte actualizado correctamente
+ *       404:
+ *         description: Reporte no encontrado
+ *       500:
+ *         description: Error al actualizar el reporte
+ */
 export async function updateReporte(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -59,6 +159,27 @@ export async function updateReporte(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /reportes/{id}:
+ *   delete:
+ *     summary: Eliminar un reporte por ID
+ *     tags: [reportes]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID del reporte
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Reporte eliminado correctamente
+ *       404:
+ *         description: Reporte no encontrado
+ *       500:
+ *         description: Error al eliminar el reporte
+ */
 export async function deleteReporte(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);

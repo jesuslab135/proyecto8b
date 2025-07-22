@@ -4,6 +4,38 @@ import { db } from '../../db/index';
 import { hilosTable } from '../../db/hilosSchema';
 import { eq } from 'drizzle-orm';
 
+/**
+ * @swagger
+ * /hilos:
+ *   post:
+ *     summary: Crear un nuevo hilo
+ *     tags: [hilos]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - foro_id
+ *               - titulo
+ *               - contenido
+ *               - autor_id
+ *             properties:
+ *               foro_id:
+ *                 type: integer
+ *               titulo:
+ *                 type: string
+ *               contenido:
+ *                 type: string
+ *               autor_id:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Hilo creado exitosamente
+ *       500:
+ *         description: Error al crear el hilo
+ */
 export async function createHilo(req: Request, res: Response) {
   try {
     const data = req.cleanBody;
@@ -15,6 +47,18 @@ export async function createHilo(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /hilos:
+ *   get:
+ *     summary: Obtener todos los hilos
+ *     tags: [hilos]
+ *     responses:
+ *       200:
+ *         description: Lista de hilos
+ *       500:
+ *         description: Error al obtener los hilos
+ */
 export async function listHilos(_req: Request, res: Response) {
   try {
     const hilos = await db.select().from(hilosTable);
@@ -25,6 +69,27 @@ export async function listHilos(_req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /hilos/{id}:
+ *   get:
+ *     summary: Obtener un hilo por ID
+ *     tags: [hilos]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del hilo
+ *     responses:
+ *       200:
+ *         description: Hilo encontrado
+ *       404:
+ *         description: Hilo no encontrado
+ *       500:
+ *         description: Error al obtener el hilo
+ */
 export async function getHilo(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -40,6 +105,38 @@ export async function getHilo(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /hilos/{id}:
+ *   put:
+ *     summary: Actualizar un hilo por ID
+ *     tags: [hilos]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del hilo a actualizar
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               titulo:
+ *                 type: string
+ *               contenido:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Hilo actualizado correctamente
+ *       404:
+ *         description: Hilo no encontrado
+ *       500:
+ *         description: Error al actualizar el hilo
+ */
 export async function updateHilo(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -59,6 +156,27 @@ export async function updateHilo(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /hilos/{id}:
+ *   delete:
+ *     summary: Eliminar un hilo por ID
+ *     tags: [hilos]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del hilo
+ *     responses:
+ *       200:
+ *         description: Hilo eliminado correctamente
+ *       404:
+ *         description: Hilo no encontrado
+ *       500:
+ *         description: Error al eliminar el hilo
+ */
 export async function deleteHilo(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);

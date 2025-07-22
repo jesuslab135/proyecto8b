@@ -3,6 +3,42 @@ import { db } from '../../db/index';
 import { taggablesTable } from '../../db/taggablesSchema';
 import { eq } from 'drizzle-orm';
 
+/**
+ * @swagger
+ * tags:
+ *   name: taggables
+ *   description: Gestión de relaciones de etiquetas
+ */
+
+/**
+ * @swagger
+ * /taggables:
+ *   post:
+ *     summary: Crear un nuevo taggable
+ *     tags: [taggables]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tag_id
+ *               - taggable_id
+ *               - taggable_type
+ *             properties:
+ *               tag_id:
+ *                 type: integer
+ *               taggable_id:
+ *                 type: integer
+ *               taggable_type:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Taggable creado correctamente
+ *       500:
+ *         description: Error al crear taggable
+ */
 export async function createTaggable(req: Request, res: Response) {
   try {
     const data = req.cleanBody;
@@ -14,6 +50,18 @@ export async function createTaggable(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /taggables:
+ *   get:
+ *     summary: Obtener todos los taggables
+ *     tags: [taggables]
+ *     responses:
+ *       200:
+ *         description: Lista de taggables
+ *       500:
+ *         description: Error al obtener los taggables
+ */
 export async function listTaggables(_req: Request, res: Response) {
   try {
     const taggables = await db.select().from(taggablesTable);
@@ -24,6 +72,27 @@ export async function listTaggables(_req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /taggables/{id}:
+ *   get:
+ *     summary: Obtener un taggable por ID
+ *     tags: [taggables]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del taggable
+ *     responses:
+ *       200:
+ *         description: Taggable encontrado
+ *       404:
+ *         description: Taggable no encontrado
+ *       500:
+ *         description: Error al obtener el taggable
+ */
 export async function getTaggable(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -39,6 +108,40 @@ export async function getTaggable(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /taggables/{id}:
+ *   put:
+ *     summary: Actualizar un taggable
+ *     tags: [taggables]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del taggable
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tag_id:
+ *                 type: integer
+ *               taggable_id:
+ *                 type: integer
+ *               taggable_type:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Taggable actualizado correctamente
+ *       404:
+ *         description: Taggable no encontrado
+ *       500:
+ *         description: Error al actualizar taggable
+ */
 export async function updateTaggable(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -58,6 +161,27 @@ export async function updateTaggable(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /taggables/{id}:
+ *   delete:
+ *     summary: Eliminar un taggable
+ *     tags: [taggables]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del taggable
+ *     responses:
+ *       200:
+ *         description: Taggable eliminado correctamente
+ *       404:
+ *         description: Taggable no encontrado
+ *       500:
+ *         description: Error al eliminar taggable
+ */
 export async function deleteTaggable(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);

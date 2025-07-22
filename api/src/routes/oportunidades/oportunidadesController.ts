@@ -4,6 +4,41 @@ import { db } from '../../db/index';
 import { oportunidadesTable } from '../../db/oportunidadesSchema';
 import { eq } from 'drizzle-orm';
 
+/**
+ * @swagger
+ * /oportunidades:
+ *   post:
+ *     summary: Crear una nueva oportunidad
+ *     tags: [oportunidades]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - titulo
+ *               - descripcion
+ *               - tipo
+ *               - universidad_id
+ *             properties:
+ *               titulo:
+ *                 type: string
+ *               descripcion:
+ *                 type: string
+ *               tipo:
+ *                 type: string
+ *               universidad_id:
+ *                 type: integer
+ *               fecha_limite:
+ *                 type: string
+ *                 format: date
+ *     responses:
+ *       201:
+ *         description: Oportunidad creada exitosamente
+ *       500:
+ *         description: Error al crear la oportunidad
+ */
 export async function createOportunidad(req: Request, res: Response) {
   try {
     const data = req.cleanBody;
@@ -15,6 +50,18 @@ export async function createOportunidad(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /oportunidades:
+ *   get:
+ *     summary: Obtener todas las oportunidades
+ *     tags: [oportunidades]
+ *     responses:
+ *       200:
+ *         description: Lista de oportunidades
+ *       500:
+ *         description: Error al obtener las oportunidades
+ */
 export async function listOportunidades(_req: Request, res: Response) {
   try {
     const oportunidades = await db.select().from(oportunidadesTable);
@@ -25,6 +72,27 @@ export async function listOportunidades(_req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /oportunidades/{id}:
+ *   get:
+ *     summary: Obtener una oportunidad por ID
+ *     tags: [oportunidades]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID de la oportunidad
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Oportunidad encontrada
+ *       404:
+ *         description: Oportunidad no encontrada
+ *       500:
+ *         description: Error al obtener la oportunidad
+ */
 export async function getOportunidad(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -44,6 +112,45 @@ export async function getOportunidad(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /oportunidades/{id}:
+ *   put:
+ *     summary: Actualizar una oportunidad por ID
+ *     tags: [oportunidades]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID de la oportunidad
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               titulo:
+ *                 type: string
+ *               descripcion:
+ *                 type: string
+ *               tipo:
+ *                 type: string
+ *               universidad_id:
+ *                 type: integer
+ *               fecha_limite:
+ *                 type: string
+ *                 format: date
+ *     responses:
+ *       200:
+ *         description: Oportunidad actualizada correctamente
+ *       404:
+ *         description: Oportunidad no encontrada
+ *       500:
+ *         description: Error al actualizar la oportunidad
+ */
 export async function updateOportunidad(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -64,6 +171,27 @@ export async function updateOportunidad(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /oportunidades/{id}:
+ *   delete:
+ *     summary: Eliminar una oportunidad por ID
+ *     tags: [oportunidades]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID de la oportunidad
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Oportunidad eliminada correctamente
+ *       404:
+ *         description: Oportunidad no encontrada
+ *       500:
+ *         description: Error al eliminar la oportunidad
+ */
 export async function deleteOportunidad(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);

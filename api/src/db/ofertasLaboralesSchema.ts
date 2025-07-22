@@ -19,7 +19,6 @@ export const ofertasLaboralesTable = pgTable('ofertas_laborales', {
 });
 
 export const insertOfertasLaboralesSchema = z.object({
-  id: z.number().int(),
   logo_url: z.string(),
   titulo: z.string().max(200),
   descripcion: z.string(),
@@ -31,12 +30,9 @@ export const insertOfertasLaboralesSchema = z.object({
   fecha_limite: z.date().optional(),
   creado_por: z.number().int(),
   estado: z.string().max(50).default('activo'),
-}).omit({
-  id: true,
 });
 
 export const updateOfertasLaboralesSchema = z.object({
-  id: z.number().int(),
   logo_url: z.string().optional(),
   titulo: z.string().max(200).optional(),
   descripcion: z.string().optional(),
@@ -48,6 +44,4 @@ export const updateOfertasLaboralesSchema = z.object({
   fecha_limite: z.date().optional(),
   creado_por: z.number().int(),
   estado: z.string().max(50).optional()
-}).omit({
-  id: true,
 }).partial();

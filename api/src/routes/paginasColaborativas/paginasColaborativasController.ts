@@ -3,6 +3,35 @@ import { db } from '../../db';
 import { paginasColaborativasTable } from '../../db/paginasColaborativasSchema';
 import { eq } from 'drizzle-orm';
 
+/**
+ * @swagger
+ * /paginas-colaborativas:
+ *   post:
+ *     summary: Crear una nueva página colaborativa
+ *     tags: [paginasColaborativas]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - titulo
+ *               - contenido
+ *               - proyecto_id
+ *             properties:
+ *               titulo:
+ *                 type: string
+ *               contenido:
+ *                 type: string
+ *               proyecto_id:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Página colaborativa creada exitosamente
+ *       500:
+ *         description: Error al crear la página colaborativa
+ */
 export async function createPaginaColaborativa(req: Request, res: Response) {
   try {
     const data = req.cleanBody;
@@ -14,6 +43,18 @@ export async function createPaginaColaborativa(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /paginas-colaborativas:
+ *   get:
+ *     summary: Obtener todas las páginas colaborativas
+ *     tags: [paginasColaborativas]
+ *     responses:
+ *       200:
+ *         description: Lista de páginas colaborativas
+ *       500:
+ *         description: Error al obtener las páginas colaborativas
+ */
 export async function listPaginasColaborativas(_req: Request, res: Response) {
   try {
     const paginas = await db.select().from(paginasColaborativasTable);
@@ -24,6 +65,27 @@ export async function listPaginasColaborativas(_req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /paginas-colaborativas/{id}:
+ *   get:
+ *     summary: Obtener una página colaborativa por ID
+ *     tags: [paginasColaborativas]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID de la página
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Página encontrada
+ *       404:
+ *         description: Página no encontrada
+ *       500:
+ *         description: Error al obtener la página colaborativa
+ */
 export async function getPaginaColaborativa(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -39,6 +101,38 @@ export async function getPaginaColaborativa(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /paginas-colaborativas/{id}:
+ *   put:
+ *     summary: Actualizar una página colaborativa por ID
+ *     tags: [paginasColaborativas]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID de la página a actualizar
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               titulo:
+ *                 type: string
+ *               contenido:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Página actualizada correctamente
+ *       404:
+ *         description: Página no encontrada
+ *       500:
+ *         description: Error al actualizar la página colaborativa
+ */
 export async function updatePaginaColaborativa(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -58,6 +152,27 @@ export async function updatePaginaColaborativa(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /paginas-colaborativas/{id}:
+ *   delete:
+ *     summary: Eliminar una página colaborativa por ID
+ *     tags: [paginasColaborativas]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID de la página a eliminar
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Página eliminada correctamente
+ *       404:
+ *         description: Página no encontrada
+ *       500:
+ *         description: Error al eliminar la página colaborativa
+ */
 export async function deletePaginaColaborativa(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);

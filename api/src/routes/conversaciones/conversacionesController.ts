@@ -4,11 +4,38 @@ import { db } from '../../db/index';
 import { conversacionesTable } from '../../db/conversacionesSchema';
 import { eq, and } from 'drizzle-orm';
 
+/**
+ * @swagger
+ * /conversaciones:
+ *   post:
+ *     summary: Crear una nueva conversación entre dos usuarios
+ *     tags: [conversaciones]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - usuario_1_id
+ *               - usuario_2_id
+ *             properties:
+ *               usuario_1_id:
+ *                 type: integer
+ *               usuario_2_id:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Conversación creada exitosamente
+ *       409:
+ *         description: La conversación ya existe
+ *       500:
+ *         description: Error al crear la conversación
+ */
 export async function createConversacion(req: Request, res: Response) {
   try {
     const { usuario_1_id, usuario_2_id } = req.cleanBody;
 
-    // evitar duplicados sin importar el orden de los usuarios
     const existing = await db
       .select()
       .from(conversacionesTable)
@@ -35,6 +62,18 @@ export async function createConversacion(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /conversaciones:
+ *   get:
+ *     summary: Obtener todas las conversaciones
+ *     tags: [conversaciones]
+ *     responses:
+ *       200:
+ *         description: Lista de conversaciones
+ *       500:
+ *         description: Error al obtener conversaciones
+ */
 export async function listConversaciones(_req: Request, res: Response) {
   try {
     const conversaciones = await db.select().from(conversacionesTable);
@@ -45,6 +84,27 @@ export async function listConversaciones(_req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /conversaciones/{id}:
+ *   get:
+ *     summary: Obtener una conversación por ID
+ *     tags: [conversaciones]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la conversación
+ *     responses:
+ *       200:
+ *         description: Conversación encontrada
+ *       404:
+ *         description: Conversación no encontrada
+ *       500:
+ *         description: Error al obtener la conversación
+ */
 export async function getConversacion(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -64,6 +124,27 @@ export async function getConversacion(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /conversaciones/{id}:
+ *   delete:
+ *     summary: Eliminar una conversación por ID
+ *     tags: [conversaciones]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la conversación a eliminar
+ *     responses:
+ *       200:
+ *         description: Conversación eliminada correctamente
+ *       404:
+ *         description: Conversación no encontrada
+ *       500:
+ *         description: Error al eliminar la conversación
+ */
 export async function deleteConversacion(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);

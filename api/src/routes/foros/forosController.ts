@@ -4,9 +4,38 @@ import { db } from '../../db/index';
 import { forosTable } from '../../db/forosSchema';
 import { eq } from 'drizzle-orm';
 
+/**
+ * @swagger
+ * /foros:
+ *   post:
+ *     summary: Crear un nuevo foro
+ *     tags: [foros]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - titulo
+ *               - descripcion
+ *               - creador_id
+ *             properties:
+ *               titulo:
+ *                 type: string
+ *               descripcion:
+ *                 type: string
+ *               creador_id:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Foro creado exitosamente
+ *       500:
+ *         description: Error al crear el foro
+ */
 export async function createForo(req: Request, res: Response) {
   try {
-    const {id, ...data} = req.cleanBody;
+    const { id, ...data } = req.cleanBody;
     const [newForo] = await db.insert(forosTable).values(data).returning();
     res.status(201).json(newForo);
   } catch (e) {
@@ -15,6 +44,18 @@ export async function createForo(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /foros:
+ *   get:
+ *     summary: Obtener todos los foros
+ *     tags: [foros]
+ *     responses:
+ *       200:
+ *         description: Lista de foros
+ *       500:
+ *         description: Error al obtener los foros
+ */
 export async function listForos(_req: Request, res: Response) {
   try {
     const foros = await db.select().from(forosTable);
@@ -25,6 +66,27 @@ export async function listForos(_req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /foros/{id}:
+ *   get:
+ *     summary: Obtener un foro por ID
+ *     tags: [foros]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del foro
+ *     responses:
+ *       200:
+ *         description: Foro encontrado
+ *       404:
+ *         description: Foro no encontrado
+ *       500:
+ *         description: Error al obtener el foro
+ */
 export async function getForo(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -40,6 +102,38 @@ export async function getForo(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /foros/{id}:
+ *   put:
+ *     summary: Actualizar un foro por ID
+ *     tags: [foros]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del foro
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               titulo:
+ *                 type: string
+ *               descripcion:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Foro actualizado
+ *       404:
+ *         description: Foro no encontrado
+ *       500:
+ *         description: Error al actualizar el foro
+ */
 export async function updateForo(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -59,6 +153,27 @@ export async function updateForo(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /foros/{id}:
+ *   delete:
+ *     summary: Eliminar un foro por ID
+ *     tags: [foros]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del foro
+ *     responses:
+ *       200:
+ *         description: Foro eliminado correctamente
+ *       404:
+ *         description: Foro no encontrado
+ *       500:
+ *         description: Error al eliminar el foro
+ */
 export async function deleteForo(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);

@@ -19,13 +19,12 @@ export const bloquesTable = pgTable('bloques', {
 
 // Validación con Zod
 export const insertBloqueSchema = z.object({
-  id: z.number(),
   pagina_id: z.number().optional(),
   tipo: z.string().max(50),
   contenido: z.any(),
   orden: z.number().optional(),
   creado_por: z.number().optional(),
-}).omit({id: true});
+});
 
 export const updateBloqueSchema = z.object({
   id: z.number(),
@@ -34,6 +33,6 @@ export const updateBloqueSchema = z.object({
   contenido: z.any(),
   orden: z.number().optional(),
   creado_por: z.number().optional(),
-}).omit({id: true}).partial();
+}).partial();
 
 

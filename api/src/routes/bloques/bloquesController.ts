@@ -4,6 +4,34 @@ import { db } from '../../db';
 import { bloquesTable } from '../../db/bloquesSchema';
 import { eq } from 'drizzle-orm';
 
+/**
+ * @swagger
+ * /bloques:
+ *   post:
+ *     summary: Crear un nuevo bloque
+ *     tags: [bloques]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               titulo:
+ *                 type: string
+ *               contenido:
+ *                 type: string
+ *               autor_id:
+ *                 type: integer
+ *               creado_en:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *       201:
+ *         description: Bloque creado exitosamente
+ *       500:
+ *         description: Error al crear bloque
+ */
 export async function createBloque(req: Request, res: Response) {
   try {
     const data = req.cleanBody;
@@ -15,6 +43,18 @@ export async function createBloque(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /bloques:
+ *   get:
+ *     summary: Obtener todos los bloques
+ *     tags: [bloques]
+ *     responses:
+ *       200:
+ *         description: Lista de bloques
+ *       500:
+ *         description: Error al obtener bloques
+ */
 export async function listBloques(_req: Request, res: Response) {
   try {
     const bloques = await db.select().from(bloquesTable);
@@ -25,6 +65,27 @@ export async function listBloques(_req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /bloques/{id}:
+ *   get:
+ *     summary: Obtener un bloque por ID
+ *     tags: [bloques]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del bloque
+ *     responses:
+ *       200:
+ *         description: Bloque encontrado
+ *       404:
+ *         description: Bloque no encontrado
+ *       500:
+ *         description: Error al obtener bloque
+ */
 export async function getBloque(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -39,6 +100,38 @@ export async function getBloque(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /bloques/{id}:
+ *   put:
+ *     summary: Actualizar un bloque por ID
+ *     tags: [bloques]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del bloque a actualizar
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               titulo:
+ *                 type: string
+ *               contenido:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Bloque actualizado
+ *       404:
+ *         description: Bloque no encontrado
+ *       500:
+ *         description: Error al actualizar bloque
+ */
 export async function updateBloque(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -57,6 +150,27 @@ export async function updateBloque(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /bloques/{id}:
+ *   delete:
+ *     summary: Eliminar un bloque por ID
+ *     tags: [bloques]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del bloque a eliminar
+ *     responses:
+ *       200:
+ *         description: Bloque eliminado correctamente
+ *       404:
+ *         description: Bloque no encontrado
+ *       500:
+ *         description: Error al eliminar bloque
+ */
 export async function deleteBloque(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);

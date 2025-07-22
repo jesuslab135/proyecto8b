@@ -4,15 +4,55 @@ import { db } from '../../db/index';
 import { eventosTable } from '../../db/eventosSchema';
 import { eq } from 'drizzle-orm';
 
+/**
+ * @swagger
+ * /eventos:
+ *   post:
+ *     summary: Crear un nuevo evento
+ *     tags: [eventos]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - titulo
+ *               - descripcion
+ *               - tipo
+ *               - creador_id
+ *               - universidad_id
+ *               - fecha_inicio
+ *               - fecha_fin
+ *             properties:
+ *               titulo:
+ *                 type: string
+ *               descripcion:
+ *                 type: string
+ *               tipo:
+ *                 type: string
+ *               creador_id:
+ *                 type: integer
+ *               universidad_id:
+ *                 type: integer
+ *               fecha_inicio:
+ *                 type: string
+ *                 format: date-time
+ *               fecha_fin:
+ *                 type: string
+ *                 format: date-time
+ *               enlace_acceso:
+ *                 type: string
+ *                 nullable: true
+ *     responses:
+ *       201:
+ *         description: Evento creado exitosamente
+ *       500:
+ *         description: Error al crear el evento
+ */
 export async function createEvento(req: Request, res: Response) {
   try {
     const { id, ...data } = req.cleanBody;
-
-    // 🔍 Logs para verificar tipo de fecha
-    console.log('typeof fecha_inicio:', typeof data.fecha_inicio);
-    console.log('fecha_inicio instanceof Date:', data.fecha_inicio instanceof Date);
-
-    // ✅ Forzar conversión a Date
     data.fecha_inicio = new Date(data.fecha_inicio);
     data.fecha_fin = new Date(data.fecha_fin);
 
@@ -24,6 +64,18 @@ export async function createEvento(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /eventos:
+ *   get:
+ *     summary: Obtener todos los eventos
+ *     tags: [eventos]
+ *     responses:
+ *       200:
+ *         description: Lista de eventos
+ *       500:
+ *         description: Error al obtener los eventos
+ */
 export async function listEventos(_req: Request, res: Response) {
   try {
     const eventos = await db.select().from(eventosTable);
@@ -34,6 +86,27 @@ export async function listEventos(_req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /eventos/{id}:
+ *   get:
+ *     summary: Obtener un evento por ID
+ *     tags: [eventos]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del evento
+ *     responses:
+ *       200:
+ *         description: Evento encontrado
+ *       404:
+ *         description: Evento no encontrado
+ *       500:
+ *         description: Error al obtener el evento
+ */
 export async function getEvento(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -53,12 +126,58 @@ export async function getEvento(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /eventos/{id}:
+ *   put:
+ *     summary: Actualizar un evento por ID
+ *     tags: [eventos]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del evento
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               titulo:
+ *                 type: string
+ *               descripcion:
+ *                 type: string
+ *               tipo:
+ *                 type: string
+ *               creador_id:
+ *                 type: integer
+ *               universidad_id:
+ *                 type: integer
+ *               fecha_inicio:
+ *                 type: string
+ *                 format: date-time
+ *               fecha_fin:
+ *                 type: string
+ *                 format: date-time
+ *               enlace_acceso:
+ *                 type: string
+ *                 nullable: true
+ *     responses:
+ *       200:
+ *         description: Evento actualizado correctamente
+ *       404:
+ *         description: Evento no encontrado
+ *       500:
+ *         description: Error al actualizar el evento
+ */
 export async function updateEvento(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
     const data = req.cleanBody;
 
-    // ✅ Convertir fechas si vienen en update también
     if (data.fecha_inicio) data.fecha_inicio = new Date(data.fecha_inicio);
     if (data.fecha_fin) data.fecha_fin = new Date(data.fecha_fin);
 
@@ -79,6 +198,27 @@ export async function updateEvento(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /eventos/{id}:
+ *   delete:
+ *     summary: Eliminar un evento por ID
+ *     tags: [eventos]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del evento a eliminar
+ *     responses:
+ *       200:
+ *         description: Evento eliminado correctamente
+ *       404:
+ *         description: Evento no encontrado
+ *       500:
+ *         description: Error al eliminar el evento
+ */
 export async function deleteEvento(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);

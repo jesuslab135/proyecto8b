@@ -1,4 +1,3 @@
-// src/routes/universidadesController.ts
 import { Request, Response } from 'express';
 import * as XLSX from 'xlsx';
 import { db } from '../../db/index';
@@ -8,14 +7,40 @@ import { universidadesTable } from '../../db/universidadesSchema';
 import { eq } from 'drizzle-orm';
 import { tokensInicialesAccesoTable } from '../../db/tokensInicialesAccesoSchema';
 
+/**
+ * @swagger
+ * tags:
+ *   name: universidades
+ *   description: Endpoints para gestión de universidades
+ */
+
+/**
+ * @swagger
+ * /universidades:
+ *   post:
+ *     summary: Crear una nueva universidad
+ *     tags: [universidades]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - nombre
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Universidad creada exitosamente
+ *       500:
+ *         description: Error al crear la universidad
+ */
 export async function createUniversidad(req: Request, res: Response) {
   try {
-    const {id, ...data} = req.cleanBody;
-    const [newUniversidad] = await db
-      .insert(universidadesTable)
-      .values(data)
-      .returning();
-
+    const { id, ...data } = req.cleanBody;
+    const [newUniversidad] = await db.insert(universidadesTable).values(data).returning();
     res.status(201).json(newUniversidad);
   } catch (e) {
     console.error(e);
@@ -23,6 +48,18 @@ export async function createUniversidad(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /universidades:
+ *   get:
+ *     summary: Obtener todas las universidades
+ *     tags: [universidades]
+ *     responses:
+ *       200:
+ *         description: Lista de universidades
+ *       500:
+ *         description: Error al obtener las universidades
+ */
 export async function listUniversidades(_req: Request, res: Response) {
   try {
     const universidades = await db.select().from(universidadesTable);
@@ -33,6 +70,27 @@ export async function listUniversidades(_req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /universidades/{id}:
+ *   get:
+ *     summary: Obtener universidad por ID
+ *     tags: [universidades]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la universidad
+ *     responses:
+ *       200:
+ *         description: Universidad encontrada
+ *       404:
+ *         description: Universidad no encontrada
+ *       500:
+ *         description: Error al obtener la universidad
+ */
 export async function getUniversidad(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -52,6 +110,36 @@ export async function getUniversidad(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /universidades/{id}:
+ *   put:
+ *     summary: Actualizar universidad por ID
+ *     tags: [universidades]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la universidad
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Universidad actualizada
+ *       404:
+ *         description: Universidad no encontrada
+ *       500:
+ *         description: Error al actualizar la universidad
+ */
 export async function updateUniversidad(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -72,6 +160,27 @@ export async function updateUniversidad(req: Request, res: Response) {
   }
 }
 
+/**
+ * @swagger
+ * /universidades/{id}:
+ *   delete:
+ *     summary: Eliminar universidad por ID
+ *     tags: [universidades]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la universidad
+ *     responses:
+ *       200:
+ *         description: Universidad eliminada correctamente
+ *       404:
+ *         description: Universidad no encontrada
+ *       500:
+ *         description: Error al eliminar la universidad
+ */
 export async function deleteUniversidad(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
@@ -90,6 +199,7 @@ export async function deleteUniversidad(req: Request, res: Response) {
     res.status(500).json({ error: 'Error al eliminar la universidad' });
   }
 }
+
 
 export async function uploadAlumnosExcel(req: Request, res: Response) {
   try {

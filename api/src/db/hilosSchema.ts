@@ -14,13 +14,12 @@ export const hilosTable = pgTable('hilos', {
 });
 
 export const insertHiloSchema = z.object({
-  id: z.number().int(),
   foro_id: z.number().int(),
   titulo: z.string().max(150),
   contenido: z.string(),
   creador_id: z.number().int(),
   creado_en: z.date().optional(),
-}).omit({ id: true });
+});
 
 export const updateHiloSchema = z.object({
   id: z.number().int(),
@@ -29,4 +28,4 @@ export const updateHiloSchema = z.object({
   contenido: z.string().optional(),
   creador_id: z.number().int().optional(),
   creado_en: z.date().optional(),
-}).omit({ id: true }).partial();
+}).partial();

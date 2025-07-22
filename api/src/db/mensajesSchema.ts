@@ -14,20 +14,14 @@ export const mensajesTable = pgTable('mensajes', {
 });
 
 export const insertMensajeSchema = z.object({
-  id: z.number().int(),
   conversacion_id: z.number().int(),
   emisor_id: z.number().int(),
   contenido: z.string().min(1),
   enviado_en: z.date().optional(),
   leido: z.boolean().optional(),
-}).omit({
-  id: true,
 });
 
 export const updateMensajeSchema = z.object({
-  id: z.number().int(),
   contenido: z.string().min(1).optional(),
   leido: z.boolean().optional(),
-}).omit({
-  id: true,
 }).partial();

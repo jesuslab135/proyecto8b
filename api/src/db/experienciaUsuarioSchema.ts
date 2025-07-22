@@ -14,7 +14,6 @@ export const experienciaUsuarioTable = pgTable('experiencia_usuario', {
 });
 
 export const insertExperienciaUsuarioSchema = z.object({
-  id: z.number(),
   usuario_id: z.number().int(),
   tipo: z.string().max(50),
   titulo: z.string().max(100),
@@ -28,7 +27,6 @@ fecha_fin: z.string().refine(val => !isNaN(Date.parse(val)), {
 });
 
 export const updateExperienciaUsuarioSchema = z.object({
-  id: z.number(),
   usuario_id: z.number().int(),
   tipo: z.string().max(50),
   titulo: z.string().max(100),
