@@ -203,19 +203,52 @@ export const restoreFull = async (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /admin-backup/restore/partial:
+ * /admin-backup/restore-partial:
  *   post:
- *     summary: Restaura un respaldo parcial de la base de datos
+ *     summary: Restaura un respaldo parcial de la base de datos desde archivo .bat
+ *     description: Ejecuta un script .bat para restaurar las tablas especificadas previamente mediante un respaldo parcial. El archivo usado tiene como nombre `union_partial_YYYYMMDD.sql`, ubicado en el escritorio.
  *     tags: [adminBackup]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Restauración parcial realizada
+ *         description: Restauración parcial realizada correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: ✅ Restauración parcial realizada correctamente
+ *                 output:
+ *                   type: string
+ *                   description: Salida del comando ejecutado
+ *       401:
+ *         description: Token inválido o ausente
+ *       403:
+ *         description: No tienes permisos para esta acción
+ *       500:
+ *         description: Error al ejecutar el script .bat
  */
+
 export const restorePartial = async (req: Request, res: Response) => {
   if (!(await validateUserRole(req, res, [1, 2]))) return;
-  runPgCommand('"C:\\Program Files\\PostgreSQL\\17\\bin\\psql.exe" nombre_bd < backup_partial.sql', res, 'Restauración parcial realizada');
+
+  const batPath = '"C:\\Users\\MSI\\Desktop\\restore_partial.bat"';
+  await db.$client.end();
+
+  exec(batPath, (error, stdout, stderr) => {
+    if (error) {
+      console.error('❌ Error ejecutando restore_partial.bat:', stderr);
+      return res.status(500).json({ error: stderr });
+    }
+
+    res.status(200).json({
+      message: '✅ Restauración parcial realizada correctamente',
+      output: stdout,
+    });
+  });
 };
 
 /**
