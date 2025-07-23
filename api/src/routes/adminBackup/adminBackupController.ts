@@ -26,14 +26,14 @@ async function getUsuarioById(id: number) {
  * @param res - Objeto de respuesta HTTP
  * @param successMsg - Mensaje a devolver en caso de éxito
  */
-function runPgCommand(command: string, res: Response, successMsg: string) {
+/* function runPgCommand(command: string, res: Response, successMsg: string) {
   exec(command, (error, stdout, stderr) => {
     if (error) {
       return res.status(500).json({ error: stderr });
     }
     res.json({ message: successMsg, output: stdout });
   });
-}
+} */
 
 /**
  * Valida si el usuario autenticado tiene uno de los roles permitidos.
@@ -253,9 +253,10 @@ export const restorePartial = async (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /admin-backup/export/{table}:
+ * /admin-backup/export-csv/{table}:
  *   get:
- *     summary: Exporta una tabla a CSV
+ *     summary: Exporta una tabla específica de un esquema a un archivo CSV mediante script .bat
+ *     description: "Ejecuta un script `.bat` para exportar una tabla PostgreSQL a CSV con encabezado. El archivo se genera como tabla.csv en el mismo directorio del script."
  *     tags: [adminBackup]
  *     security:
  *       - bearerAuth: []
@@ -265,31 +266,87 @@ export const restorePartial = async (req: Request, res: Response) => {
  *         required: true
  *         schema:
  *           type: string
- *         description: Nombre de la tabla
+ *           enum:
+ *             - actividad_usuario
+ *             - asistencias_evento
+ *             - bloques
+ *             - conversaciones
+ *             - eventos
+ *             - experiencia_usuario
+ *             - foros
+ *             - hilos
+ *             - mensajes
+ *             - oportunidades
+ *             - paginas_colaborativas
+ *             - participaciones_proyecto
+ *             - perfiles
+ *             - postulaciones
+ *             - proyectos
+ *             - proyectos_validaciones
+ *             - reportes
+ *             - respuestas_hilo
+ *             - roles_proyecto
+ *             - roles_usuario
+ *             - seguimientos
+ *             - taggables
+ *             - tags
+ *             - universidades
+ *             - usuarios
+ *             - versiones_bloques
+ *         description: "Nombre de la tabla (selecciona desde la lista)"
  *       - in: query
  *         name: schema
  *         required: true
  *         schema:
  *           type: string
- *         description: Nombre del esquema
+ *           enum:
+ *             - public
+ *         description: "Nombre del esquema"
  *     responses:
  *       200:
- *         description: Exportación realizada
+ *         description: Exportación realizada exitosamente
+ *         content:
+ *           application/octet-stream:
+ *             schema:
+ *               type: string
+ *               format: binary
  *       400:
- *         description: Tabla o esquema no especificado
+ *         description: Esquema o tabla no especificados
+ *       403:
+ *         description: No tienes permisos para esta acción
+ *       500:
+ *         description: Error durante la exportación
  */
+
+
 export const exportCsv = async (req: Request, res: Response) => {
   if (!(await validateUserRole(req, res, [1, 2, 3]))) return;
+
   const { table } = req.params;
   const { schema } = req.query;
+
   if (!table || !schema) {
     return res.status(400).json({ error: 'Debes especificar la tabla y el esquema' });
   }
-  const fullTableName = `${schema}.${table}`;
-  exec(`"C:\\Program Files\\PostgreSQL\\17\\bin\\psql.exe" -d nombre_bd -c "COPY ${fullTableName} TO STDOUT WITH CSV HEADER" > ${table}.csv`, (error, stdout, stderr) => {
+
+  const batPath = '"C:\\Users\\MSI\\Desktop\\export_table_to_csv.bat"';
+  const command = `cmd /c ${batPath} ${schema} ${table}`;
+  const outputFile = `${table}.csv`;
+
+  exec(command, (error, stdout, stderr) => {
     if (error) {
-      return res.status(500).json({ error: stderr });
+      console.error(`❌ Error al exportar ${schema}.${table}:`, stderr);
+      return res.status(500).json({ error: `Error al exportar la tabla: ${stderr}` });
     }
-    res.download(`${table}.csv`);
+
+    // Verificar que el archivo exista antes de enviarlo
+    const filePath = `${process.cwd()}\\${outputFile}`;
+    res.download(filePath, outputFile, (err) => {
+      if (err) {
+        console.error('❌ Error al enviar el archivo CSV:', err);
+        return res.status(500).json({ error: 'Archivo generado pero no se pudo descargar' });
+      }
+    });
   });
 };
+
