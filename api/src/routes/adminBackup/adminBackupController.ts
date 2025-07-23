@@ -94,7 +94,7 @@ export const runBackupBat = async (req: Request, res: Response) => {
  * @swagger
  * /admin-backup/partial:
  *   post:
- *     summary: Realiza un respaldo parcial por tablas y esquema
+ *     summary: Realiza un respaldo parcial por tablas seleccionadas
  *     tags: [adminBackup]
  *     security:
  *       - bearerAuth: []
@@ -106,14 +106,39 @@ export const runBackupBat = async (req: Request, res: Response) => {
  *             type: object
  *             required:
  *               - tables
- *               - schema
  *             properties:
  *               tables:
  *                 type: array
  *                 items:
  *                   type: string
- *               schema:
- *                 type: string
+ *                 description: Selecciona una o más tablas de la base de datos para el respaldo parcial.
+ *                 enum:
+ *                   - actividad_usuario
+ *                   - asistencias_evento
+ *                   - bloques
+ *                   - conversaciones
+ *                   - eventos
+ *                   - experiencia_usuario
+ *                   - foros
+ *                   - hilos
+ *                   - mensajes
+ *                   - oportunidades
+ *                   - paginas_colaborativas
+ *                   - participaciones_proyecto
+ *                   - perfiles
+ *                   - postulaciones
+ *                   - proyectos
+ *                   - proyectos_validaciones
+ *                   - reportes
+ *                   - respuestas_hilo
+ *                   - roles_proyecto
+ *                   - roles_usuario
+ *                   - seguimientos
+ *                   - taggables
+ *                   - tags
+ *                   - universidades
+ *                   - usuarios
+ *                   - versiones_bloques
  *     responses:
  *       200:
  *         description: Respaldo parcial realizado
@@ -122,12 +147,31 @@ export const runBackupBat = async (req: Request, res: Response) => {
  */
 export const backupPartial = async (req: Request, res: Response) => {
   if (!(await validateUserRole(req, res, [1, 2]))) return;
-  const { tables, schema } = req.body;
-  if (!tables || !Array.isArray(tables)) {
-    return res.status(400).json({ error: 'Debes especificar las tablas' });
+  const { tables } = req.body;
+
+  const allowedTables = [
+    'actividad_usuario', 'asistencias_evento', 'bloques', 'conversaciones',
+    'eventos', 'experiencia_usuario', 'foros', 'hilos', 'mensajes',
+    'oportunidades', 'paginas_colaborativas', 'participaciones_proyecto',
+    'perfiles', 'postulaciones', 'proyectos', 'proyectos_validaciones',
+    'reportes', 'respuestas_hilo', 'roles_proyecto', 'roles_usuario',
+    'seguimientos', 'taggables', 'tags', 'universidades', 'usuarios', 'versiones_bloques'
+  ];
+
+  if (!tables || !Array.isArray(tables) || tables.some((t: string) => !allowedTables.includes(t))) {
+    return res.status(400).json({ error: 'Debes especificar tablas válidas' });
   }
-  const qualifiedTables = tables.map((t: string) => `${schema}.${t}`).join(' ');
-  runPgCommand(`"C:\\Program Files\\PostgreSQL\\17\\bin\\pg_dump.exe" -t ${qualifiedTables} nombre_bd > backup_partial.sql`, res, 'Respaldo parcial realizado');
+
+  const tableArgs = tables.join(' ');
+  const batPath = '"C:\\Users\\MSI\\Desktop\\backup_partial.bat"';
+  const command = `cmd /c ${batPath} ${tableArgs}`;
+
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      return res.status(500).json({ error: stderr });
+    }
+    res.status(200).json({ message: 'Respaldo parcial realizado', output: stdout });
+  });
 };
 
 /**
