@@ -1,11 +1,11 @@
 // db/tokensInicialesAccesoSchema.ts
 import { pgTable, integer, varchar, boolean, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
-import { usersTable } from './usersSchema';
+import { usuariosTable } from './usuariosSchema';
 
 export const tokensInicialesAccesoTable = pgTable('tokens_iniciales_acceso', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  usuario_id: integer().references(() => usersTable.id),
+  usuario_id: integer().references(() => usuariosTable.id),
   token_acceso: varchar({ length: 100 }),
   usado: boolean().default(false),
   generado_en: timestamp().defaultNow(),

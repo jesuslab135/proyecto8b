@@ -1,11 +1,11 @@
 import { pgTable, integer, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
-import { usersTable } from './usersSchema';
+import { usuariosTable } from './usuariosSchema';
 
 export const conversacionesTable = pgTable('conversaciones', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  usuario_1_id: integer().references(() => usersTable.id),
-  usuario_2_id: integer().references(() => usersTable.id),
+  usuario_1_id: integer().references(() => usuariosTable.id),
+  usuario_2_id: integer().references(() => usuariosTable.id),
   creado_en: timestamp().defaultNow(),
 });
 

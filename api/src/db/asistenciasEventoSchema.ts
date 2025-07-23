@@ -1,12 +1,12 @@
 import { pgTable, integer, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { eventosTable } from './eventosSchema';
-import { usersTable } from './usersSchema';
+import { usuariosTable } from './usuariosSchema';
 
 export const asistenciasEventoTable = pgTable('asistencias_evento', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   evento_id: integer().references(() => eventosTable.id),
-  usuario_id: integer().references(() => usersTable.id),
+  usuario_id: integer().references(() => usuariosTable.id),
   registrado_en: timestamp().defaultNow(),
 });
 

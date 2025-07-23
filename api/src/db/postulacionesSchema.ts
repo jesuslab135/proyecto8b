@@ -1,11 +1,11 @@
 import { pgTable, integer, text, varchar, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
-import { usersTable } from './usersSchema';
+import { usuariosTable } from './usuariosSchema';
 import { oportunidadesTable } from './oportunidadesSchema';
 
 export const postulacionesTable = pgTable('postulaciones', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  usuario_id: integer().references(() => usersTable.id),
+  usuario_id: integer().references(() => usuariosTable.id),
   oportunidad_id: integer().references(() => oportunidadesTable.id),
   mensaje: text(),
   estado: varchar({ length: 50 }),

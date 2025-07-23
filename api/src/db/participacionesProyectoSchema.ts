@@ -1,16 +1,16 @@
 import { pgTable, integer, text, varchar, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
-import { usersTable } from './usersSchema';
+import { usuariosTable } from './usuariosSchema';
 import { proyectosTable } from './proyectosSchema';
 import { rolesProyectoTable } from './rolesProyectoSchema';
 
 export const participacionesProyectoTable = pgTable('participaciones_proyecto', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   proyecto_id: integer().references(() => proyectosTable.id),
-  usuario_id: integer().references(() => usersTable.id),
+  usuario_id: integer().references(() => usuariosTable.id),
   rol_id: integer().references(() => rolesProyectoTable.id),
   estado: varchar({ length: 50 }),
-  invitado_por: integer().references(() => usersTable.id),
+  invitado_por: integer().references(() => usuariosTable.id),
   fecha_invitacion: timestamp().defaultNow(),
 });
 

@@ -1,7 +1,7 @@
 // db/ofertasLaboralesSchema.ts
 import { pgTable, integer, varchar, timestamp, text, date } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
-import { usersTable } from './usersSchema';
+import { usuariosTable } from './usuariosSchema';
 
 export const ofertasLaboralesTable = pgTable('ofertas_laborales', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -14,7 +14,7 @@ export const ofertasLaboralesTable = pgTable('ofertas_laborales', {
   salario: varchar({ length: 100 }),
   fecha_publicacion: date(),
   fecha_limite: date(),
-  creado_por: integer().references(() => usersTable.id),
+  creado_por: integer().references(() => usuariosTable.id),
   estado: varchar({ length: 50 }).default('activo'),
 });
 

@@ -1,3 +1,4 @@
+// src/swagger.ts (o como se llame)
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
@@ -9,7 +10,22 @@ const options = {
       version: '1.0.0',
       description: 'Documentación de los endpoints del sistema UniON',
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
     tags: [
+      { name: 'auth', description: 'Autenticación y registro de usuarios' },
       { name: 'ActividadUsuario', description: 'Operaciones de actividad de usuario' },
       { name: 'asistenciasEvento', description: 'Operaciones de asistencias a eventos' },
       { name: 'bloques', description: 'Operaciones de bloques' },
@@ -39,15 +55,16 @@ const options = {
       { name: 'universidades', description: 'Operaciones de universidades' },
       { name: 'usuarios', description: 'Operaciones de usuarios' },
       { name: 'versionesBloques', description: 'Operaciones de versiones de bloques' },
+      { name: 'adminBackup', description: 'Operaciones de respaldo y restauración de base de datos para administradores' },
     ],
     servers: [
       {
         url: 'http://localhost:3000/api',
         description: 'Servidor local de desarrollo',
-      }
-    ]
+      },
+    ],
   },
-  apis: ['./src/routes/**/*.ts'], // Escanea todos tus controladores
+  apis: ['./src/routes/**/*.ts'],
 };
 
 const swaggerSpec = swaggerJSDoc(options);

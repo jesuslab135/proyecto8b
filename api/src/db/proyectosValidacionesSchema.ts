@@ -1,13 +1,13 @@
 // db/proyectosValidacionesSchema.ts
 import { pgTable, integer, text, varchar, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
-import { usersTable } from './usersSchema';
+import { usuariosTable } from './usuariosSchema';
 import { proyectosTable } from './proyectosSchema';
 
 export const proyectosValidacionesTable = pgTable('proyectos_validaciones', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   proyecto_id: integer().references(() => proyectosTable.id),
-  admin_id: integer().references(() => usersTable.id),
+  admin_id: integer().references(() => usuariosTable.id),
   comentarios: text(),
   estado: varchar({ length: 50 }),
   fecha_validacion: timestamp().defaultNow(),

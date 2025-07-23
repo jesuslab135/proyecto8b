@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import * as XLSX from 'xlsx';
 import { db } from '../../db/index';
 import { randomUUID } from 'crypto';
-import { sendTokenEmail } from '../../utils/emailSender'; // función SMTP
 import { universidadesTable } from '../../db/universidadesSchema';
 import { eq } from 'drizzle-orm';
 import { tokensInicialesAccesoTable } from '../../db/tokensInicialesAccesoSchema';
@@ -201,7 +200,7 @@ export async function deleteUniversidad(req: Request, res: Response) {
 }
 
 
-export async function uploadAlumnosExcel(req: Request, res: Response) {
+/* export async function uploadAlumnosExcel(req: Request, res: Response) {
   try {
     if (!req.file) return res.status(400).json({ error: 'No se recibió archivo' });
 
@@ -239,3 +238,4 @@ export async function uploadAlumnosExcel(req: Request, res: Response) {
     res.status(500).json({ error: 'Error al procesar archivo' });
   }
 }
+ */

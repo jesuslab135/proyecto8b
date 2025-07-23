@@ -1,14 +1,14 @@
 // db/proyectosSchema.ts
 import { pgTable, integer, varchar, text, boolean, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
-import { usersTable } from './usersSchema';
+import { usuariosTable } from './usuariosSchema';
 import { universidadesTable } from './universidadesSchema';
 
 export const proyectosTable = pgTable('proyectos', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   nombre: varchar({ length: 200 }),
   descripcion: text(),
-  creador_id: integer().references(() => usersTable.id),
+  creador_id: integer().references(() => usuariosTable.id),
   universidad_id: integer().references(() => universidadesTable.id),
   estado_verificacion: varchar({ length: 50 }),
   vista_publica: boolean().default(true),

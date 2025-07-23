@@ -3,9 +3,6 @@ import { defineConfig } from 'drizzle-kit';
 export default defineConfig({
   out: './drizzle',
   schema: [
-    './src/db/productsSchema.ts',
-    './src/db/usersSchema.ts',
-    './src/db/ordersSchema.ts',
     './src/db/actividadUsuarioSchema.ts',
     './src/db/asistenciasUsuarioSchema.ts',
     './src/db/conversacionesSchema.ts',
@@ -35,6 +32,7 @@ export default defineConfig({
     './src/db/taggablesSchema.ts',
     './src/db/tokensInicialesAccesoSchema.ts',
     './src/db/versionesBloquesSchema.ts',
+    './src/db/usuariosSchema.ts',
   ],
   dialect: 'postgresql',
   dbCredentials: {

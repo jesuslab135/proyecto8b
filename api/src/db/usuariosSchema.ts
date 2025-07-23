@@ -5,17 +5,17 @@ import { rolesUsuarioTable } from './rolesUsuarioSchema';
 import { universidadesTable } from './universidadesSchema';
 
 export const usuariosTable = pgTable('usuarios', {
-  id: integer().primaryKey().notNull(),
-  nombre: varchar({ length: 100 }),
-  correo: varchar({ length: 150 }),
-  contraseña_hash: text(),
-  rol_id: integer().references(() => rolesUsuarioTable.id),
-  universidad_id: integer().references(() => universidadesTable.id),
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  nombre: varchar({ length: 100 }).notNull(),
+  correo: varchar({ length: 150 }).notNull(),
+  contrasena: text().notNull(),
+  rol_id: integer().notNull().references(() => rolesUsuarioTable.id),
+  universidad_id: integer().notNull().references(() => universidadesTable.id),
   matricula: varchar({ length: 50 }),
   telefono: varchar({ length: 20 }),
   verificado: boolean().default(false),
   debe_cambiar_contraseña: boolean().default(true),
-  github_url: text(),
+  github_url: text(), 
   linkedin_url: text(),
   biografia: text(),
   cv_url: text(),
@@ -24,10 +24,9 @@ export const usuariosTable = pgTable('usuarios', {
 });
 
 export const insertUsuarioSchema = z.object({
-  id: z.number(),
   nombre: z.string().max(100),
-  correo: z.string().email().max(150),
-  contraseña_hash: z.string(),
+  correo: z.string().max(150),
+  contrasena: z.string(),
   rol_id: z.number().int(),
   universidad_id: z.number().int(),
   matricula: z.string().max(50),
@@ -40,16 +39,12 @@ export const insertUsuarioSchema = z.object({
   cv_url: z.string().optional(),
   cv_publico: z.boolean().optional(),
   creado_en: z.date().optional()
-}).omit({
-    id: true,
-    contraseña_hash: true,
 });
 
 export const updateUsuarioSchema = z.object({
-  id: z.number(),
   nombre: z.string().max(100),
-  correo: z.string().email().max(150),
-  contraseña_hash: z.string(),
+  correo: z.string().max(150),
+  contrasena: z.string(),
   rol_id: z.number().int(),
   universidad_id: z.number().int(),
   matricula: z.string().max(50),
@@ -62,8 +57,9 @@ export const updateUsuarioSchema = z.object({
   cv_url: z.string().optional(),
   cv_publico: z.boolean().optional(),
   creado_en: z.date().optional()
-}).omit({
-    id: true,
-    contraseña_hash: true,
 }).partial();
 
+export const loginSchema = z.object({
+  correo: z.string().max(150),
+  contrasena: z.string().min(6).max(255),
+});

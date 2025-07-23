@@ -1,7 +1,7 @@
 // src/db/bloquesSchema.ts
 import { pgTable, integer, varchar, jsonb, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
-import { usersTable } from './usersSchema';
+import { usuariosTable } from './usuariosSchema';
 import { paginasColaborativasTable } from './paginasColaborativasSchema';
 
 // Definición de la tabla bloques
@@ -13,7 +13,7 @@ export const bloquesTable = pgTable('bloques', {
   contenido: jsonb('contenido'),
   orden: integer('orden').default(0),
   creado_por: integer('creado_por')
-    .references(() => usersTable.id),
+    .references(() => usuariosTable.id),
   creado_en: timestamp('creado_en').defaultNow()
 });
 

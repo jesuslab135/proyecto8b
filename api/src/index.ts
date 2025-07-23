@@ -1,8 +1,6 @@
 import cors from 'cors';
 import express, { json, urlencoded, Request } from 'express';
-import productsRoutes from './routes/products/index';
 import authRoutes from './routes/auth/index';
-import ordersRoutes from './routes/orders/index';
 import universidadesRoutes from './routes/universidades/index';
 import forosRoutes from './routes/foros/index';
 import tagsRoutes from './routes/tags/index';
@@ -12,7 +10,6 @@ import actividadUsuarioRoutes from './routes/actividadUsuario/index';
 import eventosRoutes from './routes/eventos/index';
 import asistenciasEventoRoutes from './routes/asistenciasEvento/index';
 import conversacionesRoutes from './routes/conversaciones/index';
-import usersRoutes from './routes/users/index';
 import mensajesRoutes from './routes/mensajes/index';
 import oportunidadesRoutes from './routes/oportunidades/index';
 import hilosRoutes from './routes/hilos/index';
@@ -35,6 +32,7 @@ import tokensInicialesRoutes from './routes/tokensInicialesAcceso/index';
 import usuariosRoutes from './routes/usuarios/index';
 import ofertasLaboralesRoutes from './routes/ofertasLaborales/index';
 import { swaggerUi, swaggerSpec } from './utils/swagger';
+import adminBackupRoutes from './routes/adminBackup/index';
 
 const port = 3000;
 const app = express();
@@ -62,9 +60,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use('/api/products', productsRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/orders', ordersRoutes);
 app.use('/api/universidades', universidadesRoutes);
 app.use('/api/foros', forosRoutes);
 app.use('/api/tags', tagsRoutes);
@@ -74,7 +70,6 @@ app.use('/api/actividad-usuario', actividadUsuarioRoutes);
 app.use('/api/eventos', eventosRoutes);
 app.use('/api/asistencias-eventos', asistenciasEventoRoutes);
 app.use('/api/conversaciones', conversacionesRoutes);
-app.use('/api/users', usersRoutes);
 app.use('/api/mensajes', mensajesRoutes);
 app.use('/api/oportunidades', oportunidadesRoutes);
 app.use('/api/ofertas-laborales', ofertasLaboralesRoutes);
@@ -96,6 +91,7 @@ app.use('/api/relaciones-bloques', relacionesBloquesRoutes);
 app.use('/api/versiones-bloques', versionesBloquesRoutes);
 app.use('/api/tokens-iniciales-acceso', tokensInicialesRoutes);
 app.use('/api/usuarios', usuariosRoutes);
+app.use('/api/admin-backup', adminBackupRoutes);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

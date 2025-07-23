@@ -1,10 +1,10 @@
 import { pgTable, integer, text } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
-import { usersTable } from './usersSchema';
+import { usuariosTable } from './usuariosSchema';
 
 export const perfilesTable = pgTable('perfiles', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  usuario_id: integer().references(() => usersTable.id),
+  usuario_id: integer().references(() => usuariosTable.id),
   cv_url: text(),
   skills: text(),
   historial_participacion: text(),

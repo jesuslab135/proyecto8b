@@ -2,12 +2,12 @@
 import { pgTable, integer, text, timestamp, boolean } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { conversacionesTable } from './conversacionesSchema';
-import { usersTable } from './usersSchema';
+import { usuariosTable } from './usuariosSchema';
 
 export const mensajesTable = pgTable('mensajes', {
   id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
   conversacion_id: integer('conversacion_id').references(() => conversacionesTable.id),
-  emisor_id: integer('emisor_id').references(() => usersTable.id),
+  emisor_id: integer('emisor_id').references(() => usuariosTable.id),
   contenido: text('contenido'),
   enviado_en: timestamp('enviado_en').defaultNow(),
   leido: boolean('leido').default(false),

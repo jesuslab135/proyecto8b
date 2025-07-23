@@ -1,13 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-export function (req: Request, res: Response, next: NextFunction) {
-  const token = req.header('Authorization');
+export function verifyToken(req: Request, res: Response, next: NextFunction) {
+  const authHeader = req.header('Authorization');
 
-  if (!token) {
-    res.status(401).json({ error: 'Access denied' });
-    return;
+   if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Access denied' });
   }
+
+  const token = authHeader.split(' ')[1]; // Extrae solo el token puro
 
   try {
     // decode jwt toke data
@@ -17,16 +18,16 @@ export function (req: Request, res: Response, next: NextFunction) {
       return;
     }
     req.userId = decoded.userId;
-    req.role = decoded.role;
+    req.rol_id = decoded.rol_id;
     next();
   } catch (e) {
     res.status(401).json({ error: 'Access denied' });
   }
 }
 
-export function (req: Request, res: Response, next: NextFunction) {
-  const role = req.role;
-  if (role !== 'admin') {
+export function verifyAdmin(req: Request, res: Response, next: NextFunction) {
+  const role = req.rol_id;
+  if (role !== 1) {
     res.status(401).json({ error: 'Access denied' });
     return;
   }
@@ -34,8 +35,8 @@ export function (req: Request, res: Response, next: NextFunction) {
 }
 
 export function verifyUni(req: Request, res: Response, next: NextFunction) {
-  const role = req.role;
-  if (role !== 'admin_uni') {
+  const role = req.rol_id;
+  if (role !== 2) {
     res.status(401).json({ error: 'Access denied' });
     return;
   }

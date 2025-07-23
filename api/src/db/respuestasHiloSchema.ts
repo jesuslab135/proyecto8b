@@ -2,12 +2,12 @@
 import { pgTable, integer, text, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { hilosTable } from './hilosSchema';
-import { usersTable } from './usersSchema';
+import { usuariosTable } from './usuariosSchema';
 
 export const respuestasHiloTable = pgTable('respuestas_hilo', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   hilo_id: integer().references(() => hilosTable.id),
-  usuario_id: integer().references(() => usersTable.id),
+  usuario_id: integer().references(() => usuariosTable.id),
   contenido: text(),
   creado_en: timestamp().defaultNow(),
 });

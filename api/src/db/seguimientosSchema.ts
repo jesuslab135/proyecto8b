@@ -1,13 +1,13 @@
 // db/seguimientosSchema.ts
 import { pgTable, integer, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
-import { usersTable } from './usersSchema';
+import { usuariosTable } from './usuariosSchema';
 import { proyectosTable } from './proyectosSchema';
 
 export const seguimientosTable = pgTable('seguimientos', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  seguidor_id: integer().references(() => usersTable.id),
-  seguido_usuario_id: integer().references(() => usersTable.id),
+  seguidor_id: integer().references(() => usuariosTable.id),
+  seguido_usuario_id: integer().references(() => usuariosTable.id),
   seguido_proyecto_id: integer().references(() => proyectosTable.id),
   creado_en: timestamp().defaultNow()
 });

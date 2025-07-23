@@ -2,13 +2,13 @@
 import { pgTable, integer, jsonb, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { bloquesTable } from './bloquesSchema';
-import { usersTable } from './usersSchema';
+import { usuariosTable } from './usuariosSchema';
 
 export const versionesBloquesTable = pgTable('versiones_bloques', {
   id: integer('id').primaryKey().notNull(),
   bloque_id: integer('bloque_id').references(() => bloquesTable.id).notNull(),
   contenido: jsonb('contenido'),
-  editado_por: integer('editado_por').references(() => usersTable.id),
+  editado_por: integer('editado_por').references(() => usuariosTable.id),
   editado_en: timestamp('editado_en').defaultNow(),
 });
 

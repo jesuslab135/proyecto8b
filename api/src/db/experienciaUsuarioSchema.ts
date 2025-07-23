@@ -1,11 +1,11 @@
 // db/experienciaUsuarioSchema.ts
 import { pgTable, integer, varchar, text, date } from 'drizzle-orm/pg-core';
-import { usersTable } from './usersSchema';
+import { usuariosTable } from './usuariosSchema';
 import { z } from 'zod';
 
 export const experienciaUsuarioTable = pgTable('experiencia_usuario', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  usuario_id: integer().references(() => usersTable.id),
+  usuario_id: integer().references(() => usuariosTable.id),
   tipo: varchar({ length: 50 }),
   titulo: varchar({ length: 100 }),
   descripcion: text(),

@@ -1,6 +1,6 @@
 import { pgTable, integer, varchar, text, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
-import { usersTable } from './usersSchema';
+import { usuariosTable } from './usuariosSchema';
 import { universidadesTable } from './universidadesSchema';
 
 export const eventosTable = pgTable('eventos', {
@@ -8,7 +8,7 @@ export const eventosTable = pgTable('eventos', {
   titulo: varchar({ length: 200 }),
   descripcion: text(),
   tipo: varchar({ length: 100 }),
-  creador_id: integer().references(() => usersTable.id),
+  creador_id: integer().references(() => usuariosTable.id),
   universidad_id: integer().references(() => universidadesTable.id),
   fecha_inicio: timestamp(),
   fecha_fin: timestamp(),

@@ -1,12 +1,12 @@
 // db/reportesSchema.ts
 import { pgTable, integer, text, varchar, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
-import { usersTable } from './usersSchema';
+import { usuariosTable } from './usuariosSchema';
 
 export const reportesTable = pgTable('reportes', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  reportante_id: integer().references(() => usersTable.id),
-  usuario_reportado_id: integer().references(() => usersTable.id),
+  reportante_id: integer().references(() => usuariosTable.id),
+  usuario_reportado_id: integer().references(() => usuariosTable.id),
   tipo_contenido: varchar({ length: 100 }),
   contenido_id: integer(),
   motivo: text(),
