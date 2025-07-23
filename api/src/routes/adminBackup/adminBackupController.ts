@@ -176,19 +176,29 @@ export const backupPartial = async (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /admin-backup/restore/full:
+ * /admin-backup/restore-full:
  *   post:
- *     summary: Restaura una base de datos completa desde un respaldo
+ *     summary: Restaura una base de datos completa desde el archivo .bat más reciente
  *     tags: [adminBackup]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Restauración completa realizada
+ *       500:
+ *         description: Error al ejecutar el script
  */
 export const restoreFull = async (req: Request, res: Response) => {
   if (!(await validateUserRole(req, res, [1]))) return;
-  runPgCommand('"C:\\Program Files\\PostgreSQL\\17\\bin\\psql.exe" nombre_bd < backup_full.sql', res, 'Restauración completa realizada');
+  const batPath = '"C:\\Users\\MSI\\Desktop\\restore_full.bat"';
+  await db.$client.end();
+  exec(batPath, (error, stdout, stderr) => {
+    if (error) {
+      console.error('❌ Error ejecutando restore_full.bat:', stderr);
+      return res.status(500).json({ error: stderr });
+    }
+    res.status(200).json({ message: '✅ Restauración completa realizada', output: stdout });
+  });
 };
 
 /**
