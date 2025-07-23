@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { db } from '../../db';
 import { usuariosTable } from '../../db/usuariosSchema';
 import { eq } from 'drizzle-orm';
+import bcrypt from 'bcryptjs';
 
 /**
  * @swagger
@@ -158,15 +159,26 @@ export async function getUsuario(req: Request, res: Response) {
 export async function updateUsuario(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
+    const data = req.cleanBody;
+    
+    // Si se está actualizando la contraseña, encriptarla
+    if (data.contrasena) {
+      data.contrasena = await bcrypt.hash(data.contrasena, 10);
+    }
+    
     const [updated] = await db
       .update(usuariosTable)
-      .set(req.cleanBody)
+      .set(data)
       .where(eq(usuariosTable.id, id))
       .returning();
 
     if (!updated) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
+
+    // Remover la contraseña de la respuesta
+    // @ts-ignore
+    delete updated.contrasena;
 
     res.status(200).json(updated);
   } catch (error) {
