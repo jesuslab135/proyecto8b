@@ -17,6 +17,7 @@
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
+    "csv-parse": "^6.1.0",
     "csv-parser": "^3.2.0",
     "drizzle-orm": "^0.44.2",
     "express": "^5.1.0",
