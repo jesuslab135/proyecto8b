@@ -5,24 +5,22 @@ import { bloquesTable } from './bloquesSchema';
 import { usuariosTable } from './usuariosSchema';
 
 export const versionesBloquesTable = pgTable('versiones_bloques', {
-  id: integer('id').primaryKey().notNull(),
-  bloque_id: integer('bloque_id').references(() => bloquesTable.id).notNull(),
-  contenido: jsonb('contenido'),
-  editado_por: integer('editado_por').references(() => usuariosTable.id),
-  editado_en: timestamp('editado_en').defaultNow(),
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  bloque_id: integer().references(() => bloquesTable.id).notNull(),
+  contenido: jsonb(),
+  editado_por: integer().references(() => usuariosTable.id),
+  editado_en: timestamp().defaultNow(),
 });
 
 export const insertVersionBloqueSchema = z.object({
-  id: z.number(),
   bloque_id: z.number().int(),
   contenido: z.any(),
   editado_por: z.number().int(),
   editado_en: z.date().optional(),
-}).omit({id: true});
+});
 
 export const updateVersionBloqueSchema = z.object({
-  id: z.number(),
   contenido: z.any().optional(),
   editado_por: z.number().int().optional(),
   editado_en: z.date().optional(),
-}).omit({id: true}).partial();
+}).partial();

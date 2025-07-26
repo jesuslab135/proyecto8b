@@ -5,12 +5,12 @@ import { conversacionesTable } from './conversacionesSchema';
 import { usuariosTable } from './usuariosSchema';
 
 export const mensajesTable = pgTable('mensajes', {
-  id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
-  conversacion_id: integer('conversacion_id').references(() => conversacionesTable.id),
-  emisor_id: integer('emisor_id').references(() => usuariosTable.id),
-  contenido: text('contenido'),
-  enviado_en: timestamp('enviado_en').defaultNow(),
-  leido: boolean('leido').default(false),
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  conversacion_id: integer().references(() => conversacionesTable.id),
+  emisor_id: integer().references(() => usuariosTable.id),
+  contenido: text(),
+  enviado_en: timestamp().defaultNow(),
+  leido: boolean().default(false),
 });
 
 export const insertMensajeSchema = z.object({

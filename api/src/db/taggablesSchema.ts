@@ -10,19 +10,13 @@ export const taggablesTable = pgTable('taggables', {
 });
 
 export const insertTaggableSchema = z.object({
-  id: z.number().int(),
   tag_id: z.number().int(),
   objeto_id: z.number().int(),
   tipo_objeto: z.string().max(50),
-}).omit({
-  id: true,
 });
 
 export const updateTaggableSchema = z.object({
-  id: z.number().int(),
   tag_id: z.number().int().optional(),
   objeto_id: z.number().int().optional(),
   tipo_objeto: z.string().max(50).optional(),
-}).omit({
-  id: true,
 }).partial();

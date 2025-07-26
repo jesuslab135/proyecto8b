@@ -16,21 +16,19 @@ export const participacionesProyectoTable = pgTable('participaciones_proyecto', 
 
 // Zod Schemas
 export const insertParticipacionesProyectoSchema = z.object({
-  id: z.number().int(),
   proyecto_id: z.number().int(),
   usuario_id: z.number().int(),
   rol_id: z.number().int(),
   estado: z.string().max(50),
   invitado_por: z.number().int(),
   fecha_invitacion: z.date().optional(),
-}).omit({ id: true });
+});
 
 export const updateParticipacionesProyectoSchema = z.object({
-  id: z.number().int(),
   proyecto_id: z.number().int(),
   usuario_id: z.number().int(),
   rol_id: z.number().int(),
   estado: z.string().max(50),
   invitado_por: z.number().int(),
   fecha_invitacion: z.date().optional(),
-}).omit({ id: true }).partial();
+}).partial();

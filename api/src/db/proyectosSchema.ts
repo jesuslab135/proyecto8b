@@ -16,7 +16,6 @@ export const proyectosTable = pgTable('proyectos', {
 });
 
 export const insertProyectoSchema = z.object({
-  id: z.number(),
   nombre: z.string().max(200),
   descripcion: z.string(),
   creador_id: z.number().int(),
@@ -24,10 +23,9 @@ export const insertProyectoSchema = z.object({
   estado_verificacion: z.string().max(50),
   vista_publica: z.boolean().optional(),
   creado_en: z.string().optional(), // ISO string
-}).omit({id: true});
+});
 
 export const updateProyectoSchema = z.object({
-  id: z.number(),
   nombre: z.string().max(200),
   descripcion: z.string(),
   creador_id: z.number().int(),
@@ -35,4 +33,4 @@ export const updateProyectoSchema = z.object({
   estado_verificacion: z.string().max(50),
   vista_publica: z.boolean().optional(),
   creado_en: z.string().optional(), // ISO string
-}).omit({id:true}).partial();
+}).partial();

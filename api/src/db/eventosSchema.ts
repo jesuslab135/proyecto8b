@@ -1,3 +1,4 @@
+// db/eventosSchema.ts
 import { pgTable, integer, varchar, text, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { usuariosTable } from './usuariosSchema';
@@ -23,29 +24,25 @@ export const insertEventoSchema = z.object({
   creador_id: z.number().int(),
   universidad_id: z.number().int(),
   fecha_inicio: z.string().refine(val => !isNaN(Date.parse(val)), {
-  message: 'fecha_inicio debe ser una fecha válida'
-}).transform(val => new Date(val)),
-
-fecha_fin: z.string().refine(val => !isNaN(Date.parse(val)), {
-  message: 'fecha_fin debe ser una fecha válida'
-}).transform(val => new Date(val)),
-
-  enlace_acceso: z.string().nullable().optional(),
+    message: 'fecha_inicio debe ser una fecha válida',
+  }).transform(val => new Date(val)),
+  fecha_fin: z.string().refine(val => !isNaN(Date.parse(val)), {
+    message: 'fecha_fin debe ser una fecha válida',
+  }).transform(val => new Date(val)),
+  enlace_acceso: z.string(),
 });
 
 export const updateEventoSchema = z.object({
-  titulo: z.string().max(200).optional(),
-  descripcion: z.string().optional(),
-  tipo: z.string().max(100).optional(),
-  creador_id: z.number().int().optional(),
-  universidad_id: z.number().int().optional(),
+  titulo: z.string().max(200),
+  descripcion: z.string(),
+  tipo: z.string().max(100),
+  creador_id: z.number().int(),
+  universidad_id: z.number().int(),
   fecha_inicio: z.string().refine(val => !isNaN(Date.parse(val)), {
-  message: 'fecha_inicio debe ser una fecha válida'
-}).transform(val => new Date(val)),
-
-fecha_fin: z.string().refine(val => !isNaN(Date.parse(val)), {
-  message: 'fecha_fin debe ser una fecha válida'
-}).transform(val => new Date(val)),
-
-  enlace_acceso: z.string().nullable().optional(),
-}).partial();
+    message: 'fecha_inicio debe ser una fecha válida',
+  }).transform(val => new Date(val)),
+  fecha_fin: z.string().refine(val => !isNaN(Date.parse(val)), {
+    message: 'fecha_fin debe ser una fecha válida',
+  }).transform(val => new Date(val)),
+  enlace_acceso: z.string(),
+});

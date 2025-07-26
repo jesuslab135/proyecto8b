@@ -5,15 +5,15 @@ import { usuariosTable } from './usuariosSchema';
 import { proyectosTable } from './proyectosSchema';
 
 export const paginasColaborativasTable = pgTable('paginas_colaborativas', {
-  id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
-  proyecto_id: integer('proyecto_id').references(() => proyectosTable.id),
-  titulo: varchar('titulo', { length: 200 }),
-  descripcion: text('descripcion'),
-  creada_por: integer('creada_por').references(() => usuariosTable.id),
-  permisos_lectura: text('permisos_lectura').array(),
-  permisos_escritura: text('permisos_escritura').array(),
-  orden: integer('orden').default(0),
-  creada_en: timestamp('creada_en').defaultNow()
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  proyecto_id: integer().references(() => proyectosTable.id),
+  titulo: varchar({ length: 200 }),
+  descripcion: text(),
+  creada_por: integer().references(() => usuariosTable.id),
+  permisos_lectura: text().array(),
+  permisos_escritura: text().array(),
+  orden: integer().default(0),
+  creada_en: timestamp().defaultNow()
 });
 
 // Zod schemas

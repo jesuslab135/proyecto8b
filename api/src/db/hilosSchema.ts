@@ -22,7 +22,6 @@ export const insertHiloSchema = z.object({
 });
 
 export const updateHiloSchema = z.object({
-  id: z.number().int(),
   foro_id: z.number().int().optional(),
   titulo: z.string().max(150).optional(),
   contenido: z.string().optional(),

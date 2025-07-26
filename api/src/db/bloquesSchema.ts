@@ -6,15 +6,15 @@ import { paginasColaborativasTable } from './paginasColaborativasSchema';
 
 // Definición de la tabla bloques
 export const bloquesTable = pgTable('bloques', {
-  id: integer('id').primaryKey().notNull(),
-  pagina_id: integer('pagina_id')
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  pagina_id: integer()
     .references(() => paginasColaborativasTable.id),
-  tipo: varchar('tipo', { length: 50 }),
-  contenido: jsonb('contenido'),
-  orden: integer('orden').default(0),
-  creado_por: integer('creado_por')
+  tipo: varchar( { length: 50 }),
+  contenido: jsonb(),
+  orden: integer().default(0),
+  creado_por: integer()
     .references(() => usuariosTable.id),
-  creado_en: timestamp('creado_en').defaultNow()
+  creado_en: timestamp().defaultNow()
 });
 
 // Validación con Zod
@@ -27,7 +27,6 @@ export const insertBloqueSchema = z.object({
 });
 
 export const updateBloqueSchema = z.object({
-  id: z.number(),
   pagina_id: z.number().optional(),
   tipo: z.string().max(50),
   contenido: z.any(),

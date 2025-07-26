@@ -15,7 +15,6 @@ export const reportesTable = pgTable('reportes', {
 });
 
 export const insertReporteSchema = z.object({
-  id: z.number().int(),
   reportante_id: z.number().int(),
   usuario_reportado_id: z.number().int(),
   tipo_contenido: z.string().max(100),
@@ -23,10 +22,9 @@ export const insertReporteSchema = z.object({
   motivo: z.string(),
   estado: z.string().max(50),
   fecha: z.date().optional()
-}).omit({ id: true });
+});
 
 export const updateReporteSchema = z.object({
-  id: z.number().int(),
   reportante_id: z.number().int().optional(),
   usuario_reportado_id: z.number().int().optional(),
   tipo_contenido: z.string().max(100).optional(),
@@ -34,4 +32,4 @@ export const updateReporteSchema = z.object({
   motivo: z.string().optional(),
   estado: z.string().max(50).optional(),
   fecha: z.date().optional()
-}).omit({ id: true }).partial();
+}).partial();

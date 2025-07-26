@@ -13,21 +13,15 @@ export const respuestasHiloTable = pgTable('respuestas_hilo', {
 });
 
 export const insertRespuestaHiloSchema = z.object({
-  id: z.number().int(),
   hilo_id: z.number().int(),
   usuario_id: z.number().int(),
   contenido: z.string().min(1),
   creado_en: z.date().optional(),
-}).omit({
-  id: true,
 });
 
 export const updateRespuestaHiloSchema = z.object({
-  id: z.number().int(),
   hilo_id: z.number().int().optional(),
   usuario_id: z.number().int().optional(),
   contenido: z.string().min(1).optional(),
   creado_en: z.date().optional(),
-}).omit({
-  id: true,
 }).partial();
