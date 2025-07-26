@@ -1,3 +1,4 @@
+// db/perfilesSchema.ts
 import { pgTable, integer, text } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { usuariosTable } from './usuariosSchema';

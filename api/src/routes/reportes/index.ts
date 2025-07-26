@@ -15,10 +15,10 @@ import {
 
 const router = Router();
 
-router.post('/',validateData(insertReporteSchema), createReporte);
+router.post('/', validateData(insertReporteSchema), createReporte);
 router.get('/', listReportes);
 router.get('/:id', getReporte);
-router.put('/:id',validateData(updateReporteSchema), updateReporte);
-router.delete('/:id',deleteReporte);
+router.put('/:id', validateData(updateReporteSchema), updateReporte);
+router.delete('/:id', deleteReporte);
 
 export default router;

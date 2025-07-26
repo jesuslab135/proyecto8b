@@ -1,3 +1,4 @@
+// src/routes/paginasColaborativas/paginasColaborativasController.ts
 import { Request, Response } from 'express';
 import { db } from '../../db';
 import { paginasColaborativasTable } from '../../db/paginasColaborativasSchema';
@@ -17,14 +18,29 @@ import { eq } from 'drizzle-orm';
  *             type: object
  *             required:
  *               - titulo
- *               - contenido
+ *               - descripcion
  *               - proyecto_id
+ *               - creada_por
+ *               - permisos_lectura
+ *               - permisos_escritura
  *             properties:
  *               titulo:
  *                 type: string
- *               contenido:
+ *               descripcion:
  *                 type: string
  *               proyecto_id:
+ *                 type: integer
+ *               creada_por:
+ *                 type: integer
+ *               permisos_lectura:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               permisos_escritura:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               orden:
  *                 type: integer
  *     responses:
  *       201:
@@ -35,8 +51,8 @@ import { eq } from 'drizzle-orm';
 export async function createPaginaColaborativa(req: Request, res: Response) {
   try {
     const data = req.cleanBody;
-    const [nueva] = await db.insert(paginasColaborativasTable).values(data).returning();
-    res.status(201).json(nueva);
+    const [nuevaPagina] = await db.insert(paginasColaborativasTable).values(data).returning();
+    res.status(201).json(nuevaPagina);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Error al crear la página colaborativa' });
@@ -75,9 +91,9 @@ export async function listPaginasColaborativas(_req: Request, res: Response) {
  *       - name: id
  *         in: path
  *         required: true
- *         description: ID de la página
  *         schema:
  *           type: integer
+ *         description: ID de la página
  *     responses:
  *       200:
  *         description: Página encontrada
@@ -91,10 +107,9 @@ export async function getPaginaColaborativa(req: Request, res: Response) {
     const id = parseInt(req.params.id);
     const [pagina] = await db.select().from(paginasColaborativasTable).where(eq(paginasColaborativasTable.id, id));
     if (!pagina) {
-      res.status(404).json({ error: 'Página no encontrada' });
-    } else {
-      res.status(200).json(pagina);
+      return res.status(404).json({ error: 'Página no encontrada' });
     }
+    res.status(200).json(pagina);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Error al obtener la página colaborativa' });
@@ -123,8 +138,22 @@ export async function getPaginaColaborativa(req: Request, res: Response) {
  *             properties:
  *               titulo:
  *                 type: string
- *               contenido:
+ *               descripcion:
  *                 type: string
+ *               proyecto_id:
+ *                 type: integer
+ *               creada_por:
+ *                 type: integer
+ *               permisos_lectura:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               permisos_escritura:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               orden:
+ *                 type: integer
  *     responses:
  *       200:
  *         description: Página actualizada correctamente
@@ -142,10 +171,9 @@ export async function updatePaginaColaborativa(req: Request, res: Response) {
       .where(eq(paginasColaborativasTable.id, id))
       .returning();
     if (!actualizada) {
-      res.status(404).json({ error: 'Página no encontrada' });
-    } else {
-      res.status(200).json(actualizada);
+      return res.status(404).json({ error: 'Página no encontrada' });
     }
+    res.status(200).json(actualizada);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Error al actualizar la página colaborativa' });
@@ -162,9 +190,9 @@ export async function updatePaginaColaborativa(req: Request, res: Response) {
  *       - name: id
  *         in: path
  *         required: true
- *         description: ID de la página a eliminar
  *         schema:
  *           type: integer
+ *         description: ID de la página a eliminar
  *     responses:
  *       200:
  *         description: Página eliminada correctamente
@@ -176,16 +204,11 @@ export async function updatePaginaColaborativa(req: Request, res: Response) {
 export async function deletePaginaColaborativa(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
-    const [eliminada] = await db
-      .delete(paginasColaborativasTable)
-      .where(eq(paginasColaborativasTable.id, id))
-      .returning();
-
+    const [eliminada] = await db.delete(paginasColaborativasTable).where(eq(paginasColaborativasTable.id, id)).returning();
     if (!eliminada) {
-      res.status(404).json({ error: 'Página no encontrada' });
-    } else {
-      res.status(200).json({ message: 'Página eliminada correctamente' });
+      return res.status(404).json({ error: 'Página no encontrada' });
     }
+    res.status(200).json({ message: 'Página eliminada correctamente' });
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Error al eliminar la página colaborativa' });

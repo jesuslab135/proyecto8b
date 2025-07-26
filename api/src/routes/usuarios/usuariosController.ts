@@ -1,3 +1,4 @@
+// src/routes/usuarios/usuariosController.ts
 import { Request, Response } from 'express';
 import { db } from '../../db';
 import { usuariosTable } from '../../db/usuariosSchema';
@@ -103,11 +104,9 @@ export async function getUsuario(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
     const [usuario] = await db.select().from(usuariosTable).where(eq(usuariosTable.id, id));
-
     if (!usuario) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
-
     res.status(200).json(usuario);
   } catch (error) {
     console.error(error);
@@ -163,11 +162,9 @@ export async function updateUsuario(req: Request, res: Response) {
       .set(req.cleanBody)
       .where(eq(usuariosTable.id, id))
       .returning();
-
     if (!updated) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
-
     res.status(200).json(updated);
   } catch (error) {
     console.error(error);
@@ -199,15 +196,10 @@ export async function updateUsuario(req: Request, res: Response) {
 export async function deleteUsuario(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
-    const [deleted] = await db
-      .delete(usuariosTable)
-      .where(eq(usuariosTable.id, id))
-      .returning();
-
+    const [deleted] = await db.delete(usuariosTable).where(eq(usuariosTable.id, id)).returning();
     if (!deleted) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
-
     res.status(200).json({ message: 'Usuario eliminado correctamente' });
   } catch (error) {
     console.error(error);

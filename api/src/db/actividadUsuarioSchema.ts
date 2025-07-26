@@ -1,3 +1,4 @@
+// db/actividadUsuarioSchema.ts
 import { pgTable, integer, varchar, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { usuariosTable } from './usuariosSchema';

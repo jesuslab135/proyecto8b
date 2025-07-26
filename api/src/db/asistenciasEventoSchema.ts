@@ -1,3 +1,4 @@
+// db/asistenciasEventoSchema.ts
 import { pgTable, integer, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { eventosTable } from './eventosSchema';

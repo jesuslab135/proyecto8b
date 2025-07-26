@@ -1,3 +1,4 @@
+// src/routes/usuarios/index.ts
 import { Router } from 'express';
 import {
   createUsuario,
@@ -14,7 +15,7 @@ const router = Router();
 router.post('/', validateData(insertUsuarioSchema), createUsuario);
 router.get('/', listUsuarios);
 router.get('/:id', getUsuario);
-router.put('/:id',validateData(updateUsuarioSchema), updateUsuario);
-router.delete('/:id',deleteUsuario);
+router.put('/:id', validateData(updateUsuarioSchema), updateUsuario);
+router.delete('/:id', deleteUsuario);
 
 export default router;

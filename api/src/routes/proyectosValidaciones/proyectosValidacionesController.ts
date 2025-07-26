@@ -1,5 +1,6 @@
+// src/routes/proyectosValidaciones/proyectosValidacionesController.ts
 import { Request, Response } from 'express';
-import { db } from '../../db/index';
+import { db } from '../../db';
 import { proyectosValidacionesTable } from '../../db/proyectosValidacionesSchema';
 import { eq } from 'drizzle-orm';
 
@@ -18,9 +19,9 @@ import { eq } from 'drizzle-orm';
  *             properties:
  *               proyecto_id:
  *                 type: integer
- *               validado_por:
+ *               admin_id:
  *                 type: integer
- *               comentario:
+ *               comentarios:
  *                 type: string
  *               estado:
  *                 type: string
@@ -87,16 +88,11 @@ export async function listProyectosValidaciones(_req: Request, res: Response) {
 export async function getProyectoValidacion(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
-    const [validacion] = await db
-      .select()
-      .from(proyectosValidacionesTable)
-      .where(eq(proyectosValidacionesTable.id, id));
-
+    const [validacion] = await db.select().from(proyectosValidacionesTable).where(eq(proyectosValidacionesTable.id, id));
     if (!validacion) {
-      res.status(404).json({ error: 'Validación no encontrada' });
-    } else {
-      res.status(200).json(validacion);
+      return res.status(404).json({ error: 'Validación no encontrada' });
     }
+    res.status(200).json(validacion);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Error al obtener la validación' });
@@ -123,7 +119,7 @@ export async function getProyectoValidacion(req: Request, res: Response) {
  *           schema:
  *             type: object
  *             properties:
- *               comentario:
+ *               comentarios:
  *                 type: string
  *               estado:
  *                 type: string
@@ -138,18 +134,15 @@ export async function getProyectoValidacion(req: Request, res: Response) {
 export async function updateProyectoValidacion(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
-    const updates = req.cleanBody;
     const [updated] = await db
       .update(proyectosValidacionesTable)
-      .set(updates)
+      .set(req.cleanBody)
       .where(eq(proyectosValidacionesTable.id, id))
       .returning();
-
     if (!updated) {
-      res.status(404).json({ error: 'Validación no encontrada' });
-    } else {
-      res.status(200).json(updated);
+      return res.status(404).json({ error: 'Validación no encontrada' });
     }
+    res.status(200).json(updated);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Error al actualizar la validación' });
@@ -180,16 +173,11 @@ export async function updateProyectoValidacion(req: Request, res: Response) {
 export async function deleteProyectoValidacion(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
-    const [deleted] = await db
-      .delete(proyectosValidacionesTable)
-      .where(eq(proyectosValidacionesTable.id, id))
-      .returning();
-
+    const [deleted] = await db.delete(proyectosValidacionesTable).where(eq(proyectosValidacionesTable.id, id)).returning();
     if (!deleted) {
-      res.status(404).json({ error: 'Validación no encontrada' });
-    } else {
-      res.status(200).json({ message: 'Validación eliminada correctamente' });
+      return res.status(404).json({ error: 'Validación no encontrada' });
     }
+    res.status(200).json({ message: 'Validación eliminada correctamente' });
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Error al eliminar la validación' });

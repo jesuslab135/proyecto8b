@@ -1,5 +1,6 @@
+// src/routes/reportes/reportesController.ts
 import { Request, Response } from 'express';
-import { db } from '../../db/index';
+import { db } from '../../db';
 import { reportesTable } from '../../db/reportesSchema';
 import { eq } from 'drizzle-orm';
 
@@ -16,19 +17,25 @@ import { eq } from 'drizzle-orm';
  *           schema:
  *             type: object
  *             required:
- *               - tipo
- *               - descripcion
- *               - emisor_id
- *               - objeto_id
+ *               - reportante_id
+ *               - usuario_reportado_id
+ *               - tipo_contenido
+ *               - contenido_id
+ *               - motivo
+ *               - estado
  *             properties:
- *               tipo:
- *                 type: string
- *               descripcion:
- *                 type: string
- *               emisor_id:
+ *               reportante_id:
  *                 type: integer
- *               objeto_id:
+ *               usuario_reportado_id:
  *                 type: integer
+ *               tipo_contenido:
+ *                 type: string
+ *               contenido_id:
+ *                 type: integer
+ *               motivo:
+ *                 type: string
+ *               estado:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Reporte creado correctamente
@@ -38,8 +45,8 @@ import { eq } from 'drizzle-orm';
 export async function createReporte(req: Request, res: Response) {
   try {
     const data = req.cleanBody;
-    const [newReporte] = await db.insert(reportesTable).values(data).returning();
-    res.status(201).json(newReporte);
+    const [nuevoReporte] = await db.insert(reportesTable).values(data).returning();
+    res.status(201).json(nuevoReporte);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Error al crear el reporte' });
@@ -94,10 +101,9 @@ export async function getReporte(req: Request, res: Response) {
     const id = parseInt(req.params.id);
     const [reporte] = await db.select().from(reportesTable).where(eq(reportesTable.id, id));
     if (!reporte) {
-      res.status(404).json({ error: 'Reporte no encontrado' });
-    } else {
-      res.status(200).json(reporte);
+      return res.status(404).json({ error: 'Reporte no encontrado' });
     }
+    res.status(200).json(reporte);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Error al obtener el reporte' });
@@ -124,14 +130,18 @@ export async function getReporte(req: Request, res: Response) {
  *           schema:
  *             type: object
  *             properties:
- *               tipo:
- *                 type: string
- *               descripcion:
- *                 type: string
- *               emisor_id:
+ *               reportante_id:
  *                 type: integer
- *               objeto_id:
+ *               usuario_reportado_id:
  *                 type: integer
+ *               tipo_contenido:
+ *                 type: string
+ *               contenido_id:
+ *                 type: integer
+ *               motivo:
+ *                 type: string
+ *               estado:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Reporte actualizado correctamente
@@ -149,10 +159,9 @@ export async function updateReporte(req: Request, res: Response) {
       .where(eq(reportesTable.id, id))
       .returning();
     if (!updatedReporte) {
-      res.status(404).json({ error: 'Reporte no encontrado' });
-    } else {
-      res.status(200).json(updatedReporte);
+      return res.status(404).json({ error: 'Reporte no encontrado' });
     }
+    res.status(200).json(updatedReporte);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Error al actualizar el reporte' });
@@ -169,9 +178,9 @@ export async function updateReporte(req: Request, res: Response) {
  *       - name: id
  *         in: path
  *         required: true
- *         description: ID del reporte
  *         schema:
  *           type: integer
+ *         description: ID del reporte
  *     responses:
  *       200:
  *         description: Reporte eliminado correctamente
@@ -185,10 +194,9 @@ export async function deleteReporte(req: Request, res: Response) {
     const id = parseInt(req.params.id);
     const [deleted] = await db.delete(reportesTable).where(eq(reportesTable.id, id)).returning();
     if (!deleted) {
-      res.status(404).json({ error: 'Reporte no encontrado' });
-    } else {
-      res.status(200).json({ message: 'Reporte eliminado correctamente' });
+      return res.status(404).json({ error: 'Reporte no encontrado' });
     }
+    res.status(200).json({ message: 'Reporte eliminado correctamente' });
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Error al eliminar el reporte' });

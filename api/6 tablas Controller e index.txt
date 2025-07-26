@@ -1,0 +1,1357 @@
+// proyecto8b/api/src/routes/usuarios/usuariosController.ts
+import { Request, Response } from 'express';
+import { db } from '../../db';
+import { usuariosTable } from '../../db/usuariosSchema';
+import { eq } from 'drizzle-orm';
+
+/**
+ * @swagger
+ * tags:
+ *   name: usuarios
+ *   description: Endpoints para la gestión de usuarios
+ */
+
+/**
+ * @swagger
+ * /usuarios:
+ *   post:
+ *     summary: Crear un nuevo usuario
+ *     tags: [usuarios]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - correo
+ *               - rol_id
+ *               - universidad_id
+ *             properties:
+ *               correo:
+ *                 type: string
+ *               rol_id:
+ *                 type: integer
+ *               universidad_id:
+ *                 type: integer
+ *               telefono:
+ *                 type: string
+ *               nombre:
+ *                 type: string
+ *               apellido:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Usuario creado exitosamente
+ *       500:
+ *         description: Error al crear usuario
+ */
+export async function createUsuario(req: Request, res: Response) {
+  try {
+    const data = req.cleanBody;
+    const [nuevo] = await db.insert(usuariosTable).values(data).returning();
+    res.status(201).json(nuevo);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al crear usuario' });
+  }
+}
+
+/**
+ * @swagger
+ * /usuarios:
+ *   get:
+ *     summary: Obtener todos los usuarios
+ *     tags: [usuarios]
+ *     responses:
+ *       200:
+ *         description: Lista de usuarios
+ *       500:
+ *         description: Error al obtener usuarios
+ */
+export async function listUsuarios(_req: Request, res: Response) {
+  try {
+    const usuarios = await db.select().from(usuariosTable);
+    res.status(200).json(usuarios);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener usuarios' });
+  }
+}
+
+/**
+ * @swagger
+ * /usuarios/{id}:
+ *   get:
+ *     summary: Obtener usuario por ID
+ *     tags: [usuarios]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del usuario
+ *     responses:
+ *       200:
+ *         description: Usuario encontrado
+ *       404:
+ *         description: Usuario no encontrado
+ *       500:
+ *         description: Error al obtener usuario
+ */
+export async function getUsuario(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const [usuario] = await db.select().from(usuariosTable).where(eq(usuariosTable.id, id));
+
+    if (!usuario) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    res.status(200).json(usuario);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener usuario' });
+  }
+}
+
+/**
+ * @swagger
+ * /usuarios/{id}:
+ *   put:
+ *     summary: Actualizar un usuario existente
+ *     tags: [usuarios]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID del usuario
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               correo:
+ *                 type: string
+ *               nombre:
+ *                 type: string
+ *               apellido:
+ *                 type: string
+ *               telefono:
+ *                 type: string
+ *               universidad_id:
+ *                 type: integer
+ *               rol_id:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Usuario actualizado exitosamente
+ *       404:
+ *         description: Usuario no encontrado
+ *       500:
+ *         description: Error al actualizar usuario
+ */
+export async function updateUsuario(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const [updated] = await db
+      .update(usuariosTable)
+      .set(req.cleanBody)
+      .where(eq(usuariosTable.id, id))
+      .returning();
+
+    if (!updated) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    res.status(200).json(updated);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al actualizar usuario' });
+  }
+}
+
+/**
+ * @swagger
+ * /usuarios/{id}:
+ *   delete:
+ *     summary: Eliminar usuario por ID
+ *     tags: [usuarios]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del usuario
+ *     responses:
+ *       200:
+ *         description: Usuario eliminado correctamente
+ *       404:
+ *         description: Usuario no encontrado
+ *       500:
+ *         description: Error al eliminar usuario
+ */
+export async function deleteUsuario(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const [deleted] = await db
+      .delete(usuariosTable)
+      .where(eq(usuariosTable.id, id))
+      .returning();
+
+    if (!deleted) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    res.status(200).json({ message: 'Usuario eliminado correctamente' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al eliminar usuario' });
+  }
+}
+
+// proyecto8b/api/src/routes/usuarios/index.ts
+import { Router } from 'express';
+import {
+  createUsuario,
+  deleteUsuario,
+  getUsuario,
+  listUsuarios,
+  updateUsuario
+} from './usuariosController';
+import { validateData } from '../../middlewares/validationMiddleware';
+import { insertUsuarioSchema, updateUsuarioSchema } from '../../db/usuariosSchema';
+
+const router = Router();
+
+router.post('/', validateData(insertUsuarioSchema), createUsuario);
+router.get('/', listUsuarios);
+router.get('/:id', getUsuario);
+router.put('/:id',validateData(updateUsuarioSchema), updateUsuario);
+router.delete('/:id',deleteUsuario);
+
+export default router;
+
+// proyecto8b/api/src/routes/usuarios/usuariosController.ts
+import { Request, Response } from 'express';
+import { db } from '../../db/index';
+import { proyectosTable } from '../../db/proyectosSchema';
+import { eq } from 'drizzle-orm';
+
+/**
+ * @swagger
+ * /proyectos:
+ *   post:
+ *     summary: Crear un nuevo proyecto
+ *     tags: [proyectos]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *               descripcion:
+ *                 type: string
+ *               estado:
+ *                 type: string
+ *               creado_por:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Proyecto creado correctamente
+ *       500:
+ *         description: Error al crear el proyecto
+ */
+export async function createProyecto(req: Request, res: Response) {
+  try {
+    const data = req.cleanBody;
+    const [newProyecto] = await db.insert(proyectosTable).values(data).returning();
+    res.status(201).json(newProyecto);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al crear el proyecto' });
+  }
+}
+
+/**
+ * @swagger
+ * /proyectos:
+ *   get:
+ *     summary: Obtener todos los proyectos
+ *     tags: [proyectos]
+ *     responses:
+ *       200:
+ *         description: Lista de proyectos
+ *       500:
+ *         description: Error al obtener los proyectos
+ */
+export async function listProyectos(_req: Request, res: Response) {
+  try {
+    const proyectos = await db.select().from(proyectosTable);
+    res.status(200).json(proyectos);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al obtener los proyectos' });
+  }
+}
+
+/**
+ * @swagger
+ * /proyectos/{id}:
+ *   get:
+ *     summary: Obtener un proyecto por ID
+ *     tags: [proyectos]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del proyecto
+ *     responses:
+ *       200:
+ *         description: Proyecto encontrado
+ *       404:
+ *         description: Proyecto no encontrado
+ *       500:
+ *         description: Error al obtener el proyecto
+ */
+export async function getProyecto(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const [proyecto] = await db
+      .select()
+      .from(proyectosTable)
+      .where(eq(proyectosTable.id, id));
+    if (!proyecto) {
+      res.status(404).json({ error: 'Proyecto no encontrado' });
+    } else {
+      res.status(200).json(proyecto);
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al obtener el proyecto' });
+  }
+}
+
+/**
+ * @swagger
+ * /proyectos/{id}:
+ *   put:
+ *     summary: Actualizar un proyecto por ID
+ *     tags: [proyectos]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID del proyecto
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *               descripcion:
+ *                 type: string
+ *               estado:
+ *                 type: string
+ *               creado_por:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Proyecto actualizado correctamente
+ *       404:
+ *         description: Proyecto no encontrado
+ *       500:
+ *         description: Error al actualizar el proyecto
+ */
+export async function updateProyecto(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const updates = req.cleanBody;
+    const [updated] = await db
+      .update(proyectosTable)
+      .set(updates)
+      .where(eq(proyectosTable.id, id))
+      .returning();
+    if (!updated) {
+      res.status(404).json({ error: 'Proyecto no encontrado' });
+    } else {
+      res.status(200).json(updated);
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al actualizar el proyecto' });
+  }
+}
+
+/**
+ * @swagger
+ * /proyectos/{id}:
+ *   delete:
+ *     summary: Eliminar un proyecto por ID
+ *     tags: [proyectos]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID del proyecto
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Proyecto eliminado correctamente
+ *       404:
+ *         description: Proyecto no encontrado
+ *       500:
+ *         description: Error al eliminar el proyecto
+ */
+export async function deleteProyecto(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const [deleted] = await db
+      .delete(proyectosTable)
+      .where(eq(proyectosTable.id, id))
+      .returning();
+    if (!deleted) {
+      res.status(404).json({ error: 'Proyecto no encontrado' });
+    } else {
+      res.status(200).json({ message: 'Proyecto eliminado correctamente' });
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al eliminar el proyecto' });
+  }
+}
+
+// proyecto8b/api/src/routes/proyectos/index.ts
+import { Router } from 'express';
+import {
+  createProyecto,
+  deleteProyecto,
+  getProyecto,
+  listProyectos,
+  updateProyecto,
+} from './proyectosController';
+
+import { validateData } from '../../middlewares/validationMiddleware';
+import {
+  insertProyectoSchema,
+  updateProyectoSchema,
+} from '../../db/proyectosSchema';
+
+
+const router = Router();
+
+router.get('/', listProyectos);
+router.get('/:id', getProyecto);
+router.post('/',validateData(insertProyectoSchema), createProyecto);
+router.put('/:id',validateData(updateProyectoSchema), updateProyecto);
+router.delete('/:id',deleteProyecto);
+
+export default router;
+
+// proyecto8b/api/src/routes/reportes/reportesController.ts
+import { Request, Response } from 'express';
+import { db } from '../../db/index';
+import { reportesTable } from '../../db/reportesSchema';
+import { eq } from 'drizzle-orm';
+
+/**
+ * @swagger
+ * /reportes:
+ *   post:
+ *     summary: Crear un nuevo reporte
+ *     tags: [reportes]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tipo
+ *               - descripcion
+ *               - emisor_id
+ *               - objeto_id
+ *             properties:
+ *               tipo:
+ *                 type: string
+ *               descripcion:
+ *                 type: string
+ *               emisor_id:
+ *                 type: integer
+ *               objeto_id:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Reporte creado correctamente
+ *       500:
+ *         description: Error al crear el reporte
+ */
+export async function createReporte(req: Request, res: Response) {
+  try {
+    const data = req.cleanBody;
+    const [newReporte] = await db.insert(reportesTable).values(data).returning();
+    res.status(201).json(newReporte);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al crear el reporte' });
+  }
+}
+
+/**
+ * @swagger
+ * /reportes:
+ *   get:
+ *     summary: Obtener todos los reportes
+ *     tags: [reportes]
+ *     responses:
+ *       200:
+ *         description: Lista de reportes
+ *       500:
+ *         description: Error al obtener los reportes
+ */
+export async function listReportes(_req: Request, res: Response) {
+  try {
+    const reportes = await db.select().from(reportesTable);
+    res.status(200).json(reportes);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al obtener los reportes' });
+  }
+}
+
+/**
+ * @swagger
+ * /reportes/{id}:
+ *   get:
+ *     summary: Obtener un reporte por ID
+ *     tags: [reportes]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del reporte
+ *     responses:
+ *       200:
+ *         description: Reporte encontrado
+ *       404:
+ *         description: Reporte no encontrado
+ *       500:
+ *         description: Error al obtener el reporte
+ */
+export async function getReporte(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const [reporte] = await db.select().from(reportesTable).where(eq(reportesTable.id, id));
+    if (!reporte) {
+      res.status(404).json({ error: 'Reporte no encontrado' });
+    } else {
+      res.status(200).json(reporte);
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al obtener el reporte' });
+  }
+}
+
+/**
+ * @swagger
+ * /reportes/{id}:
+ *   put:
+ *     summary: Actualizar un reporte por ID
+ *     tags: [reportes]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID del reporte
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tipo:
+ *                 type: string
+ *               descripcion:
+ *                 type: string
+ *               emisor_id:
+ *                 type: integer
+ *               objeto_id:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Reporte actualizado correctamente
+ *       404:
+ *         description: Reporte no encontrado
+ *       500:
+ *         description: Error al actualizar el reporte
+ */
+export async function updateReporte(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const [updatedReporte] = await db
+      .update(reportesTable)
+      .set(req.cleanBody)
+      .where(eq(reportesTable.id, id))
+      .returning();
+    if (!updatedReporte) {
+      res.status(404).json({ error: 'Reporte no encontrado' });
+    } else {
+      res.status(200).json(updatedReporte);
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al actualizar el reporte' });
+  }
+}
+
+/**
+ * @swagger
+ * /reportes/{id}:
+ *   delete:
+ *     summary: Eliminar un reporte por ID
+ *     tags: [reportes]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID del reporte
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Reporte eliminado correctamente
+ *       404:
+ *         description: Reporte no encontrado
+ *       500:
+ *         description: Error al eliminar el reporte
+ */
+export async function deleteReporte(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const [deleted] = await db.delete(reportesTable).where(eq(reportesTable.id, id)).returning();
+    if (!deleted) {
+      res.status(404).json({ error: 'Reporte no encontrado' });
+    } else {
+      res.status(200).json({ message: 'Reporte eliminado correctamente' });
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al eliminar el reporte' });
+  }
+}
+
+// src/routes/reportes/index.ts
+import { Router } from 'express';
+import {
+  createReporte,
+  deleteReporte,
+  getReporte,
+  listReportes,
+  updateReporte,
+} from './reportesController';
+import { validateData } from '../../middlewares/validationMiddleware';
+import {
+  insertReporteSchema,
+  updateReporteSchema,
+} from '../../db/reportesSchema';
+
+const router = Router();
+
+router.post('/',validateData(insertReporteSchema), createReporte);
+router.get('/', listReportes);
+router.get('/:id', getReporte);
+router.put('/:id',validateData(updateReporteSchema), updateReporte);
+router.delete('/:id',deleteReporte);
+
+export default router;
+
+// src/routes/permission-types/permissionTypesController.ts
+import { Request, Response } from 'express';
+import { db } from '../../db/index';
+import { permissionTypesTable } from '../../db/permissionTypesSchema';
+import { eq } from 'drizzle-orm';
+
+/**
+ * @swagger
+ * /permission-types:
+ *   post:
+ *     summary: Crear un nuevo tipo de permiso
+ *     tags: [permissionTypes]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - code
+ *               - name
+ *             properties:
+ *               code:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Tipo de permiso creado exitosamente
+ *       500:
+ *         description: Error al crear el tipo de permiso
+ */
+export async function createPermissionType(req: Request, res: Response) {
+  try {
+    const { id, ...data } = req.cleanBody;
+    const [newRecord] = await db.insert(permissionTypesTable).values(data).returning();
+    res.status(201).json(newRecord);
+  } catch (e) {
+    console.error('❌ Error en createPermissionType:', e);
+    res.status(500).json({ error: 'Error al crear el tipo de permiso' });
+  }
+}
+
+/**
+ * @swagger
+ * /permission-types:
+ *   get:
+ *     summary: Obtener todos los tipos de permiso
+ *     tags: [permissionTypes]
+ *     responses:
+ *       200:
+ *         description: Lista de tipos de permiso
+ *       500:
+ *         description: Error al obtener los tipos de permiso
+ */
+export async function listPermissionTypes(req: Request, res: Response) {
+  try {
+    const records = await db.select().from(permissionTypesTable);
+    res.status(200).json(records);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al obtener los tipos de permiso' });
+  }
+}
+
+/**
+ * @swagger
+ * /permission-types/{id}:
+ *   get:
+ *     summary: Obtener un tipo de permiso por ID
+ *     tags: [permissionTypes]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del tipo de permiso
+ *     responses:
+ *       200:
+ *         description: Tipo de permiso encontrado
+ *       404:
+ *         description: Tipo de permiso no encontrado
+ *       500:
+ *         description: Error al obtener el tipo de permiso
+ */
+export async function getPermissionType(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const [record] = await db.select().from(permissionTypesTable).where(eq(permissionTypesTable.id, id));
+    if (!record) {
+      return res.status(404).json({ error: 'Tipo de permiso no encontrado' });
+    }
+    res.status(200).json(record);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al obtener el tipo de permiso' });
+  }
+}
+
+/**
+ * @swagger
+ * /permission-types/{id}:
+ *   put:
+ *     summary: Actualizar un tipo de permiso por ID
+ *     tags: [permissionTypes]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del tipo de permiso a actualizar
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               code:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Tipo de permiso actualizado correctamente
+ *       404:
+ *         description: Tipo de permiso no encontrado
+ *       500:
+ *         description: Error al actualizar el tipo de permiso
+ */
+export async function updatePermissionType(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const data = req.cleanBody;
+    const [updatedRecord] = await db.update(permissionTypesTable).set(data).where(eq(permissionTypesTable.id, id)).returning();
+    if (!updatedRecord) {
+      return res.status(404).json({ error: 'Tipo de permiso no encontrado' });
+    }
+    res.status(200).json(updatedRecord);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al actualizar el tipo de permiso' });
+  }
+}
+
+/**
+ * @swagger
+ * /permission-types/{id}:
+ *   delete:
+ *     summary: Eliminar un tipo de permiso por ID
+ *     tags: [permissionTypes]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del tipo de permiso a eliminar
+ *     responses:
+ *       200:
+ *         description: Tipo de permiso eliminado correctamente
+ *       404:
+ *         description: Tipo de permiso no encontrado
+ *       500:
+ *         description: Error al eliminar el tipo de permiso
+ */
+export async function deletePermissionType(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const [deletedRecord] = await db.delete(permissionTypesTable).where(eq(permissionTypesTable.id, id)).returning();
+    if (!deletedRecord) {
+      return res.status(404).json({ error: 'Tipo de permiso no encontrado' });
+    }
+    res.status(200).json({ message: 'Tipo de permiso eliminado correctamente' });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al eliminar el tipo de permiso' });
+  }
+}
+
+// src/routes/permission-types/index.ts
+import { Router } from 'express';
+import {
+  createPermissionType,
+  deletePermissionType,
+  getPermissionType,
+  listPermissionTypes,
+  updatePermissionType,
+} from './permissionTypesController';
+import { validateData } from '../../middlewares/validationMiddleware';
+import {
+  insertPermissionTypeSchema,
+  updatePermissionTypeSchema,
+} from '../../db/permissionTypesSchema';
+
+const router = Router();
+
+router.post('/', validateData(insertPermissionTypeSchema), createPermissionType);
+router.get('/', listPermissionTypes);
+router.get('/:id', getPermissionType);
+router.put('/:id', validateData(updatePermissionTypeSchema), updatePermissionType);
+router.delete('/:id', deletePermissionType);
+
+export default router;
+
+// proyecto8b/api/src/routes/paginasColaborativas/paginasColaborativasController.ts
+import { Request, Response } from 'express';
+import { db } from '../../db';
+import { paginasColaborativasTable } from '../../db/paginasColaborativasSchema';
+import { eq } from 'drizzle-orm';
+
+/**
+ * @swagger
+ * /paginas-colaborativas:
+ *   post:
+ *     summary: Crear una nueva página colaborativa
+ *     tags: [paginasColaborativas]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - titulo
+ *               - contenido
+ *               - proyecto_id
+ *             properties:
+ *               titulo:
+ *                 type: string
+ *               contenido:
+ *                 type: string
+ *               proyecto_id:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Página colaborativa creada exitosamente
+ *       500:
+ *         description: Error al crear la página colaborativa
+ */
+export async function createPaginaColaborativa(req: Request, res: Response) {
+  try {
+    const data = req.cleanBody;
+    const [nueva] = await db.insert(paginasColaborativasTable).values(data).returning();
+    res.status(201).json(nueva);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al crear la página colaborativa' });
+  }
+}
+
+/**
+ * @swagger
+ * /paginas-colaborativas:
+ *   get:
+ *     summary: Obtener todas las páginas colaborativas
+ *     tags: [paginasColaborativas]
+ *     responses:
+ *       200:
+ *         description: Lista de páginas colaborativas
+ *       500:
+ *         description: Error al obtener las páginas colaborativas
+ */
+export async function listPaginasColaborativas(_req: Request, res: Response) {
+  try {
+    const paginas = await db.select().from(paginasColaborativasTable);
+    res.status(200).json(paginas);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al obtener las páginas colaborativas' });
+  }
+}
+
+/**
+ * @swagger
+ * /paginas-colaborativas/{id}:
+ *   get:
+ *     summary: Obtener una página colaborativa por ID
+ *     tags: [paginasColaborativas]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID de la página
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Página encontrada
+ *       404:
+ *         description: Página no encontrada
+ *       500:
+ *         description: Error al obtener la página colaborativa
+ */
+export async function getPaginaColaborativa(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const [pagina] = await db.select().from(paginasColaborativasTable).where(eq(paginasColaborativasTable.id, id));
+    if (!pagina) {
+      res.status(404).json({ error: 'Página no encontrada' });
+    } else {
+      res.status(200).json(pagina);
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al obtener la página colaborativa' });
+  }
+}
+
+/**
+ * @swagger
+ * /paginas-colaborativas/{id}:
+ *   put:
+ *     summary: Actualizar una página colaborativa por ID
+ *     tags: [paginasColaborativas]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID de la página a actualizar
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               titulo:
+ *                 type: string
+ *               contenido:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Página actualizada correctamente
+ *       404:
+ *         description: Página no encontrada
+ *       500:
+ *         description: Error al actualizar la página colaborativa
+ */
+export async function updatePaginaColaborativa(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const [actualizada] = await db
+      .update(paginasColaborativasTable)
+      .set(req.cleanBody)
+      .where(eq(paginasColaborativasTable.id, id))
+      .returning();
+    if (!actualizada) {
+      res.status(404).json({ error: 'Página no encontrada' });
+    } else {
+      res.status(200).json(actualizada);
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al actualizar la página colaborativa' });
+  }
+}
+
+/**
+ * @swagger
+ * /paginas-colaborativas/{id}:
+ *   delete:
+ *     summary: Eliminar una página colaborativa por ID
+ *     tags: [paginasColaborativas]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID de la página a eliminar
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Página eliminada correctamente
+ *       404:
+ *         description: Página no encontrada
+ *       500:
+ *         description: Error al eliminar la página colaborativa
+ */
+export async function deletePaginaColaborativa(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const [eliminada] = await db
+      .delete(paginasColaborativasTable)
+      .where(eq(paginasColaborativasTable.id, id))
+      .returning();
+
+    if (!eliminada) {
+      res.status(404).json({ error: 'Página no encontrada' });
+    } else {
+      res.status(200).json({ message: 'Página eliminada correctamente' });
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al eliminar la página colaborativa' });
+  }
+}
+
+// proyecto8b/api/src/routes/paginasColaborativas/index.ts
+import { Router } from 'express';
+import {
+  createPaginaColaborativa,
+  deletePaginaColaborativa,
+  getPaginaColaborativa,
+  listPaginasColaborativas,
+  updatePaginaColaborativa
+} from './paginasColaborativasController';
+import { validateData } from '../../middlewares/validationMiddleware';
+import {
+  insertPaginaColaborativaSchema,
+  updatePaginaColaborativaSchema
+} from '../../db/paginasColaborativasSchema';
+
+const router = Router();
+
+router.post('/',validateData(insertPaginaColaborativaSchema), createPaginaColaborativa);
+router.get('/', listPaginasColaborativas);
+router.get('/:id', getPaginaColaborativa);
+router.put('/:id',validateData(updatePaginaColaborativaSchema), updatePaginaColaborativa);
+router.delete('/:id',deletePaginaColaborativa);
+
+export default router;
+
+// proyecto8b/api/src/routes/proyectosValidaciones/proyectosValidacionesController.ts
+import { Request, Response } from 'express';
+import { db } from '../../db/index';
+import { proyectosValidacionesTable } from '../../db/proyectosValidacionesSchema';
+import { eq } from 'drizzle-orm';
+
+/**
+ * @swagger
+ * /proyectos-validaciones:
+ *   post:
+ *     summary: Crear una nueva validación de proyecto
+ *     tags: [proyectosValidaciones]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               proyecto_id:
+ *                 type: integer
+ *               validado_por:
+ *                 type: integer
+ *               comentario:
+ *                 type: string
+ *               estado:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Validación creada exitosamente
+ *       500:
+ *         description: Error al crear la validación del proyecto
+ */
+export async function createProyectoValidacion(req: Request, res: Response) {
+  try {
+    const data = req.cleanBody;
+    const [nuevaValidacion] = await db.insert(proyectosValidacionesTable).values(data).returning();
+    res.status(201).json(nuevaValidacion);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al crear la validación del proyecto' });
+  }
+}
+
+/**
+ * @swagger
+ * /proyectos-validaciones:
+ *   get:
+ *     summary: Obtener todas las validaciones de proyectos
+ *     tags: [proyectosValidaciones]
+ *     responses:
+ *       200:
+ *         description: Lista de validaciones de proyectos
+ *       500:
+ *         description: Error al obtener las validaciones
+ */
+export async function listProyectosValidaciones(_req: Request, res: Response) {
+  try {
+    const validaciones = await db.select().from(proyectosValidacionesTable);
+    res.status(200).json(validaciones);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al obtener las validaciones' });
+  }
+}
+
+/**
+ * @swagger
+ * /proyectos-validaciones/{id}:
+ *   get:
+ *     summary: Obtener una validación de proyecto por ID
+ *     tags: [proyectosValidaciones]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la validación
+ *     responses:
+ *       200:
+ *         description: Validación encontrada
+ *       404:
+ *         description: Validación no encontrada
+ *       500:
+ *         description: Error al obtener la validación
+ */
+export async function getProyectoValidacion(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const [validacion] = await db
+      .select()
+      .from(proyectosValidacionesTable)
+      .where(eq(proyectosValidacionesTable.id, id));
+
+    if (!validacion) {
+      res.status(404).json({ error: 'Validación no encontrada' });
+    } else {
+      res.status(200).json(validacion);
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al obtener la validación' });
+  }
+}
+
+/**
+ * @swagger
+ * /proyectos-validaciones/{id}:
+ *   put:
+ *     summary: Actualizar una validación de proyecto
+ *     tags: [proyectosValidaciones]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la validación
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               comentario:
+ *                 type: string
+ *               estado:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Validación actualizada correctamente
+ *       404:
+ *         description: Validación no encontrada
+ *       500:
+ *         description: Error al actualizar la validación
+ */
+export async function updateProyectoValidacion(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const updates = req.cleanBody;
+    const [updated] = await db
+      .update(proyectosValidacionesTable)
+      .set(updates)
+      .where(eq(proyectosValidacionesTable.id, id))
+      .returning();
+
+    if (!updated) {
+      res.status(404).json({ error: 'Validación no encontrada' });
+    } else {
+      res.status(200).json(updated);
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al actualizar la validación' });
+  }
+}
+
+/**
+ * @swagger
+ * /proyectos-validaciones/{id}:
+ *   delete:
+ *     summary: Eliminar una validación de proyecto
+ *     tags: [proyectosValidaciones]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la validación
+ *     responses:
+ *       200:
+ *         description: Validación eliminada correctamente
+ *       404:
+ *         description: Validación no encontrada
+ *       500:
+ *         description: Error al eliminar la validación
+ */
+export async function deleteProyectoValidacion(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const [deleted] = await db
+      .delete(proyectosValidacionesTable)
+      .where(eq(proyectosValidacionesTable.id, id))
+      .returning();
+
+    if (!deleted) {
+      res.status(404).json({ error: 'Validación no encontrada' });
+    } else {
+      res.status(200).json({ message: 'Validación eliminada correctamente' });
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al eliminar la validación' });
+  }
+}
+
+// proyecto8b/api/src/routes/proyectosValidaciones/index.ts
+import { Router } from 'express';
+import {
+  createProyectoValidacion,
+  deleteProyectoValidacion,
+  getProyectoValidacion,
+  listProyectosValidaciones,
+  updateProyectoValidacion,
+} from './proyectosValidacionesController';
+
+import { validateData } from '../../middlewares/validationMiddleware';
+import {
+  insertProyectoValidacionSchema,
+  updateProyectoValidacionSchema,
+} from '../../db/proyectosValidacionesSchema';
+
+
+const router = Router();
+
+// Protegidas
+router.get('/', listProyectosValidaciones);
+router.get('/:id', getProyectoValidacion);
+
+// Solo admins pueden modificar
+router.post(
+  '/',validateData(insertProyectoValidacionSchema),
+  createProyectoValidacion
+);
+
+router.put(
+  '/:id',validateData(updateProyectoValidacionSchema),
+  updateProyectoValidacion
+);
+
+router.delete('/:id',deleteProyectoValidacion);
+
+export default router;

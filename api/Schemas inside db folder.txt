@@ -1,0 +1,1243 @@
+// db/actividadUsuarioSchema.ts
+import { pgTable, integer, varchar, timestamp } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { usuariosTable } from './usuariosSchema';
+
+export const actividadUsuarioTable = pgTable('actividad_usuario', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  usuario_id: integer().references(() => usuariosTable.id),
+  tipo_actividad: varchar({ length: 100 }),
+  objeto_id: integer(),
+  contexto: varchar({ length: 50 }),
+  fecha: timestamp().defaultNow(),
+});
+
+export const insertActividadUsuarioSchema = z.object({
+  usuario_id: z.number().int(),
+  tipo_actividad: z.string().max(100),
+  objeto_id: z.number().int(),
+  contexto: z.string().max(50)
+});
+
+export const updateActividadUsuarioSchema = z.object({
+  usuario_id: z.number().int().optional(),
+  tipo_actividad: z.string().max(100).optional(),
+  objeto_id: z.number().int().optional(),
+  contexto: z.string().max(50).optional()
+}).partial();
+
+// db/asistenciasEventoSchema.ts
+import { pgTable, integer, timestamp } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { eventosTable } from './eventosSchema';
+import { usuariosTable } from './usuariosSchema';
+
+export const asistenciasEventoTable = pgTable('asistencias_evento', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  evento_id: integer().references(() => eventosTable.id),
+  usuario_id: integer().references(() => usuariosTable.id),
+  registrado_en: timestamp().defaultNow(),
+});
+
+export const insertAsistenciaEventoSchema = z.object({
+  evento_id: z.number().int(),
+  usuario_id: z.number().int(),
+  registrado_en: z.date().optional(),
+});
+
+export const updateAsistenciaEventoSchema = z.object({
+  evento_id: z.number().int().optional(),
+  usuario_id: z.number().int().optional(),
+  registrado_en: z.date().optional(),
+}).partial();
+
+// src/db/bloquesSchema.ts
+import { pgTable, integer, varchar, jsonb, timestamp } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { usuariosTable } from './usuariosSchema';
+import { paginasColaborativasTable } from './paginasColaborativasSchema';
+
+// Definición de la tabla bloques
+export const bloquesTable = pgTable('bloques', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  pagina_id: integer()
+    .references(() => paginasColaborativasTable.id),
+  tipo: varchar( { length: 50 }),
+  contenido: jsonb(),
+  orden: integer().default(0),
+  creado_por: integer()
+    .references(() => usuariosTable.id),
+  creado_en: timestamp().defaultNow()
+});
+
+// Validación con Zod
+export const insertBloqueSchema = z.object({
+  pagina_id: z.number().optional(),
+  tipo: z.string().max(50),
+  contenido: z.any(),
+  orden: z.number().optional(),
+  creado_por: z.number().optional(),
+});
+
+export const updateBloqueSchema = z.object({
+  pagina_id: z.number().optional(),
+  tipo: z.string().max(50),
+  contenido: z.any(),
+  orden: z.number().optional(),
+  creado_por: z.number().optional(),
+}).partial();
+
+// db/collaborativePagePermissionsSchema.ts
+import { pgTable, integer, timestamp, boolean, unique } from 'drizzle-orm/pg-core';
+import { usuariosTable } from './usuariosSchema';
+import { paginasColaborativasTable } from './paginasColaborativasSchema';
+import { permissionTypesTable } from './permissionTypesSchema';
+import { z } from 'zod';
+
+export const collaborativePagePermissionsTable = pgTable('collaborative_page_permissions', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  page_id: integer().notNull().references(() => paginasColaborativasTable.id, { onDelete: 'cascade' }),
+  user_id: integer().notNull().references(() => usuariosTable.id, { onDelete: 'cascade' }),
+  permission_type_id: integer().notNull().references(() => permissionTypesTable.id),
+  granted_by: integer().references(() => usuariosTable.id),  // Quién otorgó el permiso:contentReference[oaicite:30]{index=30}
+  granted_at: timestamp().defaultNow(),                      // Cuándo se otorgó:contentReference[oaicite:31]{index=31}
+  is_active: boolean().default(true)                         // Estado del permiso:contentReference[oaicite:32]{index=32}
+}, (t) => [
+  unique().on(t.page_id, t.user_id, t.permission_type_id)    // UNIQUE(page_id, user_id, permission_type_id):contentReference[oaicite:33]{index=33}
+]);
+
+export const insertCollaborativePagePermissionSchema = z.object({
+  page_id: z.number().int(),
+  user_id: z.number().int(),
+  permission_type_id: z.number().int(),
+  // `granted_by` and `granted_at` are set automatically (e.g. by the system), not provided by client
+  is_active: z.boolean().optional()
+});
+export const updateCollaborativePagePermissionSchema = z.object({
+  page_id: z.number().int().optional(),
+  user_id: z.number().int().optional(),
+  permission_type_id: z.number().int().optional(),
+  is_active: z.boolean().optional()
+}).partial();
+
+// db/contentTypesSchema.ts
+import { pgTable, integer, varchar, text, boolean, timestamp, unique } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+
+export const contentTypesTable = pgTable('content_types', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  name: varchar({ length: 100 }).notNull().unique(),
+  description: text(),
+  is_active: boolean().default(true),
+  created_at: timestamp().defaultNow()
+});
+
+export const insertContentTypeSchema = z.object({
+  name: z.string().max(100),
+  description: z.string().optional(),
+  is_active: z.boolean().optional()
+});
+export const updateContentTypeSchema = z.object({
+  name: z.string().max(100).optional(),
+  description: z.string().optional(),
+  is_active: z.boolean().optional()
+}).partial();
+
+import { pgTable, integer, timestamp } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { usuariosTable } from './usuariosSchema';
+
+export const conversacionesTable = pgTable('conversaciones', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  usuario_1_id: integer().references(() => usuariosTable.id),
+  usuario_2_id: integer().references(() => usuariosTable.id),
+  creado_en: timestamp().defaultNow(),
+});
+
+export const insertConversacionSchema = z.object({
+  usuario_1_id: z.number().int(),
+  usuario_2_id: z.number().int(),
+  creado_en: z.date().optional(),
+});
+
+export const updateConversacionSchema = z.object({
+  usuario_1_id: z.number().int().optional(),
+  usuario_2_id: z.number().int().optional(),
+  creado_en: z.date().optional(),
+}).partial();
+
+// db/eventosSchema.ts
+import { pgTable, integer, varchar, text, timestamp } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { usuariosTable } from './usuariosSchema';
+import { universidadesTable } from './universidadesSchema';
+
+export const eventosTable = pgTable('eventos', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  titulo: varchar({ length: 200 }),
+  descripcion: text(),
+  tipo: varchar({ length: 100 }),
+  creador_id: integer().references(() => usuariosTable.id),
+  universidad_id: integer().references(() => universidadesTable.id),
+  fecha_inicio: timestamp(),
+  fecha_fin: timestamp(),
+  enlace_acceso: text(),
+  creado_en: timestamp().defaultNow(),
+});
+
+export const insertEventoSchema = z.object({
+  titulo: z.string().max(200),
+  descripcion: z.string(),
+  tipo: z.string().max(100),
+  creador_id: z.number().int(),
+  universidad_id: z.number().int(),
+  fecha_inicio: z.string().refine(val => !isNaN(Date.parse(val)), {
+    message: 'fecha_inicio debe ser una fecha válida',
+  }).transform(val => new Date(val)),
+  fecha_fin: z.string().refine(val => !isNaN(Date.parse(val)), {
+    message: 'fecha_fin debe ser una fecha válida',
+  }).transform(val => new Date(val)),
+  enlace_acceso: z.string(),
+});
+
+export const updateEventoSchema = z.object({
+  titulo: z.string().max(200),
+  descripcion: z.string(),
+  tipo: z.string().max(100),
+  creador_id: z.number().int(),
+  universidad_id: z.number().int(),
+  fecha_inicio: z.string().refine(val => !isNaN(Date.parse(val)), {
+    message: 'fecha_inicio debe ser una fecha válida',
+  }).transform(val => new Date(val)),
+  fecha_fin: z.string().refine(val => !isNaN(Date.parse(val)), {
+    message: 'fecha_fin debe ser una fecha válida',
+  }).transform(val => new Date(val)),
+  enlace_acceso: z.string(),
+});
+
+// db/eventTypesSchema.ts
+import { pgTable, integer, varchar, text, boolean, timestamp, unique } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+
+export const eventTypesTable = pgTable('event_types', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  name: varchar({ length: 100 }).notNull().unique(),  // Nombre del tipo de evento (único):contentReference[oaicite:10]{index=10}
+  description: text(),                                // Descripción del tipo de evento
+  icon: varchar({ length: 50 }),                      // Nuevo: Para interfaz de usuario:contentReference[oaicite:11]{index=11}
+  is_active: boolean().default(true),
+  created_at: timestamp().defaultNow()
+});
+
+export const insertEventTypeSchema = z.object({
+  name: z.string().max(100),
+  description: z.string().optional(),
+  icon: z.string().max(50).optional(),
+  is_active: z.boolean().optional()
+});
+export const updateEventTypeSchema = z.object({
+  name: z.string().max(100).optional(),
+  description: z.string().optional(),
+  icon: z.string().max(50).optional(),
+  is_active: z.boolean().optional()
+}).partial();
+
+// db/experienceTypesSchema.ts
+import { pgTable, integer, varchar, text, boolean, unique } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+
+export const experienceTypesTable = pgTable('experience_types', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  name: varchar({ length: 50 }).notNull().unique(),
+  description: text(),
+  is_active: boolean().default(true)
+});
+
+export const insertExperienceTypeSchema = z.object({
+  name: z.string().max(50),
+  description: z.string().optional(),
+  is_active: z.boolean().optional()
+});
+export const updateExperienceTypeSchema = z.object({
+  name: z.string().max(50).optional(),
+  description: z.string().optional(),
+  is_active: z.boolean().optional()
+}).partial();
+
+// db/experienciaUsuarioSchema.ts
+import { pgTable, integer, varchar, text, date } from 'drizzle-orm/pg-core';
+import { usuariosTable } from './usuariosSchema';
+import { z } from 'zod';
+
+export const experienciaUsuarioTable = pgTable('experiencia_usuario', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  usuario_id: integer().references(() => usuariosTable.id),
+  tipo: varchar({ length: 50 }),
+  titulo: varchar({ length: 100 }),
+  descripcion: text(),
+  fecha_inicio: date(),
+  fecha_fin: date(),
+});
+
+export const insertExperienciaUsuarioSchema = z.object({
+  usuario_id: z.number().int(),
+  tipo: z.string().max(50),
+  titulo: z.string().max(100),
+  descripcion: z.string(),
+  fecha_inicio: z.string().refine(val => !isNaN(Date.parse(val)), {
+  message: 'fecha_inicio debe ser una fecha válida'
+}).transform(val => new Date(val)),
+fecha_fin: z.string().refine(val => !isNaN(Date.parse(val)), {
+  message: 'fecha_fin debe ser una fecha válida'
+}).transform(val => new Date(val)),
+});
+
+export const updateExperienciaUsuarioSchema = z.object({
+  usuario_id: z.number().int(),
+  tipo: z.string().max(50),
+  titulo: z.string().max(100),
+  descripcion: z.string(),
+  fecha_inicio: z.string().refine(val => !isNaN(Date.parse(val)), {
+  message: 'fecha_inicio debe ser una fecha válida'
+}).transform(val => new Date(val)),
+fecha_fin: z.string().refine(val => !isNaN(Date.parse(val)), {
+  message: 'fecha_fin debe ser una fecha válida'
+}).transform(val => new Date(val)),
+});
+
+import { pgTable, integer, varchar, text } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+
+export const forosTable = pgTable('foros', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  nombre: varchar({ length: 100 }),
+  descripcion: text(),
+});
+
+export const insertForoSchema = z.object({
+  nombre: z.string().max(100),
+  descripcion: z.string().nullable().optional(),
+});
+
+export const updateForoSchema = z.object({
+  nombre: z.string().max(100).optional(),
+  descripcion: z.string().nullable().optional(),
+}).partial();
+
+// db/hilosSchema.ts
+import { pgTable, integer, varchar, text, timestamp } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { forosTable } from './forosSchema';
+import { usuariosTable } from './usuariosSchema';
+
+export const hilosTable = pgTable('hilos', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  foro_id: integer().references(() => forosTable.id),
+  titulo: varchar({ length: 150 }),
+  contenido: text(),
+  creador_id: integer().references(() => usuariosTable.id),
+  creado_en: timestamp().defaultNow(),
+});
+
+export const insertHiloSchema = z.object({
+  foro_id: z.number().int(),
+  titulo: z.string().max(150),
+  contenido: z.string(),
+  creador_id: z.number().int(),
+  creado_en: z.date().optional(),
+});
+
+export const updateHiloSchema = z.object({
+  foro_id: z.number().int().optional(),
+  titulo: z.string().max(150).optional(),
+  contenido: z.string().optional(),
+  creador_id: z.number().int().optional(),
+  creado_en: z.date().optional(),
+}).partial();
+
+// db/mensajesSchema.ts
+import { pgTable, integer, text, timestamp, boolean } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { conversacionesTable } from './conversacionesSchema';
+import { usuariosTable } from './usuariosSchema';
+
+export const mensajesTable = pgTable('mensajes', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  conversacion_id: integer().references(() => conversacionesTable.id),
+  emisor_id: integer().references(() => usuariosTable.id),
+  contenido: text(),
+  enviado_en: timestamp().defaultNow(),
+  leido: boolean().default(false),
+});
+
+export const insertMensajeSchema = z.object({
+  conversacion_id: z.number().int(),
+  emisor_id: z.number().int(),
+  contenido: z.string().min(1),
+  enviado_en: z.date().optional(),
+  leido: z.boolean().optional(),
+});
+
+export const updateMensajeSchema = z.object({
+  contenido: z.string().min(1).optional(),
+  leido: z.boolean().optional(),
+}).partial();
+
+// db/ofertasLaboralesSchema.ts
+import { pgTable, integer, varchar, timestamp, text, date } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { usuariosTable } from './usuariosSchema';
+
+export const ofertasLaboralesTable = pgTable('ofertas_laborales', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  logo_url: text(),
+  titulo: varchar({ length: 200 }),
+  descripcion: text(),
+  empresa: varchar({ length: 150 }),
+  ubicacion: varchar({ length: 100 }),
+  tipo_contrato: varchar({ length: 100 }),
+  salario: varchar({ length: 100 }),
+  fecha_publicacion: date(),
+  fecha_limite: date(),
+  creado_por: integer().references(() => usuariosTable.id),
+  estado: varchar({ length: 50 }).default('activo'),
+});
+
+export const insertOfertasLaboralesSchema = z.object({
+  logo_url: z.string(),
+  titulo: z.string().max(200),
+  descripcion: z.string(),
+  empresa: z.string().max(150),
+  ubicacion: z.string().max(100),
+  tipo_contrato: z.string().max(100),
+  salario: z.string().max(100),
+  fecha_publicacion: z.date().optional(),
+  fecha_limite: z.date().optional(),
+  creado_por: z.number().int(),
+  estado: z.string().max(50).default('activo'),
+});
+
+export const updateOfertasLaboralesSchema = z.object({
+  logo_url: z.string().optional(),
+  titulo: z.string().max(200).optional(),
+  descripcion: z.string().optional(),
+  empresa: z.string().max(150).optional(),
+  ubicacion: z.string().max(100).optional(),
+  tipo_contrato: z.string().max(100).optional(),
+  salario: z.string().max(100).optional(),
+  fecha_publicacion: z.date(),
+  fecha_limite: z.date().optional(),
+  creado_por: z.number().int(),
+  estado: z.string().max(50).optional()
+}).partial();
+
+// db/oportunidadesSchema.ts
+import { pgTable, integer, varchar, text, date } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { universidadesTable } from './universidadesSchema';
+
+export const oportunidadesTable = pgTable('oportunidades', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  titulo: varchar({ length: 200 }),
+  descripcion: text(),
+  tipo: varchar({ length: 100 }),
+  universidad_id: integer().references(() => universidadesTable.id),
+  fecha_limite: date(),
+});
+
+export const insertOportunidadSchema = z.object({
+  titulo: z.string().max(200),
+  descripcion: z.string(),
+  tipo: z.string().max(100),
+  universidad_id: z.number().int(),
+  fecha_limite: z.string(), // en formato ISO
+});
+
+export const updateOportunidadSchema = z.object({
+  titulo: z.string().max(200).optional(),
+  descripcion: z.string().optional(),
+  tipo: z.string().max(100).optional(),
+  universidad_id: z.number().int().optional(),
+  fecha_limite: z.string().optional(), // ISO date
+}).partial();
+
+// db/opportunityTypesSchema.ts
+import { pgTable, integer, varchar, text, boolean, timestamp, unique } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+
+export const opportunityTypesTable = pgTable('opportunity_types', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  name: varchar({ length: 100 }).notNull().unique(),
+  description: text(),
+  icon: varchar({ length: 50 }),       // Nuevo: Para interfaz de usuario:contentReference[oaicite:13]{index=13}
+  is_active: boolean().default(true),
+  created_at: timestamp().defaultNow()
+});
+
+export const insertOpportunityTypeSchema = z.object({
+  name: z.string().max(100),
+  description: z.string().optional(),
+  icon: z.string().max(50).optional(),
+  is_active: z.boolean().optional()
+});
+export const updateOpportunityTypeSchema = z.object({
+  name: z.string().max(100).optional(),
+  description: z.string().optional(),
+  icon: z.string().max(50).optional(),
+  is_active: z.boolean().optional()
+}).partial();
+
+// db/paginasColaborativasSchema.ts
+import { pgTable, integer, varchar, text, timestamp } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { usuariosTable } from './usuariosSchema';
+import { proyectosTable } from './proyectosSchema';
+
+export const paginasColaborativasTable = pgTable('paginas_colaborativas', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  proyecto_id: integer().references(() => proyectosTable.id),
+  titulo: varchar({ length: 200 }),
+  descripcion: text(),
+  creada_por: integer().references(() => usuariosTable.id),
+  permisos_lectura: text().array(),
+  permisos_escritura: text().array(),
+  orden: integer().default(0),
+  creada_en: timestamp().defaultNow()
+});
+
+// Zod schemas
+export const insertPaginaColaborativaSchema = z.object({
+  proyecto_id: z.number().int(),
+  titulo: z.string().max(200),
+  descripcion: z.string(),
+  creada_por: z.number().int(),
+  permisos_lectura: z.array(z.string()),
+  permisos_escritura: z.array(z.string()),
+  orden: z.number().optional(),
+  creada_en: z.date().optional()
+});
+
+export const updatePaginaColaborativaSchema = z.object({
+  proyecto_id: z.number().int().optional(),
+  titulo: z.string().max(200).optional(),
+  descripcion: z.string().optional(),
+  creada_por: z.number().int().optional(),
+  permisos_lectura: z.array(z.string()).optional(),
+  permisos_escritura: z.array(z.string()).optional(),
+  orden: z.number().optional(),
+  creada_en: z.date().optional()
+}).partial();
+
+// db/participacionesProyectoSchema.ts
+import { pgTable, integer, text, varchar, timestamp } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { usuariosTable } from './usuariosSchema';
+import { proyectosTable } from './proyectosSchema';
+import { rolesProyectoTable } from './rolesProyectoSchema';
+
+export const participacionesProyectoTable = pgTable('participaciones_proyecto', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  proyecto_id: integer().references(() => proyectosTable.id),
+  usuario_id: integer().references(() => usuariosTable.id),
+  rol_id: integer().references(() => rolesProyectoTable.id),
+  estado: varchar({ length: 50 }),
+  invitado_por: integer().references(() => usuariosTable.id),
+  fecha_invitacion: timestamp().defaultNow(),
+});
+
+// Zod Schemas
+export const insertParticipacionesProyectoSchema = z.object({
+  proyecto_id: z.number().int(),
+  usuario_id: z.number().int(),
+  rol_id: z.number().int(),
+  estado: z.string().max(50),
+  invitado_por: z.number().int(),
+  fecha_invitacion: z.date().optional(),
+});
+
+export const updateParticipacionesProyectoSchema = z.object({
+  proyecto_id: z.number().int(),
+  usuario_id: z.number().int(),
+  rol_id: z.number().int(),
+  estado: z.string().max(50),
+  invitado_por: z.number().int(),
+  fecha_invitacion: z.date().optional(),
+}).partial();
+
+// db/perfilesSchema.ts
+import { pgTable, integer, text } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { usuariosTable } from './usuariosSchema';
+
+export const perfilesTable = pgTable('perfiles', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  usuario_id: integer().references(() => usuariosTable.id),
+  cv_url: text(),
+  skills: text(),
+  historial_participacion: text(),
+});
+
+export const insertPerfilSchema = z.object({
+  usuario_id: z.number().int(),
+  cv_url: z.string(),
+  skills: z.string(),
+  historial_participacion: z.string(),
+});
+
+export const updatePerfilSchema = z.object({
+  usuario_id: z.number().int().optional(),
+  cv_url: z.string().optional(),
+  skills: z.string().optional(),
+  historial_participacion: z.string().optional(),
+}).partial();
+
+// db/permissionTypesSchema.ts
+import { pgTable, integer, varchar, text, timestamp, unique } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+
+export const permissionTypesTable = pgTable('permission_types', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  code: varchar({ length: 50 }).notNull().unique(),  // Código para uso programático (único):contentReference[oaicite:16]{index=16}
+  name: varchar({ length: 100 }).notNull(),          // Nombre legible del permiso:contentReference[oaicite:17]{index=17}
+  description: text(),                               // Descripción del tipo de permiso
+  created_at: timestamp().defaultNow()
+});
+
+export const insertPermissionTypeSchema = z.object({
+  code: z.string().max(50),
+  name: z.string().max(100),
+  description: z.string().optional()
+});
+export const updatePermissionTypeSchema = z.object({
+  code: z.string().max(50).optional(),
+  name: z.string().max(100).optional(),
+  description: z.string().optional()
+}).partial();
+
+// db/ofertasLaborales.ts
+import { pgTable, integer, varchar, timestamp, text, date } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { ofertasLaboralesTable } from './ofertasLaboralesSchema';
+import { usuariosTable } from './usuariosSchema';
+
+export const postulacioneslaboralesTable = pgTable('postulaciones_laborales', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  usuario_id: integer().references(() => usuariosTable.id),
+  mensaje: text(),
+  estado: varchar({ length: 50 }),
+  fecha: timestamp().defaultNow(), // <- CORREGIDO
+  oferta_laboral_id: integer().references(() => ofertasLaboralesTable.id),
+});
+
+export const insertPostulacionesLaboralesSchema = z.object({
+  usuario_id: z.number().int(),
+  mensaje: z.string(),
+  estado: z.string().max(50).default('pendiente'),
+  fecha: z.date().optional(),
+  oferta_laboral_id: z.number().int(), 
+});
+
+export const updatePostulacionesLaboralesSchema = z.object({
+  usuario_id: z.number().int(),
+  mensaje: z.string().optional(),
+  estado: z.string().max(50),
+  fecha: z.date(),
+  oferta_laboral_id: z.number().int(),
+}).partial();
+
+// db/participacionesProyectoSchema.ts
+import { pgTable, integer, text, varchar, timestamp } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { usuariosTable } from './usuariosSchema';
+import { oportunidadesTable } from './oportunidadesSchema';
+
+export const postulacionesTable = pgTable('postulaciones', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  usuario_id: integer().references(() => usuariosTable.id),
+  oportunidad_id: integer().references(() => oportunidadesTable.id),
+  mensaje: text(),
+  estado: varchar({ length: 50 }),
+  fecha: timestamp().defaultNow(),
+});
+
+export const insertPostulacionSchema = z.object({
+  usuario_id: z.number().int(),
+  oportunidad_id: z.number().int(),
+  mensaje: z.string(),
+  estado: z.string().max(50).optional()
+});
+
+export const updatePostulacionSchema = z.object({
+  usuario_id: z.number().int().optional(),
+  oportunidad_id: z.number().int().optional(),
+  mensaje: z.string().optional(),
+  estado: z.string().max(50).optional()
+}).partial();
+
+// db/projectTechnologiesSchema.ts
+import { pgTable, integer, varchar, timestamp, unique, check } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import { proyectosTable } from './proyectosSchema';
+import { z } from 'zod';
+
+export const projectTechnologiesTable = pgTable('project_technologies', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  proyecto_id: integer().notNull().references(() => proyectosTable.id, { onDelete: 'cascade' }),
+  technology_name: varchar({ length: 50 }).notNull(),   // Nombre de la tecnología:contentReference[oaicite:21]{index=21}
+  proficiency_level: integer(),                         // Nivel de dominio 1-5:contentReference[oaicite:22]{index=22}
+  created_at: timestamp().defaultNow()
+}, (t) => [
+  unique().on(t.proyecto_id, t.technology_name),        // UNIQUE(proyecto_id, technology_name):contentReference[oaicite:23]{index=23}
+  check('project_technologies_proficiency_level_check', 
+        sql`${t.proficiency_level} >= 1 AND ${t.proficiency_level} <= 5`)  // CHECK 1 <= proficiency_level <= 5:contentReference[oaicite:24]{index=24}
+]);
+
+export const insertProjectTechnologySchema = z.object({
+  proyecto_id: z.number().int(),
+  technology_name: z.string().max(50),
+  proficiency_level: z.number().int().min(1).max(5)
+});
+export const updateProjectTechnologySchema = z.object({
+  proyecto_id: z.number().int().optional(),
+  technology_name: z.string().max(50).optional(),
+  proficiency_level: z.number().int().min(1).max(5).optional()
+}).partial();
+
+// db/proyectosSchema.ts
+import { pgTable, integer, varchar, text, boolean, timestamp } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { usuariosTable } from './usuariosSchema';
+import { universidadesTable } from './universidadesSchema';
+
+export const proyectosTable = pgTable('proyectos', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  nombre: varchar({ length: 200 }),
+  descripcion: text(),
+  creador_id: integer().references(() => usuariosTable.id),
+  universidad_id: integer().references(() => universidadesTable.id),
+  estado_verificacion: varchar({ length: 50 }),
+  vista_publica: boolean().default(true),
+  creado_en: timestamp().defaultNow(),
+});
+
+export const insertProyectoSchema = z.object({
+  nombre: z.string().max(200),
+  descripcion: z.string(),
+  creador_id: z.number().int(),
+  universidad_id: z.number().int(),
+  estado_verificacion: z.string().max(50),
+  vista_publica: z.boolean().optional(),
+  creado_en: z.string().optional(), // ISO string
+});
+
+export const updateProyectoSchema = z.object({
+  nombre: z.string().max(200),
+  descripcion: z.string(),
+  creador_id: z.number().int(),
+  universidad_id: z.number().int(),
+  estado_verificacion: z.string().max(50),
+  vista_publica: z.boolean().optional(),
+  creado_en: z.string().optional(), // ISO string
+}).partial();
+
+// db/proyectosValidacionesSchema.ts
+import { pgTable, integer, text, varchar, timestamp } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { usuariosTable } from './usuariosSchema';
+import { proyectosTable } from './proyectosSchema';
+
+export const proyectosValidacionesTable = pgTable('proyectos_validaciones', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  proyecto_id: integer().references(() => proyectosTable.id),
+  admin_id: integer().references(() => usuariosTable.id),
+  comentarios: text(),
+  estado: varchar({ length: 50 }),
+  fecha_validacion: timestamp().defaultNow(),
+});
+
+export const insertProyectoValidacionSchema = z.object({
+  proyecto_id: z.number().int(),
+  admin_id: z.number().int(),
+  comentarios: z.string().optional(),
+  estado: z.string().max(50),
+  fecha_validacion: z.string().optional(), // ISO format
+});
+
+export const updateProyectoValidacionSchema = z.object({
+  proyecto_id: z.number().int().optional(),
+  admin_id: z.number().int().optional(),
+  comentarios: z.string().optional(),
+  estado: z.string().max(50).optional(),
+  fecha_validacion: z.string().optional(),
+}).partial();
+
+// src/db/relacionesBloquesSchema.ts
+import { pgTable, integer } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { bloquesTable } from './bloquesSchema';
+
+export const relacionesBloquesTable = pgTable('relaciones_bloques', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  bloque_padre_id: integer()
+    .notNull()
+    .references(() => bloquesTable.id),
+  bloque_hijo_id: integer()
+    .notNull()
+    .references(() => bloquesTable.id),
+});
+
+export const insertRelacionBloqueSchema = z.object({
+  bloque_padre_id: z.number().int(),
+  bloque_hijo_id: z.number().int(),
+});
+
+export const updateRelacionBloqueSchema = z.object({
+  bloque_padre_id: z.number().int().optional(),
+  bloque_hijo_id: z.number().int().optional(),
+}).partial();
+
+// db/reportesSchema.ts
+import { pgTable, integer, text, varchar, timestamp } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { usuariosTable } from './usuariosSchema';
+
+export const reportesTable = pgTable('reportes', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  reportante_id: integer().references(() => usuariosTable.id),
+  usuario_reportado_id: integer().references(() => usuariosTable.id),
+  tipo_contenido: varchar({ length: 100 }),
+  contenido_id: integer(),
+  motivo: text(),
+  estado: varchar({ length: 50 }),
+  fecha: timestamp().defaultNow()
+});
+
+export const insertReporteSchema = z.object({
+  reportante_id: z.number().int(),
+  usuario_reportado_id: z.number().int(),
+  tipo_contenido: z.string().max(100),
+  contenido_id: z.number().int(),
+  motivo: z.string(),
+  estado: z.string().max(50),
+  fecha: z.date().optional()
+});
+
+export const updateReporteSchema = z.object({
+  reportante_id: z.number().int().optional(),
+  usuario_reportado_id: z.number().int().optional(),
+  tipo_contenido: z.string().max(100).optional(),
+  contenido_id: z.number().int().optional(),
+  motivo: z.string().optional(),
+  estado: z.string().max(50).optional(),
+  fecha: z.date().optional()
+}).partial();
+
+// db/reportEvidencesSchema.ts
+import { pgTable, integer, text, varchar, timestamp } from 'drizzle-orm/pg-core';
+import { reportesTable } from './reportesSchema';
+import { z } from 'zod';
+
+export const reportEvidencesTable = pgTable('report_evidences', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  reporte_id: integer().notNull().references(() => reportesTable.id, { onDelete: 'cascade' }),
+  evidence_url: text().notNull(),                  // URL de la evidencia:contentReference[oaicite:35]{index=35}
+  evidence_type: varchar({ length: 50 }),          // Tipo de evidencia (imagen, video, documento):contentReference[oaicite:36]{index=36}
+  created_at: timestamp().defaultNow()
+});
+
+export const insertReportEvidenceSchema = z.object({
+  reporte_id: z.number().int(),
+  evidence_url: z.string(),         // could use z.string().url() if URL validation needed
+  evidence_type: z.string().max(50).optional()
+});
+export const updateReportEvidenceSchema = z.object({
+  reporte_id: z.number().int().optional(),
+  evidence_url: z.string().optional(),
+  evidence_type: z.string().max(50).optional()
+});
+
+// src/db/respuestasHiloSchema.ts
+import { pgTable, integer, text, timestamp } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { hilosTable } from './hilosSchema';
+import { usuariosTable } from './usuariosSchema';
+
+export const respuestasHiloTable = pgTable('respuestas_hilo', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  hilo_id: integer().references(() => hilosTable.id),
+  usuario_id: integer().references(() => usuariosTable.id),
+  contenido: text(),
+  creado_en: timestamp().defaultNow(),
+});
+
+export const insertRespuestaHiloSchema = z.object({
+  hilo_id: z.number().int(),
+  usuario_id: z.number().int(),
+  contenido: z.string().min(1),
+  creado_en: z.date().optional(),
+});
+
+export const updateRespuestaHiloSchema = z.object({
+  hilo_id: z.number().int().optional(),
+  usuario_id: z.number().int().optional(),
+  contenido: z.string().min(1).optional(),
+  creado_en: z.date().optional(),
+}).partial();
+
+// db/rolesProyectoSchema.ts
+import { pgTable, integer, varchar, boolean } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+
+export const rolesProyectoTable = pgTable('roles_proyecto', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  nombre: varchar({ length: 50 }),
+  puede_editar: boolean().default(false),
+  puede_comentar: boolean().default(true),
+  puede_subir_archivos: boolean().default(false),
+  puede_validar: boolean().default(false),
+});
+
+export const insertRolProyectoSchema = z.object({
+  nombre: z.string().max(50),
+  puede_editar: z.boolean().optional(),
+  puede_comentar: z.boolean().optional(),
+  puede_subir_archivos: z.boolean().optional(),
+  puede_validar: z.boolean().optional(),
+});
+
+export const updateRolProyectoSchema = z.object({
+  nombre: z.string().max(50).optional(),
+  puede_editar: z.boolean().optional(),
+  puede_comentar: z.boolean().optional(),
+  puede_subir_archivos: z.boolean().optional(),
+  puede_validar: z.boolean().optional(),
+}).partial();
+
+// db/rolesUsuarioSchema.ts
+import { pgTable, integer, varchar } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+
+export const rolesUsuarioTable = pgTable('roles_usuario', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  nombre: varchar({ length: 50 }),
+});
+
+export const insertRolUsuarioSchema = z.object({
+  nombre: z.string().max(50),
+});
+
+export const updateRolUsuarioSchema = z.object({
+  nombre: z.string().max(50).optional(),
+}).partial();
+
+// db/seguimientosSchema.ts
+import { pgTable, integer, timestamp } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { usuariosTable } from './usuariosSchema';
+import { proyectosTable } from './proyectosSchema';
+
+export const seguimientosTable = pgTable('seguimientos', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  seguidor_id: integer().references(() => usuariosTable.id),
+  seguido_usuario_id: integer().references(() => usuariosTable.id),
+  seguido_proyecto_id: integer().references(() => proyectosTable.id),
+  creado_en: timestamp().defaultNow()
+});
+
+// Validación de entrada
+export const insertSeguimientoSchema = z.object({
+  seguidor_id: z.number().int(),
+  seguido_usuario_id: z.number().int().nullable().optional(),
+  seguido_proyecto_id: z.number().int().nullable().optional(),
+  creado_en: z.date().optional()
+}).refine(data =>
+  (data.seguido_usuario_id && !data.seguido_proyecto_id) ||
+  (!data.seguido_usuario_id && data.seguido_proyecto_id), {
+  message: 'Debes especificar uno y solo uno: seguido_usuario_id o seguido_proyecto_id'
+});
+
+export const updateSeguimientoSchema = z.object({
+  seguidor_id: z.number().int().optional(),
+  seguido_usuario_id: z.number().int().nullable().optional(),
+  seguido_proyecto_id: z.number().int().nullable().optional(),
+  creado_en: z.date().optional()
+}).refine(data =>
+  (data.seguido_usuario_id && !data.seguido_proyecto_id) ||
+  (!data.seguido_usuario_id && data.seguido_proyecto_id) ||
+  (!data.seguido_usuario_id && !data.seguido_proyecto_id), {
+  message: 'Debes especificar uno y solo uno: seguido_usuario_id o seguido_proyecto_id'
+});
+
+// db/systemStatesSchema.ts
+import { pgTable, integer, varchar, text, boolean, timestamp, unique } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+
+export const systemStatesTable = pgTable('system_states', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  entity_type: varchar({ length: 50 }).notNull(),    // Tipo de entidad: 'proyecto', 'postulacion', etc.:contentReference[oaicite:0]{index=0}
+  code: varchar({ length: 50 }).notNull(),           // Código único del estado:contentReference[oaicite:1]{index=1}
+  name: varchar({ length: 100 }).notNull(),          // Nombre legible del estado:contentReference[oaicite:2]{index=2}
+  description: text(),                               // Descripción detallada:contentReference[oaicite:3]{index=3}
+  color: varchar({ length: 7 }),                     // Color hex para UI:contentReference[oaicite:4]{index=4}
+  is_active: boolean().default(true),                // Gestión de estado (activo/inactivo):contentReference[oaicite:5]{index=5}
+  sort_order: integer().default(0),                  // Orden de visualización:contentReference[oaicite:6]{index=6}
+  created_at: timestamp().defaultNow()
+}, (t) => [
+  // Unique constraint to avoid duplicate code per entity type:
+  unique().on(t.entity_type, t.code)                 // UNIQUE(entity_type, code):contentReference[oaicite:7]{index=7}
+]);
+
+export const insertSystemStateSchema = z.object({
+  entity_type: z.string().max(50),
+  code: z.string().max(50),
+  name: z.string().max(100),
+  description: z.string().optional(),
+  color: z.string().max(7).optional(),
+  is_active: z.boolean().optional(),
+  sort_order: z.number().int().optional()
+});
+export const updateSystemStateSchema = z.object({
+  entity_type: z.string().max(50).optional(),
+  code: z.string().max(50).optional(),
+  name: z.string().max(100).optional(),
+  description: z.string().optional(),
+  color: z.string().max(7).optional(),
+  is_active: z.boolean().optional(),
+  sort_order: z.number().int().optional()
+}).partial();
+
+// db/taggablesSchema.ts
+import { pgTable, integer, varchar } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { tagsTable } from './tagsSchema';
+
+export const taggablesTable = pgTable('taggables', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  tag_id: integer().references(() => tagsTable.id),
+  objeto_id: integer(),
+  tipo_objeto: varchar({ length: 50 }),
+});
+
+export const insertTaggableSchema = z.object({
+  tag_id: z.number().int(),
+  objeto_id: z.number().int(),
+  tipo_objeto: z.string().max(50),
+});
+
+export const updateTaggableSchema = z.object({
+  tag_id: z.number().int().optional(),
+  objeto_id: z.number().int().optional(),
+  tipo_objeto: z.string().max(50).optional(),
+}).partial();
+
+// db/taggablesSchema.ts
+import { pgTable, integer, varchar } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+
+export const tagsTable = pgTable('tags', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  nombre: varchar({ length: 50 }),
+});
+
+export const insertTagSchema = z.object({
+  nombre: z.string().max(50),
+});
+
+export const updateTagSchema = z.object({
+  nombre: z.string().max(50).optional(),
+}).partial();
+
+// db/universidadesSchema.ts
+import { pgTable, integer, varchar, text } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+
+export const universidadesTable = pgTable('universidades', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  nombre: varchar({ length: 150 }),
+  dominio_correo: varchar({ length: 100 }),
+  logo_url: text(),
+});
+
+// Schema para crear (sin id)
+export const insertUniversidadSchema = z.object({
+  nombre: z.string().max(150),
+  dominio_correo: z.string().max(100),
+  logo_url: z.string().nullable().optional(),
+});
+
+// Schema para actualizar (sin id y parcial)
+export const updateUniversidadSchema = z.object({
+  nombre: z.string().max(150),
+  dominio_correo: z.string().max(100),
+  logo_url: z.string().nullable().optional(),
+}).partial();
+
+// db/userSkillsSchema.ts
+import { pgTable, integer, varchar, timestamp, unique, check } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import { usuariosTable } from './usuariosSchema';
+import { z } from 'zod';
+
+export const userSkillsTable = pgTable('user_skills', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  usuario_id: integer().notNull().references(() => usuariosTable.id, { onDelete: 'cascade' }),
+  skill_name: varchar({ length: 100 }).notNull(),    // Nombre de la habilidad:contentReference[oaicite:26]{index=26}
+  proficiency_level: integer(),                     // Nivel de dominio 1-5:contentReference[oaicite:27]{index=27}
+  created_at: timestamp().defaultNow()
+}, (t) => [
+  unique().on(t.usuario_id, t.skill_name),          // UNIQUE(usuario_id, skill_name):contentReference[oaicite:28]{index=28}
+  check('user_skills_proficiency_level_check', 
+        sql`${t.proficiency_level} >= 1 AND ${t.proficiency_level} <= 5`)
+]);
+
+export const insertUserSkillSchema = z.object({
+  usuario_id: z.number().int(),
+  skill_name: z.string().max(100),
+  proficiency_level: z.number().int().min(1).max(5)
+});
+export const updateUserSkillSchema = z.object({
+  usuario_id: z.number().int().optional(),
+  skill_name: z.string().max(100).optional(),
+  proficiency_level: z.number().int().min(1).max(5).optional()
+}).partial();
+
+// src/db/usuariosSchema.ts
+import { pgTable, integer, varchar, boolean, text, timestamp } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { rolesUsuarioTable } from './rolesUsuarioSchema';
+import { universidadesTable } from './universidadesSchema';
+
+export const usuariosTable = pgTable('usuarios', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  nombre: varchar({ length: 100 }).notNull(),
+  correo: varchar({ length: 150 }).notNull(),
+  contrasena: text().notNull(),
+  rol_id: integer().notNull().references(() => rolesUsuarioTable.id),
+  universidad_id: integer().notNull().references(() => universidadesTable.id),
+  matricula: varchar({ length: 50 }),
+  telefono: varchar({ length: 20 }),
+  verificado: boolean().default(false),
+  debe_cambiar_contraseña: boolean().default(true),
+  github_url: text(), 
+  linkedin_url: text(),
+  biografia: text(),
+  cv_url: text(),
+  cv_publico: boolean().default(false),
+  creado_en: timestamp().defaultNow(),
+});
+
+export const insertUsuarioSchema = z.object({
+  nombre: z.string().max(100),
+  correo: z.string().max(150),
+  contrasena: z.string(),
+  rol_id: z.number().int(),
+  universidad_id: z.number().int(),
+  matricula: z.string().max(50),
+  telefono: z.string().max(20),
+  verificado: z.boolean().optional(),
+  debe_cambiar_contraseña: z.boolean().optional(),
+  github_url: z.string().optional(),
+  linkedin_url: z.string().optional(),
+  biografia: z.string().optional(),
+  cv_url: z.string().optional(),
+  cv_publico: z.boolean().optional(),
+  creado_en: z.date().optional()
+});
+
+export const updateUsuarioSchema = z.object({
+  nombre: z.string().max(100),
+  correo: z.string().max(150),
+  contrasena: z.string(),
+  rol_id: z.number().int(),
+  universidad_id: z.number().int(),
+  matricula: z.string().max(50),
+  telefono: z.string().max(20),
+  verificado: z.boolean().optional(),
+  debe_cambiar_contraseña: z.boolean().optional(),
+  github_url: z.string().optional(),
+  linkedin_url: z.string().optional(),
+  biografia: z.string().optional(),
+  cv_url: z.string().optional(),
+  cv_publico: z.boolean().optional(),
+  creado_en: z.date().optional()
+}).partial();
+
+export const loginSchema = z.object({
+  correo: z.string().max(150),
+  contrasena: z.string().min(6).max(255),
+});
+
+// db/validationDocumentsSchema.ts
+import { pgTable, integer, varchar, text, boolean, timestamp } from 'drizzle-orm/pg-core';
+import { proyectosValidacionesTable } from './proyectosValidacionesSchema';
+import { z } from 'zod';
+
+export const validationDocumentsTable = pgTable('validation_documents', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  validation_id: integer().notNull().references(() => proyectosValidacionesTable.id, { onDelete: 'cascade' }),
+  document_name: varchar({ length: 100 }).notNull(),  // Nombre del documento requerido:contentReference[oaicite:38]{index=38}
+  document_url: text(),                               // URL del documento subido:contentReference[oaicite:39]{index=39}
+  is_submitted: boolean().default(false),             // Si ya fue enviado (entregado):contentReference[oaicite:40]{index=40}
+  created_at: timestamp().defaultNow()
+});
+
+export const insertValidationDocumentSchema = z.object({
+  validation_id: z.number().int(),
+  document_name: z.string().max(100),
+  document_url: z.string().optional(),
+  is_submitted: z.boolean().optional()
+});
+export const updateValidationDocumentSchema = z.object({
+  validation_id: z.number().int().optional(),
+  document_name: z.string().max(100).optional(),
+  document_url: z.string().optional(),
+  is_submitted: z.boolean().optional()
+}).partial();
+
+// src/db/versionesBloquesSchema.ts
+import { pgTable, integer, jsonb, timestamp } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+import { bloquesTable } from './bloquesSchema';
+import { usuariosTable } from './usuariosSchema';
+
+export const versionesBloquesTable = pgTable('versiones_bloques', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  bloque_id: integer().references(() => bloquesTable.id).notNull(),
+  contenido: jsonb(),
+  editado_por: integer().references(() => usuariosTable.id),
+  editado_en: timestamp().defaultNow(),
+});
+
+export const insertVersionBloqueSchema = z.object({
+  bloque_id: z.number().int(),
+  contenido: z.any(),
+  editado_por: z.number().int(),
+  editado_en: z.date().optional(),
+});
+
+export const updateVersionBloqueSchema = z.object({
+  contenido: z.any().optional(),
+  editado_por: z.number().int().optional(),
+  editado_en: z.date().optional(),
+}).partial();
+
+// db/workModalitiesSchema.ts
+import { pgTable, integer, varchar, text, boolean, unique } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
+
+export const workModalitiesTable = pgTable('work_modalities', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  name: varchar({ length: 50 }).notNull().unique(),
+  description: text(),
+  is_active: boolean().default(true)
+});
+
+export const insertWorkModalitySchema = z.object({
+  name: z.string().max(50),
+  description: z.string().optional(),
+  is_active: z.boolean().optional()
+});
+export const updateWorkModalitySchema = z.object({
+  name: z.string().max(50).optional(),
+  description: z.string().optional(),
+  is_active: z.boolean().optional()
+}).partial();

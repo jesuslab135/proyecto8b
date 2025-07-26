@@ -1,5 +1,6 @@
+// src/routes/proyectos/proyectosController.ts
 import { Request, Response } from 'express';
-import { db } from '../../db/index';
+import { db } from '../../db';
 import { proyectosTable } from '../../db/proyectosSchema';
 import { eq } from 'drizzle-orm';
 
@@ -15,15 +16,25 @@ import { eq } from 'drizzle-orm';
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - nombre
+ *               - descripcion
+ *               - creador_id
+ *               - universidad_id
+ *               - estado_verificacion
  *             properties:
  *               nombre:
  *                 type: string
  *               descripcion:
  *                 type: string
- *               estado:
- *                 type: string
- *               creado_por:
+ *               creador_id:
  *                 type: integer
+ *               universidad_id:
+ *                 type: integer
+ *               estado_verificacion:
+ *                 type: string
+ *               vista_publica:
+ *                 type: boolean
  *     responses:
  *       201:
  *         description: Proyecto creado correctamente
@@ -33,8 +44,8 @@ import { eq } from 'drizzle-orm';
 export async function createProyecto(req: Request, res: Response) {
   try {
     const data = req.cleanBody;
-    const [newProyecto] = await db.insert(proyectosTable).values(data).returning();
-    res.status(201).json(newProyecto);
+    const [nuevoProyecto] = await db.insert(proyectosTable).values(data).returning();
+    res.status(201).json(nuevoProyecto);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Error al crear el proyecto' });
@@ -87,15 +98,11 @@ export async function listProyectos(_req: Request, res: Response) {
 export async function getProyecto(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
-    const [proyecto] = await db
-      .select()
-      .from(proyectosTable)
-      .where(eq(proyectosTable.id, id));
+    const [proyecto] = await db.select().from(proyectosTable).where(eq(proyectosTable.id, id));
     if (!proyecto) {
-      res.status(404).json({ error: 'Proyecto no encontrado' });
-    } else {
-      res.status(200).json(proyecto);
+      return res.status(404).json({ error: 'Proyecto no encontrado' });
     }
+    res.status(200).json(proyecto);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Error al obtener el proyecto' });
@@ -126,10 +133,14 @@ export async function getProyecto(req: Request, res: Response) {
  *                 type: string
  *               descripcion:
  *                 type: string
- *               estado:
- *                 type: string
- *               creado_por:
+ *               creador_id:
  *                 type: integer
+ *               universidad_id:
+ *                 type: integer
+ *               estado_verificacion:
+ *                 type: string
+ *               vista_publica:
+ *                 type: boolean
  *     responses:
  *       200:
  *         description: Proyecto actualizado correctamente
@@ -141,17 +152,15 @@ export async function getProyecto(req: Request, res: Response) {
 export async function updateProyecto(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
-    const updates = req.cleanBody;
     const [updated] = await db
       .update(proyectosTable)
-      .set(updates)
+      .set(req.cleanBody)
       .where(eq(proyectosTable.id, id))
       .returning();
     if (!updated) {
-      res.status(404).json({ error: 'Proyecto no encontrado' });
-    } else {
-      res.status(200).json(updated);
+      return res.status(404).json({ error: 'Proyecto no encontrado' });
     }
+    res.status(200).json(updated);
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Error al actualizar el proyecto' });
@@ -168,9 +177,9 @@ export async function updateProyecto(req: Request, res: Response) {
  *       - name: id
  *         in: path
  *         required: true
- *         description: ID del proyecto
  *         schema:
  *           type: integer
+ *         description: ID del proyecto
  *     responses:
  *       200:
  *         description: Proyecto eliminado correctamente
@@ -182,15 +191,11 @@ export async function updateProyecto(req: Request, res: Response) {
 export async function deleteProyecto(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
-    const [deleted] = await db
-      .delete(proyectosTable)
-      .where(eq(proyectosTable.id, id))
-      .returning();
+    const [deleted] = await db.delete(proyectosTable).where(eq(proyectosTable.id, id)).returning();
     if (!deleted) {
-      res.status(404).json({ error: 'Proyecto no encontrado' });
-    } else {
-      res.status(200).json({ message: 'Proyecto eliminado correctamente' });
+      return res.status(404).json({ error: 'Proyecto no encontrado' });
     }
+    res.status(200).json({ message: 'Proyecto eliminado correctamente' });
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Error al eliminar el proyecto' });

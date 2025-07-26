@@ -1,3 +1,4 @@
+// db/taggablesSchema.ts
 import { pgTable, integer, varchar } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { tagsTable } from './tagsSchema';

@@ -1,6 +1,6 @@
 // src/routes/permission-types/permissionTypesController.ts
 import { Request, Response } from 'express';
-import { db } from '../../db/index';
+import { db } from '../../db';
 import { permissionTypesTable } from '../../db/permissionTypesSchema';
 import { eq } from 'drizzle-orm';
 
@@ -55,7 +55,7 @@ export async function createPermissionType(req: Request, res: Response) {
  *       500:
  *         description: Error al obtener los tipos de permiso
  */
-export async function listPermissionTypes(req: Request, res: Response) {
+export async function listPermissionTypes(_req: Request, res: Response) {
   try {
     const records = await db.select().from(permissionTypesTable);
     res.status(200).json(records);
@@ -138,7 +138,11 @@ export async function updatePermissionType(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
     const data = req.cleanBody;
-    const [updatedRecord] = await db.update(permissionTypesTable).set(data).where(eq(permissionTypesTable.id, id)).returning();
+    const [updatedRecord] = await db
+      .update(permissionTypesTable)
+      .set(data)
+      .where(eq(permissionTypesTable.id, id))
+      .returning();
     if (!updatedRecord) {
       return res.status(404).json({ error: 'Tipo de permiso no encontrado' });
     }
