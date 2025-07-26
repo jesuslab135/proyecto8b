@@ -32,7 +32,20 @@ import tokensInicialesRoutes from './routes/tokensInicialesAcceso/index';
 import usuariosRoutes from './routes/usuarios/index';
 import ofertasLaboralesRoutes from './routes/ofertasLaborales/index';
 import { swaggerUi, swaggerSpec } from './utils/swagger';
+import systemStatesRoutes from './routes/systemStates/index';
+import eventTypesRoutes from './routes/eventTypes/index';
+import opportunityTypesRoutes from './routes/opportunityTypes/index';
+import contentTypesRoutes from './routes/contentTypes/index';
+import permissionTypesRoutes from './routes/permissionTypes/index';
+import workModalitiesRoutes from './routes/workModalities/index';
+import experienceTypesRoutes from './routes/experienceTypes/index';
+import projectTechnologiesRoutes from './routes/projectTechnologies/index';
+import userSkillsRoutes from './routes/userSkills/index';
+import collaborativePagePermissionsRoutes from './routes/collaborativePagePermissions/index';
+import reportEvidencesRoutes from './routes/reportEvidences/index';
+import validationDocumentsRoutes from './routes/validationDocuments/index';
 import adminBackupRoutes from './routes/adminBackup/index';
+
 
 const port = 3000;
 const app = express();
@@ -91,6 +104,18 @@ app.use('/api/relaciones-bloques', relacionesBloquesRoutes);
 app.use('/api/versiones-bloques', versionesBloquesRoutes);
 app.use('/api/tokens-iniciales-acceso', tokensInicialesRoutes);
 app.use('/api/usuarios', usuariosRoutes);
+app.use('/api/system-states', systemStatesRoutes);
+app.use('/api/event-types', eventTypesRoutes);
+app.use('/api/opportunity-types', opportunityTypesRoutes);
+app.use('/api/content-types', contentTypesRoutes);
+app.use('/api/permission-types', permissionTypesRoutes);
+app.use('/api/work-modalities', workModalitiesRoutes);
+app.use('/api/experience-types', experienceTypesRoutes);
+app.use('/api/project-technologies', projectTechnologiesRoutes);
+app.use('/api/user-skills', userSkillsRoutes);
+app.use('/api/collaborative-page-permissions', collaborativePagePermissionsRoutes);
+app.use('/api/report-evidences', reportEvidencesRoutes);
+app.use('/api/validation-documents', validationDocumentsRoutes);
 app.use('/api/admin-backup', adminBackupRoutes);
 
 app.listen(port, () => {
