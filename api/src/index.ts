@@ -46,20 +46,10 @@ import validationDocumentsRoutes from './routes/validationDocuments/index';
 import adminBackupRoutes from './routes/adminBackup/index';
 import bloquesRoutes from './routes/bloques/index';
 
-const allowedOrigins = [
-  'http://localhost:4200',
-  'https://proyecto8b-production.up.railway.app',
-];
-const port = process.env.PORT || 3000;
+const port = 3000;
 const app = express();
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('CORS not allowed for this origin'));
-    }
-  },
+  origin: 'http://localhost:4200',
   credentials: true,
 }));
 app.use((req, res, next) => {
