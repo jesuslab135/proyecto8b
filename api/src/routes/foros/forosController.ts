@@ -17,7 +17,7 @@ import { eq } from 'drizzle-orm';
  *           schema:
  *             type: object
  *             required:
- *               - titulo
+ *               - nombre
  *               - descripcion
  *               - creador_id
  *             properties:
