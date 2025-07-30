@@ -50,7 +50,7 @@ const allowedOrigins = [
   'http://localhost:4200',
   'https://proyecto8b-production.up.railway.app',
 ];
-const port = 3000;
+const port = process.env.PORT || 3000;
 const app = express();
 app.use(cors({
   origin: (origin, callback) => {
