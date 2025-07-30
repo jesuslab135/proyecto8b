@@ -21,6 +21,7 @@ import { eq } from 'drizzle-orm';
  *               - descripcion
  *               - tipo
  *               - universidad_id
+ *               - fecha_limite
  *             properties:
  *               titulo:
  *                 type: string
@@ -33,6 +34,35 @@ import { eq } from 'drizzle-orm';
  *               fecha_limite:
  *                 type: string
  *                 format: date
+ *               opportunity_type_id:
+ *                 type: integer
+ *                 nullable: true
+ *               state_id:
+ *                 type: integer
+ *                 nullable: true
+ *               created_by:
+ *                 type: integer
+ *                 nullable: true
+ *               empresa:
+ *                 type: string
+ *                 nullable: true
+ *               salario_min:
+ *                 type: number
+ *                 format: double
+ *                 nullable: true
+ *               salario_max:
+ *                 type: number
+ *                 format: double
+ *                 nullable: true
+ *               modality_id:
+ *                 type: integer
+ *                 nullable: true
+ *               requisitos:
+ *                 type: string
+ *                 nullable: true
+ *               beneficios:
+ *                 type: string
+ *                 nullable: true
  *     responses:
  *       201:
  *         description: Oportunidad creada exitosamente
@@ -41,7 +71,8 @@ import { eq } from 'drizzle-orm';
  */
 export async function createOportunidad(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const { id, ...data } = req.cleanBody;
+    if (data.fecha_limite) data.fecha_limite = new Date(data.fecha_limite);
     const [nueva] = await db.insert(oportunidadesTable).values(data).returning();
     res.status(201).json(nueva);
   } catch (e) {
@@ -143,6 +174,35 @@ export async function getOportunidad(req: Request, res: Response) {
  *               fecha_limite:
  *                 type: string
  *                 format: date
+ *               opportunity_type_id:
+ *                 type: integer
+ *                 nullable: true
+ *               state_id:
+ *                 type: integer
+ *                 nullable: true
+ *               created_by:
+ *                 type: integer
+ *                 nullable: true
+ *               empresa:
+ *                 type: string
+ *                 nullable: true
+ *               salario_min:
+ *                 type: number
+ *                 format: double
+ *                 nullable: true
+ *               salario_max:
+ *                 type: number
+ *                 format: double
+ *                 nullable: true
+ *               modality_id:
+ *                 type: integer
+ *                 nullable: true
+ *               requisitos:
+ *                 type: string
+ *                 nullable: true
+ *               beneficios:
+ *                 type: string
+ *                 nullable: true
  *     responses:
  *       200:
  *         description: Oportunidad actualizada correctamente
@@ -154,9 +214,12 @@ export async function getOportunidad(req: Request, res: Response) {
 export async function updateOportunidad(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
+    const data = { ...req.cleanBody };
+    delete data.id;
+    if (data.fecha_limite) data.fecha_limite = new Date(data.fecha_limite);
     const [actualizada] = await db
       .update(oportunidadesTable)
-      .set(req.cleanBody)
+      .set(data)
       .where(eq(oportunidadesTable.id, id))
       .returning();
 

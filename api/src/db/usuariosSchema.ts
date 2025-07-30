@@ -1,3 +1,4 @@
+// src/db/usuariosSchema.ts
 import { pgTable, integer, varchar, boolean, text, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { rolesUsuarioTable } from './rolesUsuarioSchema';
@@ -7,7 +8,7 @@ export const usuariosTable = pgTable('usuarios', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   nombre: varchar({ length: 100 }),
   correo: varchar({ length: 150 }),
-  contrasena: text(),
+  contrasena: text().notNull(),
   rol_id: integer().references(() => rolesUsuarioTable.id),
   universidad_id: integer().references(() => universidadesTable.id),
   matricula: varchar({ length: 50 }),
