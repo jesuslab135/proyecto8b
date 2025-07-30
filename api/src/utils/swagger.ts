@@ -55,7 +55,7 @@ const options = {
     ],
     servers: [
       {
-        url: 'https://proyecto8b-production.up.railway.app/api',
+        url: 'http://localhost:3000/api',
         description: 'Servidor Railway producción',
       },
     ],
