@@ -44,6 +44,18 @@ import { eq } from 'drizzle-orm';
  *               enlace_acceso:
  *                 type: string
  *                 nullable: true
+ *               event_type_id:
+ *                 type: integer
+ *                 nullable: true
+ *               state_id:
+ *                 type: integer
+ *                 nullable: true
+ *               ubicacion:
+ *                 type: string
+ *                 nullable: true
+ *               capacidad_maxima:
+ *                 type: integer
+ *                 nullable: true
  *     responses:
  *       201:
  *         description: Evento creado exitosamente
@@ -165,6 +177,18 @@ export async function getEvento(req: Request, res: Response) {
  *               enlace_acceso:
  *                 type: string
  *                 nullable: true
+ *               event_type_id:
+ *                 type: integer
+ *                 nullable: true
+ *               state_id:
+ *                 type: integer
+ *                 nullable: true
+ *               ubicacion:
+ *                 type: string
+ *                 nullable: true
+ *               capacidad_maxima:
+ *                 type: integer
+ *                 nullable: true
  *     responses:
  *       200:
  *         description: Evento actualizado correctamente
@@ -176,7 +200,8 @@ export async function getEvento(req: Request, res: Response) {
 export async function updateEvento(req: Request, res: Response) {
   try {
     const id = parseInt(req.params.id);
-    const data = req.cleanBody;
+    const data = { ...req.cleanBody };
+    delete data.id;
 
     if (data.fecha_inicio) data.fecha_inicio = new Date(data.fecha_inicio);
     if (data.fecha_fin) data.fecha_fin = new Date(data.fecha_fin);
