@@ -60,7 +60,7 @@ const options = {
       },
     ],
   },
-  apis: ['./src/routes/**/*.ts'], // Ajusta si tus rutas están en otro path
+  apis: [path.resolve(__dirname, './routes/**/*.ts')], // siempre correcto // Ajusta si tus rutas están en otro path
 };
 
 const swaggerSpec = swaggerJSDoc(options);
