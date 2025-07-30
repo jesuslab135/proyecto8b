@@ -1,4 +1,4 @@
-// src/swagger.ts (o como se llame)
+// src/swagger.ts
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
@@ -19,11 +19,7 @@ const options = {
         },
       },
     },
-    security: [
-      {
-        bearerAuth: [],
-      },
-    ],
+    security: [{ bearerAuth: [] }],
     tags: [
       { name: 'auth', description: 'Autenticación y registro de usuarios' },
       { name: 'ActividadUsuario', description: 'Operaciones de actividad de usuario' },
@@ -60,25 +56,13 @@ const options = {
     servers: [
       {
         url: 'https://proyecto8b-production.up.railway.app/api',
-        description: 'Servidor local de desarrollo',
+        description: 'Servidor Railway producción',
       },
     ],
   },
-  apis: ['./src/routes/**/*.ts'],
+  apis: ['./src/routes/**/*.ts'], // Ajusta si tus rutas están en otro path
 };
 
-const swaggerSpec = {
-  openapi: '3.0.0',
-  info: {
-    title: 'Union API',
-    version: '1.0.0',
-  },
-  servers: [
-    {
-      url: 'https://proyecto8b-production.up.railway.app/api', // ✅ TU URL REAL AQUÍ
-    }
-  ],
-  // ...
-};
+const swaggerSpec = swaggerJSDoc(options);
 
 export { swaggerUi, swaggerSpec };
