@@ -5,7 +5,7 @@ import { actividadUsuarioTable } from '../../db/actividadUsuarioSchema';
 import { eq } from 'drizzle-orm';
 
 /**
- * @swagger
+ * @openapi
  * /actividad-usuario:
  *   post:
  *     summary: Crear nueva actividad de usuario
@@ -48,7 +48,7 @@ export async function createActividadUsuario(req: Request, res: Response) {
 }
 
 /**
- * @swagger
+ * @openapi
  * /actividad-usuario:
  *   get:
  *     summary: Obtener todas las actividades de usuario
@@ -70,7 +70,7 @@ export async function listActividadUsuario(_req: Request, res: Response) {
 }
 
 /**
- * @swagger
+ * @openapi
  * /actividad-usuario/{id}:
  *   get:
  *     summary: Obtener una actividad por ID
@@ -106,7 +106,7 @@ export async function getActividadUsuario(req: Request, res: Response) {
 }
 
 /**
- * @swagger
+ * @openapi
  * /actividad-usuario/{id}:
  *   put:
  *     summary: Actualizar una actividad de usuario por ID
@@ -161,7 +161,7 @@ export async function updateActividadUsuario(req: Request, res: Response) {
 }
 
 /**
- * @swagger
+ * @openapi
  * /actividad-usuario/{id}:
  *   delete:
  *     summary: Eliminar una actividad por ID
