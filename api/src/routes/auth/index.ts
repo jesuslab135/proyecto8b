@@ -76,16 +76,19 @@ const generateUserToken = (user: any) => {
  */
 router.post('/register', validateData(insertUsuarioSchema), async (req, res) => {
   try {
-    const {id, ...data} = req.cleanBody;
+    const data = req.cleanBody;
     data.contrasena = await bcrypt.hash(data.contrasena, 10);
 
     const [user] = await db.insert(usuariosTable).values(data).returning();
 
-    // @ts-ignore
-    delete user.contrasena;
-    const token = generateUserToken(user);
+    const userWithoutPassword = {
+      ...user,
+      contrasena: undefined // Marcamos como undefined en lugar de usar delete
+    };
 
-    res.status(201).json({ token, user });
+    const token = generateUserToken(userWithoutPassword);
+
+    res.status(201).json({ token, user: userWithoutPassword });
   } catch (e) {
     console.log(e);
     res.status(500).send('Something went wrong');
