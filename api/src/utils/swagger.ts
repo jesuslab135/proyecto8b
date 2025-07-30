@@ -59,7 +59,7 @@ const options = {
     ],
     servers: [
       {
-        url: 'http://localhost:3000/api',
+        url: 'https://proyecto8b-production.up.railway.app/api',
         description: 'Servidor local de desarrollo',
       },
     ],
@@ -67,6 +67,18 @@ const options = {
   apis: ['./src/routes/**/*.ts'],
 };
 
-const swaggerSpec = swaggerJSDoc(options);
+const swaggerSpec = {
+  openapi: '3.0.0',
+  info: {
+    title: 'Union API',
+    version: '1.0.0',
+  },
+  servers: [
+    {
+      url: 'https://proyecto8b-production.up.railway.app/api', // ✅ TU URL REAL AQUÍ
+    }
+  ],
+  // ...
+};
 
 export { swaggerUi, swaggerSpec };
