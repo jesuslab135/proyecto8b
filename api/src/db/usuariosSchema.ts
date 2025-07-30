@@ -1,3 +1,4 @@
+// src/db/usuariosSchema.ts
 import { pgTable, integer, varchar, boolean, text, timestamp } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { rolesUsuarioTable } from './rolesUsuarioSchema';
