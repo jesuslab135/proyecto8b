@@ -56,11 +56,11 @@ const options = {
     servers: [
       {
         url: 'http://localhost:3000/api',
-        description: 'Servidor Railway producción',
+        description: 'Servidor Local Desarrollo',
       },
     ],
   },
-  apis: [path.resolve(__dirname, './routes/**/*.ts')], // siempre correcto // Ajusta si tus rutas están en otro path
+  apis: ['./src/routes/**/*.ts'], // siempre correcto // Ajusta si tus rutas están en otro path
 };
 
 const swaggerSpec = swaggerJSDoc(options);
