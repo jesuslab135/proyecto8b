@@ -4,6 +4,7 @@ import { db } from '../../db';
 import { paginasColaborativasTable } from '../../db/paginasColaborativasSchema';
 import { eq } from 'drizzle-orm';
 
+// Extiende la interfaz Request para incluir 'user'
 declare global {
   namespace Express {
     interface User {
@@ -18,10 +19,10 @@ declare global {
 
 // Helper para extraer ID de usuario autenticado
 const getUserId = (req: Request): number => {
-  if (typeof req.userId !== 'number') {
+  if (!req.user || typeof req.user.id !== 'number') {
     throw new Error('Usuario no autenticado');
   }
-  return req.userId;
+  return req.user.id;
 };
 
 /**

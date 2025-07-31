@@ -1,60 +1,9 @@
 // src/routes/proyectos/proyectosController.ts
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { db } from '../../db';
 import { proyectosTable } from '../../db/proyectosSchema';
-import { participacionesProyectoTable } from '../../db/participacionesProyectoSchema';
-import { eq, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
-/**
- * GET /proyectos/:projectId/permiso/:userId
- * Devuelve { permiso: 'edit'|'view'|'none' }
- */
-export async function getPermisoProyecto(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const projectId = Number(req.params.projectId);
-    const userId    = Number(req.params.userId);
-
-    // 1) ¿Es creador?
-    const [project] = await db
-      .select()
-      .from(proyectosTable)
-      .where(eq(proyectosTable.id, projectId));
-
-    if (!project) {
-      return res.status(404).json({ message: 'Proyecto no encontrado' });
-    }
-    if (project.creador_id === userId) {
-      return res.json({ permiso: 'edit' });
-    }
-
-    // 2) Buscar participación
-    const [part] = await db
-      .select()
-      .from(participacionesProyectoTable)
-      .where(
-        and(
-          eq(participacionesProyectoTable.proyecto_id, projectId),
-          eq(participacionesProyectoTable.usuario_id, userId)
-        )
-      );
-
-    if (!part) {
-      return res.json({ permiso: 'none' });
-    }
-
-    // 3) Mapear rol_id a permiso
-    // (ajusta rol_id según tu lógica de negocio)
-    const permiso = part.rol_id === 1 ? 'edit' : 'view';
-    return res.json({ permiso });
-
-  } catch (err) {
-    next(err);
-  }
-}
 /**
  * @swagger
  * /proyectos:
