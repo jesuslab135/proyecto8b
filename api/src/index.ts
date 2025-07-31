@@ -25,6 +25,7 @@ import postulacionesRoutes from './routes/postulaciones/index';
 import postulacionesLaboralesRoutes from './routes/postulacionesLaborales/index';
 import participacionesProyectoRoutes from './routes/participacionesProyecto/index';
 import paginasColaborativasRoutes from './routes/paginasColaborativas/index';
+import bloquesRoutes from './routes/bloques/index';
 import relacionesBloquesRoutes from './routes/relacionesBloques/index';
 import versionesBloquesRoutes from './routes/versionesBloques/index';
 import tokensInicialesRoutes from './routes/tokensInicialesAcceso/index';
@@ -44,7 +45,6 @@ import collaborativePagePermissionsRoutes from './routes/collaborativePagePermis
 import reportEvidencesRoutes from './routes/reportEvidences/index';
 import validationDocumentsRoutes from './routes/validationDocuments/index';
 import adminBackupRoutes from './routes/adminBackup/index';
-import bloquesRoutes from './routes/bloques/index';
 
 const port = 3000;
 const app = express();

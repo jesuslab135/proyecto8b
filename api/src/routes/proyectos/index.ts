@@ -1,33 +1,24 @@
- import { Router } from 'express';
- import { verifyToken } from '../../middlewares/authMiddleware';
- import { getPermisoProyecto } from './proyectosController';
+// src/routes/proyectos/index.ts
+import { Router } from 'express';
+import {
+  createProyecto,
+  deleteProyecto,
+  getProyecto,
+  listProyectos,
+  updateProyecto,
+} from './proyectosController';
+import { validateData } from '../../middlewares/validationMiddleware';
+import {
+  insertProyectoSchema,
+  updateProyectoSchema,
+} from '../../db/proyectosSchema';
 
- import {
-   createProyecto,
-   deleteProyecto,
-   getProyecto,
-   listProyectos,
-   updateProyecto,
- } from './proyectosController';
- import { validateData } from '../../middlewares/validationMiddleware';
- import {
-   insertProyectoSchema,
-   updateProyectoSchema,
- } from '../../db/proyectosSchema';
+const router = Router();
 
- const router = Router();
+router.get('/', listProyectos);
+router.get('/:id', getProyecto);
+router.post('/', validateData(insertProyectoSchema), createProyecto);
+router.put('/:id', validateData(updateProyectoSchema), updateProyecto);
+router.delete('/:id', deleteProyecto);
 
-// Endpoint para obtener permiso de un usuario sobre un proyecto
-router.get(
-  '/:projectId/permiso/:userId',
-  verifyToken,
-  getPermisoProyecto
-);
-
- router.get('/', listProyectos);
- router.get('/:id', getProyecto);
- router.post('/', validateData(insertProyectoSchema), createProyecto);
- router.put('/:id', validateData(updateProyectoSchema), updateProyecto);
- router.delete('/:id', deleteProyecto);
-
- export default router;
+export default router;
