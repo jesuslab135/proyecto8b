@@ -1,8 +1,10 @@
 // src/routes/bloquesController.ts
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { db } from '../../db';
 import { bloquesTable } from '../../db/bloquesSchema';
-import { eq } from 'drizzle-orm';
+import { eq, or } from 'drizzle-orm';
+import { versionesBloquesTable } from '../../db/versionesBloquesSchema';
+import { relacionesBloquesTable } from '../../db/relacionesBloquesSchema';
 
 /**
  * @swagger
@@ -32,14 +34,22 @@ import { eq } from 'drizzle-orm';
  *       500:
  *         description: Error al crear bloque
  */
-export async function createBloque(req: Request, res: Response) {
+const getUserId = (req: Request) => req.userId;
+
+// 1) Crear bloque
+export async function createBloque(req: Request, res: Response, next: NextFunction) {
   try {
+    const pageId = Number(req.params.pageId);
     const data = req.cleanBody;
-    const [nuevo] = await db.insert(bloquesTable).values(data).returning();
-    res.status(201).json(nuevo);
+    data.pagina_id = pageId;
+    data.creado_por = getUserId(req);
+    
+    const [bloque] = await db.insert(bloquesTable).values(data).returning();
+    
+    res.status(201).json(bloque);
   } catch (e) {
     console.error(e);
-    res.status(500).json({ error: 'Error al crear bloque' });
+    next(e);
   }
 }
 
@@ -55,7 +65,7 @@ export async function createBloque(req: Request, res: Response) {
  *       500:
  *         description: Error al obtener bloques
  */
-export async function listBloques(_req: Request, res: Response) {
+export async function listBloques(_req: Request, res: Response, next: NextFunction) {
   try {
     const bloques = await db.select().from(bloquesTable);
     res.status(200).json(bloques);
