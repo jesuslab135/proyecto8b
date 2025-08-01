@@ -27,13 +27,35 @@ const getUserId = (req: Request): number => {
 
 export async function createPaginaColaborativa(req: Request, res: Response, next: NextFunction) {
   try {
-    const data = req.cleanBody;
-    data.creada_por = getUserId(req);  // siempre usar el ID del token
+    const data = req.cleanBody as {
+      titulo: string;
+      descripcion: string;
+      proyecto_id: number;
+      orden?: number;
+      permisos_lectura: string[];
+      permisos_escritura: string[];
+    };
+    
+    const userId = getUserId(req);
 
+        // 1) Inicializa los campos si vienen undefined
+    data.permisos_lectura  = Array.isArray(data.permisos_lectura)
+      ? data.permisos_lectura.concat(String(userId))
+      : [String(userId)];
+
+    data.permisos_escritura = Array.isArray(data.permisos_escritura)
+      ? data.permisos_escritura.concat(String(userId))
+      : [String(userId)];
+    // 2) Si quieres un default para orden:
+    if (data.orden == null) {
+      data.orden = 0;
+    }
+    
     const [nuevaPagina] = await db
       .insert(paginasColaborativasTable)
       .values(data)
       .returning();
+    
     res.status(201).json(nuevaPagina);
   } catch (e) {
     console.error(e);
