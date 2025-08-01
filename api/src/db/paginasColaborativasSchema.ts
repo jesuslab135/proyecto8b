@@ -16,13 +16,12 @@ export const paginasColaborativasTable = pgTable('paginas_colaborativas', {
 });
 
 export const insertPaginaColaborativaSchema = z.object({
-  proyecto_id: z.number().int(),
-  titulo: z.string().max(200),
-  descripcion: z.string(),
-  creada_por: z.number().int(),
-  permisos_lectura: z.array(z.string()),
-  permisos_escritura: z.array(z.string()),
-  orden: z.number().optional()
+  titulo:           z.string(),
+  descripcion:      z.string(),
+  proyecto_id:      z.number(),
+  orden:            z.number().optional(),
+  permisos_lectura:  z.array(z.string()).optional().default([]),
+  permisos_escritura:z.array(z.string()).optional().default([])
 });
 
 export const updatePaginaColaborativaSchema = z.object({
