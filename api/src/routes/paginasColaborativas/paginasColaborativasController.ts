@@ -19,10 +19,10 @@ declare global {
 
 // Helper para extraer ID de usuario autenticado
 const getUserId = (req: Request): number => {
-  if (!req.user || typeof req.user.id !== 'number') {
+  if (typeof req.userId !== 'number') {
     throw new Error('Usuario no autenticado');
   }
-  return req.user.id;
+  return req.userId;
 };
 
 export async function createPaginaColaborativa(req: Request, res: Response, next: NextFunction) {
