@@ -98,7 +98,7 @@ app.use('/api/postulaciones', postulacionesRoutes);
 app.use('/api/postulaciones-laborales', postulacionesLaboralesRoutes);
 app.use('/api/participaciones-proyecto', participacionesProyectoRoutes);
 app.use('/api/paginas-colaborativas', paginasColaborativasRoutes);
-app.use('/api/', bloquesRoutes);
+app.use('/api/bloques', bloquesRoutes);
 app.use('/api/relaciones-bloques', relacionesBloquesRoutes);
 app.use('/api/versiones-bloques', versionesBloquesRoutes);
 app.use('/api/tokens-iniciales-acceso', tokensInicialesRoutes);

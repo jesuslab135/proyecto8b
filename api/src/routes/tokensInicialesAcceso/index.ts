@@ -6,6 +6,8 @@ import {
   getTokenInicialAcceso,
   listTokensInicialesAcceso,
   updateTokenInicialAcceso,
+  getTokenByTokenAcceso,
+  getTokenByUsuarioId,
 } from './tokensInicialesAccesoController';
 import { validateData } from '../../middlewares/validationMiddleware';
 import {
@@ -19,13 +21,16 @@ router.post(
   '/',validateData(insertTokenAccesoSchema),
   createTokenInicialAcceso
 );
-router.get('/', listTokensInicialesAcceso);
-router.get('/:id', getTokenInicialAcceso);
+router.get('/all', listTokensInicialesAcceso);
+router.get('/token-acceso', getTokenByTokenAcceso); // ✅ Ruta clara y sin conflicto
+router.get('/usuario/:usuarioId', getTokenByUsuarioId); // ✅ Ruta específica
+router.get('/:id', getTokenInicialAcceso); 
 router.put(
   '/:id',
   validateData(updateTokenAccesoSchema),
   updateTokenInicialAcceso
 );
 router.delete('/:id',deleteTokenInicialAcceso);
+
 
 export default router;

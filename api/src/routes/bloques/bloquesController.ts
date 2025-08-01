@@ -197,3 +197,44 @@ export async function deleteBloque(req: Request, res: Response) {
     res.status(500).json({ error: 'Error al eliminar bloque' });
   }
 }
+
+/**
+ * @swagger
+ * /paginas-colaborativas/{pageId}/bloques:
+ *   get:
+ *     summary: Obtener todos los bloques de una página específica
+ *     tags: [bloques]
+ *     parameters:
+ *       - name: pageId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la página colaborativa
+ *     responses:
+ *       200:
+ *         description: Lista de bloques de la página
+ *       400:
+ *         description: ID de página no válido
+ *       500:
+ *         description: Error al obtener bloques
+ */
+export async function listBloquesByPage(req: Request, res: Response, next: NextFunction) {
+  try {
+    const pageId = Number(req.params.pageId);
+    
+    if (isNaN(pageId)) {
+      return res.status(400).json({ error: 'ID de página no válido' });
+    }
+
+    const bloques = await db.select()
+      .from(bloquesTable)
+      .where(eq(bloquesTable.pagina_id, pageId))
+      .orderBy(bloquesTable.creado_en);
+
+    res.status(200).json(bloques);
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+}

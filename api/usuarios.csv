@@ -1,0 +1,9 @@
+id,nombre,correo,contrasena,rol_id,universidad_id,matricula,telefono,verificado,debe_cambiar_contraseña,github_url,linkedin_url,biografia,cv_url,cv_publico,creado_en,is_active,updated_at,last_login_at
+1,Ana Torres,ana@un.edu.mx,hash123,2,1,A12345,555-1234,t,f,https://github.com/ana,https://linkedin.com/in/ana,Apasionada por la IA,https://cv.com/ana,t,2025-07-03 17:49:12.94136,t,,
+2,Luis Pérez,luis@it.edu.mx,hash456,3,2,L67890,555-5678,f,t,https://github.com/luis,https://linkedin.com/in/luis,Especialista en redes,https://cv.com/luis,f,2025-07-03 17:49:12.94136,t,,
+3,Esteban,esteban@gmail.com,$2b$10$wbg/qgmX.DTRzXCrG7B46OvidgGNo.prkwM6vRewwrdF4IWuwo2Eq,1,1,asd123,6631561542,f,t,https://,string,string,string,t,2025-07-22 20:37:46.332173,t,,
+4,Carlos Martínez,carlos.martinez@example.com,$2b$10$FjE1Q6KS6DmZXAMG7qim6ux1bSzHAsOluU3pHZnHbGkxGwhE2oPye,1,1,A01234567,5551234567,f,t,https://github.com/carlosm,https://www.linkedin.com/in/carlosm,Estudiante de ingeniería apasionado por backend y sistemas distribuidos.,https://drive.google.com/cv/carlos.pdf,t,2025-07-26 16:57:22.879574,t,,
+5,alma juanita dominguez diaz,diazalmajuanita@gmail.com,$2b$10$PQfmKprlO0fH7aauATqzkOlJ/M95RmNG09GfhZh.L1/GfzGlMON6C,2,1,string,string,f,t,string,string,string,string,t,2025-07-30 17:26:19.286172,t,,
+6,alma diaz,admin@gmail.com,$2b$10$sr9/GJXRL3HVmWyttUucTucUGROhFlJZzdRsxFx2qAImtBrrncr3W,1,1,string,string,f,t,string,string,string,string,t,2025-07-30 17:29:41.104921,t,,
+7,ana,ejemplo@gmail.com,$2b$10$NWG8CYMQbzcwusYHcjoWMeqZfIH4f3xiaCFrip8O8i8xvqelPXVpq,1,1,string,string,f,t,string,string,string,string,t,2025-07-30 17:53:52.731283,t,,
+8,peter,holamundo@gmail.com,$2b$10$xU6BtziIys6UTyow14xhoutn/ulOAQAc8e1fR/kIOnqNUpAHD4FVa,2,1,string,string,f,t,string,string,string,string,t,2025-07-30 19:57:50.412652,t,,
