@@ -8,12 +8,15 @@ import {
   updatePaginaColaborativa
 } from './paginasColaborativasController';
 import { validateData } from '../../middlewares/validationMiddleware';
+import { verifyToken } from '../../middlewares/authMiddleware';
 import {
   insertPaginaColaborativaSchema,
   updatePaginaColaborativaSchema
 } from '../../db/paginasColaborativasSchema';
 
 const router = Router();
+
+router.use(verifyToken);
 
 router.post('/', validateData(insertPaginaColaborativaSchema), createPaginaColaborativa);
 router.get('/', listPaginasColaborativas);
