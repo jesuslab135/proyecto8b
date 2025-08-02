@@ -1,0 +1,50 @@
+{
+	"name": "union-api",
+	"version": "1.0.0",
+	"description": "",
+	"license": "ISC",
+	"author": "",
+	"type": "module",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"dev": "node --import=tsx --watch --env-file=.env src/index.ts",
+		"build": "tsc",
+		"start": "node --import=tsx src/index.ts",
+		"vercel-build": "npm run build",
+		"db:generate": "drizzle-kit generate",
+		"db:migrate": "drizzle-kit migrate",
+		"db:studio": "drizzle-kit studio"
+	},
+	"dependencies": {
+		"bcryptjs": "^3.0.2",
+		"cors": "^2.8.5",
+		"csv-parser": "^3.2.0",
+		"drizzle-orm": "^0.44.2",
+		"express": "^5.1.0",
+		"jsonwebtoken": "^9.0.2",
+		"lodash": "^4.17.21",
+		"multer": "^2.0.1",
+		"nodemailer": "^7.0.5",
+		"pg": "^8.16.3",
+		"swagger-jsdoc": "^6.2.8",
+		"swagger-ui-express": "^5.0.1",
+		"uuid": "^11.1.0",
+		"xlsx": "^0.18.5",
+		"zod": "^4.0.5"
+	},
+	"devDependencies": {
+		"@types/cors": "^2.8.19",
+		"@types/express": "^5.0.3",
+		"@types/jsonwebtoken": "^9.0.10",
+		"@types/lodash": "^4.17.20",
+		"@types/multer": "^2.0.0",
+		"@types/nodemailer": "^6.4.17",
+		"@types/pg": "^8.15.4",
+		"@types/swagger-jsdoc": "^6.0.4",
+		"@types/swagger-ui-express": "^4.1.8",
+		"drizzle-kit": "^0.31.4",
+		"tsx": "^4.20.3",
+		"typescript": "^5.8.3"
+	}
+}

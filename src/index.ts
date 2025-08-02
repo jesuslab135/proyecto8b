@@ -1,5 +1,13 @@
 import cors from 'cors';
 import express, { json, urlencoded, Request } from 'express';
+import {
+	logger,
+	requestLoggingMiddleware,
+	errorLoggingMiddleware,
+	LogCategory,
+	LogComponent,
+} from './utils/logger';
+import { verifyToken } from './middlewares/authMiddleware';
 import authRoutes from './routes/auth/index';
 import universidadesRoutes from './routes/universidades/index';
 import forosRoutes from './routes/foros/index';
@@ -46,32 +54,99 @@ import reportEvidencesRoutes from './routes/reportEvidences/index';
 import validationDocumentsRoutes from './routes/validationDocuments/index';
 import adminBackupRoutes from './routes/adminBackup/index';
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 const app = express();
-app.use(cors({
-  origin: 'http://localhost:4200',
-  credentials: true,
-}));
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Headers", "Authorization, Content-Type");
-  next();
-});
 
+// Logger de inicio de aplicación con información detallada del sistema
+logger.info(
+	'API Server initialization started',
+	{
+		port,
+		nodeEnv: process.env.NODE_ENV || 'development',
+		logLevel: process.env.LOG_LEVEL || 'INFO',
+		timestamp: new Date().toISOString(),
+		version: process.env.npm_package_version || '1.0.0',
+		nodeVersion: process.version,
+		platform: process.platform,
+		arch: process.arch,
+		pid: process.pid,
+		memory: {
+			heap: `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB`,
+			rss: `${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)}MB`,
+		},
+	},
+	{
+		category: LogCategory.SYSTEM,
+		component: LogComponent.API,
+		action: 'SERVER_INIT',
+	}
+);
+
+// Middleware de logging para todas las requests (debe ir antes de CORS)
+logger.debug(
+	'Setting up request logging middleware',
+	{
+		middleware: 'requestLoggingMiddleware',
+		position: 'before_cors',
+	},
+	{
+		category: LogCategory.SYSTEM,
+		component: LogComponent.MIDDLEWARE,
+		action: 'MIDDLEWARE_SETUP',
+	}
+);
+
+app.use(requestLoggingMiddleware);
+
+// Configuración CORS con logging
+const allowedOrigins = process.env.NODE_ENV === 'production' 
+	? [process.env.FRONTEND_URL || 'https://your-frontend-domain.vercel.app']
+	: ['http://localhost:4200'];
+
+logger.debug(
+	'Setting up CORS configuration',
+	{
+		origins: allowedOrigins,
+		credentials: true,
+		allowedHeaders: ['Authorization', 'Content-Type'],
+	},
+	{
+		category: LogCategory.SYSTEM,
+		component: LogComponent.MIDDLEWARE,
+		action: 'CORS_SETUP',
+	}
+);
+
+app.use(
+	cors({
+		origin: allowedOrigins,
+		credentials: true,
+	})
+);
+
+app.use((req, res, next) => {
+	res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type');
+	next();
+});
 
 app.use(urlencoded({ extended: false }));
 app.use(
-  json({
-    verify: (req: Request, res, buf) => {
-      req.rawBody = buf;
-    },
-  })
+	json({
+		verify: (req: Request, res, buf) => {
+			req.rawBody = buf;
+		},
+	})
 );
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+	logger.info('Root endpoint accessed');
+	res.send('Hello World!');
 });
 
+logger.info('📚 Setting up API documentation at /api-docs');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+logger.info('🛣️  Setting up API routes...');
 app.use('/api/auth', authRoutes);
 app.use('/api/universidades', universidadesRoutes);
 app.use('/api/foros', forosRoutes);
@@ -112,12 +187,28 @@ app.use('/api/work-modalities', workModalitiesRoutes);
 app.use('/api/experience-types', experienceTypesRoutes);
 app.use('/api/project-technologies', projectTechnologiesRoutes);
 app.use('/api/user-skills', userSkillsRoutes);
-app.use('/api/collaborative-page-permissions', collaborativePagePermissionsRoutes);
+app.use(
+	'/api/collaborative-page-permissions',
+	collaborativePagePermissionsRoutes
+);
 app.use('/api/report-evidences', reportEvidencesRoutes);
 app.use('/api/validation-documents', validationDocumentsRoutes);
 app.use('/api/admin-backup', adminBackupRoutes);
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
-});
+// Middleware de manejo de errores (debe ir al final)
+app.use(errorLoggingMiddleware);
+
+// Para Vercel, exportamos la app en lugar de usar listen directamente
+if (process.env.NODE_ENV !== 'production') {
+	app.listen(port, () => {
+		logger.info(`✅ API server successfully started on port ${port}`, {
+			port,
+			environment: process.env.NODE_ENV || 'development',
+			apiDocs: `http://localhost:${port}/api-docs`,
+			timestamp: new Date().toISOString(),
+		});
+	});
+}
+
+export default app;
 
