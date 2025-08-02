@@ -98,8 +98,13 @@ logger.debug(
 
 app.use(requestLoggingMiddleware);
 
-// Configuración CORS con logging
+// Configuración CORS con logging - PERMISIVA PARA DESARROLLO/PROYECTO ESCOLAR
 const getAllowedOrigins = () => {
+	// Para proyecto escolar, permitimos cualquier origen
+	if (process.env.ALLOW_ALL_ORIGINS === 'true') {
+		return true; // Permite cualquier origen
+	}
+	
 	const origins = [];
 	
 	// Siempre permitir localhost para desarrollo
@@ -129,7 +134,7 @@ const allowedOrigins = getAllowedOrigins();
 logger.debug(
 	'Setting up CORS configuration',
 	{
-		origins: allowedOrigins,
+		origins: allowedOrigins === true ? 'ALL_ORIGINS_ALLOWED' : allowedOrigins,
 		credentials: true,
 		allowedHeaders: ['Authorization', 'Content-Type', 'X-Requested-With', 'Accept'],
 		allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
@@ -143,7 +148,7 @@ logger.debug(
 
 app.use(
 	cors({
-		origin: (origin, callback) => {
+		origin: allowedOrigins === true ? true : (origin, callback) => {
 			// Permitir requests sin origin (como herramientas de testing, Postman, etc.)
 			if (!origin) return callback(null, true);
 			

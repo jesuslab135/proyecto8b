@@ -54,9 +54,22 @@ const options = {
       { name: 'adminBackup', description: 'Operaciones de respaldo y restauración de base de datos para administradores' },
     ],
     servers: [
+      ...(process.env.NODE_ENV === 'production' 
+        ? [
+            {
+              url: process.env.API_BASE_URL || 'https://curious-bernie-union-196dcdb6.koyeb.app',
+              description: 'Servidor de Producción (Koyeb)',
+            }
+          ]
+        : []
+      ),
       {
-        url: 'http://localhost:3000/api',
+        url: 'http://localhost:3000',
         description: 'Servidor Local Desarrollo',
+      },
+      {
+        url: 'http://localhost:8000',
+        description: 'Servidor Local Desarrollo (Puerto Alternativo)',
       },
     ],
   },
