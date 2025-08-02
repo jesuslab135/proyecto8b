@@ -187,19 +187,32 @@ export async function updateBloque(req: Request, res: Response) {
  *       500:
  *         description: Error al eliminar bloque
  */
-export async function deleteBloque(req: Request, res: Response) {
+export async function deleteBloque(req: Request, res: Response, next: NextFunction) {
   try {
-    const id = parseInt(req.params.id);
-    const [deleted] = await db
+    const id = Number(req.params.id);
+
+    // eliminar versiones asociadas
+    await db
+      .delete(versionesBloquesTable)
+      .where(eq(versionesBloquesTable.bloque_id, id));
+
+    // eliminar relaciones asociadas (donde el bloque es padre O hijo)
+    await db
+      .delete(relacionesBloquesTable)
+      .where(
+        or(
+          eq(relacionesBloquesTable.bloque_padre_id, id),
+          eq(relacionesBloquesTable.bloque_hijo_id, id)
+        )
+      );
+
+    // eliminar el bloque
+    await db
       .delete(bloquesTable)
-      .where(eq(bloquesTable.id, id))
-      .returning();
-    if (!deleted) {
-      return res.status(404).json({ error: 'Bloque no encontrado' });
-    }
-    res.status(200).json({ message: 'Bloque eliminado correctamente' });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: 'Error al eliminar bloque' });
+      .where(eq(bloquesTable.id, id));
+
+    res.status(204).send();
+  } catch (err) {
+    next(err);
   }
 }
