@@ -64,7 +64,7 @@ export async function createPaginaColaborativa(req: Request, res: Response, next
 }
 
 
-export async function listPaginasColaborativas(_req: Request, res: Response, next: NextFunction) {
+export async function listPaginasColaborativas(req: Request, res: Response, next: NextFunction) {
   try {
     const proyectoId = req.query.proyecto_id ? Number(req.query.proyecto_id) : null;
     let consulta;
