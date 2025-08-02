@@ -65,13 +65,19 @@ export async function createBloque(req: Request, res: Response, next: NextFuncti
  *       500:
  *         description: Error al obtener bloques
  */
-export async function listBloques(_req: Request, res: Response, next: NextFunction) {
+// 2) Listar por página
+export async function listBloquesByPage(req: Request, res: Response, next: NextFunction) {
   try {
-    const bloques = await db.select().from(bloquesTable);
-    res.status(200).json(bloques);
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: 'Error al obtener bloques' });
+    const pageId = Number(req.params.pageId);
+    const bloques = await db
+      .select()
+      .from(bloquesTable)
+      .where(eq(bloquesTable.pagina_id, pageId))
+      .orderBy(bloquesTable.orden);
+
+    res.json(bloques);
+  } catch (err) {
+    next(err);
   }
 }
 
