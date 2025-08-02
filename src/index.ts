@@ -99,16 +99,40 @@ logger.debug(
 app.use(requestLoggingMiddleware);
 
 // Configuración CORS con logging
-const allowedOrigins = process.env.NODE_ENV === 'production' 
-	? [process.env.FRONTEND_URL || 'https://your-frontend-domain.vercel.app']
-	: ['http://localhost:4200'];
+const getAllowedOrigins = () => {
+	const origins = [];
+	
+	// Siempre permitir localhost para desarrollo
+	origins.push('http://localhost:4200', 'http://localhost:3000', 'http://localhost:5173');
+	
+	// Agregar orígenes de producción si están configurados
+	if (process.env.FRONTEND_URL) {
+		origins.push(process.env.FRONTEND_URL);
+	}
+	
+	// Agregar orígenes adicionales desde variable de entorno
+	if (process.env.ALLOWED_ORIGINS) {
+		const additionalOrigins = process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim());
+		origins.push(...additionalOrigins);
+	}
+	
+	// En desarrollo, también permitir cualquier localhost
+	if (process.env.NODE_ENV !== 'production') {
+		origins.push(/^http:\/\/localhost:\d+$/);
+	}
+	
+	return origins;
+};
+
+const allowedOrigins = getAllowedOrigins();
 
 logger.debug(
 	'Setting up CORS configuration',
 	{
 		origins: allowedOrigins,
 		credentials: true,
-		allowedHeaders: ['Authorization', 'Content-Type'],
+		allowedHeaders: ['Authorization', 'Content-Type', 'X-Requested-With', 'Accept'],
+		allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
 	},
 	{
 		category: LogCategory.SYSTEM,
@@ -119,13 +143,50 @@ logger.debug(
 
 app.use(
 	cors({
-		origin: allowedOrigins,
+		origin: (origin, callback) => {
+			// Permitir requests sin origin (como herramientas de testing, Postman, etc.)
+			if (!origin) return callback(null, true);
+			
+			// Verificar si el origin está en la lista permitida
+			const isAllowed = allowedOrigins.some(allowedOrigin => {
+				if (typeof allowedOrigin === 'string') {
+					return allowedOrigin === origin;
+				} else if (allowedOrigin instanceof RegExp) {
+					return allowedOrigin.test(origin);
+				}
+				return false;
+			});
+			
+			if (isAllowed) {
+				callback(null, true);
+			} else {
+				logger.warn(`CORS blocked origin: ${origin}`, {
+					requestedOrigin: origin,
+					allowedOrigins: allowedOrigins.filter(o => typeof o === 'string')
+				});
+				callback(new Error('Not allowed by CORS'));
+			}
+		},
 		credentials: true,
+		methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+		allowedHeaders: ['Authorization', 'Content-Type', 'X-Requested-With', 'Accept'],
+		exposedHeaders: ['Authorization'],
+		preflightContinue: false,
+		optionsSuccessStatus: 200
 	})
 );
 
 app.use((req, res, next) => {
-	res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type');
+	res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type, X-Requested-With, Accept');
+	res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+	res.header('Access-Control-Expose-Headers', 'Authorization');
+	
+	// Handle preflight requests
+	if (req.method === 'OPTIONS') {
+		res.status(200).end();
+		return;
+	}
+	
 	next();
 });
 
