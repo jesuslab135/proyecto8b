@@ -3,15 +3,12 @@ import jwt from 'jsonwebtoken';
 
 export function verifyToken(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.header('Authorization');
-
-   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Access denied' });
+  if (!authHeader) {
+    res.status(401).json({ error: 'Access denied' });
+    return;
   }
-
-  const token = authHeader.split(' ')[1]; // Extrae solo el token puro
-
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
   try {
-    // decode jwt toke data
     const decoded = jwt.verify(token, 'your-secret');
     if (typeof decoded !== 'object' || !decoded?.userId) {
       res.status(401).json({ error: 'Access denied' });
@@ -27,7 +24,7 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
 
 export function verifyAdmin(req: Request, res: Response, next: NextFunction) {
   const role = req.rol_id;
-  if (role !== 1) {
+  if (role !== 3) {
     res.status(401).json({ error: 'Access denied' });
     return;
   }
