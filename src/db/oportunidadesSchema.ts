@@ -37,7 +37,7 @@ export const oportunidadesTable = pgTable('oportunidades', {
 export const insertOportunidadSchema = z.object({
   titulo: z.string().max(200),
   descripcion: z.string(),
-  tipo: z.string().max(100), // para compatibilidad temporal
+  tipo: z.string().max(100).optional(), // para compatibilidad temporal
   universidad_id: z.number().int(),
   fecha_limite: z.string().refine(val => !isNaN(Date.parse(val))).transform(val => new Date(val)),
 
