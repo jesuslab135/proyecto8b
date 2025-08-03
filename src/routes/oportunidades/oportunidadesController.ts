@@ -19,15 +19,13 @@ import { eq } from 'drizzle-orm';
  *             required:
  *               - titulo
  *               - descripcion
- *               - tipo
+ *               - opportunity_type_id
  *               - universidad_id
  *               - fecha_limite
  *             properties:
  *               titulo:
  *                 type: string
  *               descripcion:
- *                 type: string
- *               tipo:
  *                 type: string
  *               universidad_id:
  *                 type: integer
@@ -142,6 +140,50 @@ export async function getOportunidad(req: Request, res: Response) {
     res.status(500).json({ error: 'Error al obtener la oportunidad' });
   }
 }
+
+/**
+ * @swagger
+ * /oportunidades/creadas-por/{userId}:
+ *   get:
+ *     summary: Obtener oportunidades creadas por un usuario
+ *     tags: [oportunidades]
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         required: true
+ *         description: ID del usuario creador
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Lista de oportunidades creadas por el usuario
+ *       404:
+ *         description: No se encontraron oportunidades
+ *       500:
+ *         description: Error al obtener las oportunidades
+ */
+export async function getOportunidadesByCreator(req: Request, res: Response) {
+  try {
+    const userId = parseInt(req.params.userId);
+     if (isNaN(userId)) {
+    return res.status(400).json({ error: 'Parámetro inválido: userId debe ser un número.' });
+  }
+    const oportunidades = await db
+      .select()
+      .from(oportunidadesTable)
+      .where(eq(oportunidadesTable.created_by, userId));
+
+    if (oportunidades.length === 0) {
+      res.status(404).json({ error: 'No se encontraron oportunidades creadas por este usuario' });
+    } else {
+      res.status(200).json(oportunidades);
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al obtener las oportunidades del usuario' });
+  }
+}
+
 
 /**
  * @swagger
