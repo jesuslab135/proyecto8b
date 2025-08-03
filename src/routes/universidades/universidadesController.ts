@@ -5,6 +5,8 @@ import { randomUUID } from 'crypto';
 import { universidadesTable } from '../../db/universidadesSchema';
 import { eq } from 'drizzle-orm';
 import { tokensInicialesAccesoTable } from '../../db/tokensInicialesAccesoSchema';
+import { logger } from '../../utils/logger';
+import { DatabaseLogger } from '../../utils/databaseLogger';
 
 /**
  * @swagger
@@ -37,14 +39,43 @@ import { tokensInicialesAccesoTable } from '../../db/tokensInicialesAccesoSchema
  *         description: Error al crear la universidad
  */
 export async function createUniversidad(req: Request, res: Response) {
-  try {
-    const { id, ...data } = req.cleanBody;
-    const [newUniversidad] = await db.insert(universidadesTable).values(data).returning();
-    res.status(201).json(newUniversidad);
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: 'Error al crear la universidad' });
-  }
+	const startTime = Date.now();
+
+	try {
+		const { id, ...data } = req.cleanBody;
+
+		logger.info('[UNIVERSIDAD] Creating new university', {
+			userId: req.userId,
+			universityData: {
+				nombre: data.nombre,
+				dominio_correo: data.dominio_correo,
+			},
+		});
+
+		const [newUniversidad] = await DatabaseLogger.logInsert(
+			() => db.insert(universidadesTable).values(data).returning(),
+			'universidades',
+			data
+		);
+
+		const duration = Date.now() - startTime;
+		logger.info('[UNIVERSIDAD] University created successfully', {
+			userId: req.userId,
+			universityId: newUniversidad.id,
+			nombre: newUniversidad.nombre,
+			duration: `${duration}ms`,
+		});
+
+		res.status(201).json(newUniversidad);
+	} catch (e) {
+		const duration = Date.now() - startTime;
+		logger.error('[UNIVERSIDAD] Failed to create university', e as Error, {
+			userId: req.userId,
+			universityData: req.cleanBody,
+			duration: `${duration}ms`,
+		});
+		res.status(500).json({ error: 'Error al crear la universidad' });
+	}
 }
 
 /**
@@ -60,13 +91,35 @@ export async function createUniversidad(req: Request, res: Response) {
  *         description: Error al obtener las universidades
  */
 export async function listUniversidades(_req: Request, res: Response) {
-  try {
-    const universidades = await db.select().from(universidadesTable);
-    res.status(200).json(universidades);
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: 'Error al obtener las universidades' });
-  }
+	const startTime = Date.now();
+
+	try {
+		logger.debug('[UNIVERSIDAD] Fetching all universities');
+
+		const universidades = await DatabaseLogger.logSelect(
+			() => db.select().from(universidadesTable),
+			'universidades',
+			'listing all universities'
+		);
+
+		const duration = Date.now() - startTime;
+		logger.info('[UNIVERSIDAD] Universities list retrieved', {
+			count: universidades.length,
+			duration: `${duration}ms`,
+		});
+
+		res.status(200).json(universidades);
+	} catch (e) {
+		const duration = Date.now() - startTime;
+		logger.error(
+			'[UNIVERSIDAD] Failed to fetch universities list',
+			e as Error,
+			{
+				duration: `${duration}ms`,
+			}
+		);
+		res.status(500).json({ error: 'Error al obtener las universidades' });
+	}
 }
 
 /**
@@ -91,22 +144,54 @@ export async function listUniversidades(_req: Request, res: Response) {
  *         description: Error al obtener la universidad
  */
 export async function getUniversidad(req: Request, res: Response) {
-  try {
-    const id = parseInt(req.params.id);
-    const [universidad] = await db
-      .select()
-      .from(universidadesTable)
-      .where(eq(universidadesTable.id, id));
+	const startTime = Date.now();
 
-    if (!universidad) {
-      res.status(404).json({ error: 'Universidad no encontrada' });
-    } else {
-      res.status(200).json(universidad);
-    }
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: 'Error al obtener la universidad' });
-  }
+	try {
+		const id = parseInt(req.params.id);
+
+		logger.debug('[UNIVERSIDAD] Fetching university by ID', {
+			universityId: id,
+			userId: req.userId,
+		});
+
+		const [universidad] = await DatabaseLogger.logSelect(
+			() =>
+				db
+					.select()
+					.from(universidadesTable)
+					.where(eq(universidadesTable.id, id)),
+			'universidades',
+			`finding university by id ${id}`,
+			{ id }
+		);
+
+		const duration = Date.now() - startTime;
+
+		if (!universidad) {
+			logger.warn('[UNIVERSIDAD] University not found', {
+				universityId: id,
+				userId: req.userId,
+				duration: `${duration}ms`,
+			});
+			res.status(404).json({ error: 'Universidad no encontrada' });
+		} else {
+			logger.info('[UNIVERSIDAD] University retrieved successfully', {
+				universityId: id,
+				nombre: universidad.nombre,
+				userId: req.userId,
+				duration: `${duration}ms`,
+			});
+			res.status(200).json(universidad);
+		}
+	} catch (e) {
+		const duration = Date.now() - startTime;
+		logger.error('[UNIVERSIDAD] Failed to fetch university by ID', e as Error, {
+			universityId: req.params.id,
+			userId: req.userId,
+			duration: `${duration}ms`,
+		});
+		res.status(500).json({ error: 'Error al obtener la universidad' });
+	}
 }
 
 /**
