@@ -7,7 +7,9 @@ import {
 	LogCategory,
 	LogComponent,
 } from './utils/logger';
-import { verifyToken } from './middlewares/authMiddleware';
+import { createServer } from 'http';
+import { Server as SocketIOServer } from 'socket.io';
+import { initializeChatSocket } from './socket/socket';
 import authRoutes from './routes/auth/index';
 import universidadesRoutes from './routes/universidades/index';
 import forosRoutes from './routes/foros/index';
@@ -56,6 +58,15 @@ import bloquesRoutes from './routes/bloques/index';
 
 const port = process.env.PORT || 3000;
 const app = express();
+
+const server = createServer(app);
+const io = new SocketIOServer(server, {
+  cors: {
+    origin: 'http://localhost:4200',
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
+});
 
 // Logger de inicio de aplicación con información detallada del sistema
 logger.info(
@@ -260,13 +271,14 @@ app.use(
 app.use('/api/report-evidences', reportEvidencesRoutes);
 app.use('/api/validation-documents', validationDocumentsRoutes);
 app.use('/api/admin-backup', adminBackupRoutes);
-
+// Inicializar Socket.IO para chat en tiempo real
+initializeChatSocket(io);
 // Middleware de manejo de errores (debe ir al final)
 app.use(errorLoggingMiddleware);
 
 // Para Vercel, exportamos la app en lugar de usar listen directamente
 if (process.env.NODE_ENV !== 'production') {
-	app.listen(port, () => {
+	server.listen(port, () => {
 		logger.info(`✅ API server successfully started on port ${port}`, {
 			port,
 			environment: process.env.NODE_ENV || 'development',

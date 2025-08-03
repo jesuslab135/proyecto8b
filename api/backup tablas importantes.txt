@@ -1,0 +1,47 @@
+@echo off
+echo Iniciando respaldo completo personalizado...
+
+REM Variables
+SET "PG_BIN=C:\Program Files\PostgreSQL\17\bin\pg_dump.exe"
+SET "PG_DATABASE=union"
+SET "PG_USER=postgres"
+SET "PG_PATH=C:\Users\MSI\Desktop"
+SET "FILE_NAME=%PG_PATH%\union_respaldo.sql"
+
+REM Tablas importantes que deben incluir datos
+SET "TABLAS_IMPORTANTES=^
+  -t usuarios ^
+  -t roles_usuario ^
+  -t universidades ^
+  -t tags ^
+  -t proyectos ^
+  -t roles_proyecto ^
+  -t actividad_usuario ^
+  -t asistencias_evento ^
+  -t eventos ^
+  -t experiencia_usuario ^
+  -t foros ^
+  -t hilos ^
+  -t mensajes ^
+  -t postulaciones ^
+  -t oportunidades ^
+  -t conversaciones ^
+  -t tokens_iniciales_acceso ^
+  -t proyectos_validaciones ^
+  -t reportes"
+
+REM Paso 1: Exportar toda la estructura de todas las tablas (sin datos)
+echo Exportando estructura general...
+%PG_BIN% -U %PG_USER% -d %PG_DATABASE% --schema-only --exclude-schema=drizzle > "%FILE_NAME%"
+
+REM Paso 2: Exportar solo datos de tablas importantes (añadirlos al archivo)
+echo Exportando datos de tablas importantes...
+%PG_BIN% -U %PG_USER% -d %PG_DATABASE% --data-only %TABLAS_IMPORTANTES% >> "%FILE_NAME%"
+
+IF %ERRORLEVEL% EQU 0 (
+  echo ✅ Respaldo completado exitosamente: %FILE_NAME%
+) ELSE (
+  echo ❌ Ocurrió un error durante el respaldo.
+)
+
+exit /b 0
