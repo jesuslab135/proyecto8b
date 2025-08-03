@@ -8,6 +8,7 @@ import { Request, Response } from 'express';
 import { exec } from 'child_process';
 import { db } from '../../db';
 import { eq } from 'drizzle-orm';
+import * as fs from 'fs';
 import { usuariosTable } from '../../db/usuariosSchema';
 
 /**
@@ -323,30 +324,39 @@ export const exportCsv = async (req: Request, res: Response) => {
   if (!(await validateUserRole(req, res, [1, 2, 3]))) return;
 
   const { table } = req.params;
-  const { schema } = req.query;
 
-  if (!table || !schema) {
-    return res.status(400).json({ error: 'Debes especificar la tabla y el esquema' });
+  if (!table) {
+    return res.status(400).json({ error: 'Debes especificar la tabla' });
   }
 
   const batPath = '"C:\\Users\\MSI\\Desktop\\export_table_to_csv.bat"';
-  const command = `cmd /c ${batPath} ${schema} ${table}`;
+  const command = `cmd /c ${batPath} ${table}`;
   const outputFile = `${table}.csv`;
+  const filePath = `C:\\Users\\MSI\\Desktop\\${outputFile}`;
 
   exec(command, (error, stdout, stderr) => {
     if (error) {
-      console.error(`❌ Error al exportar ${schema}.${table}:`, stderr);
+      console.error(`❌ Error al exportar public.${table}:`, stderr);
       return res.status(500).json({ error: `Error al exportar la tabla: ${stderr}` });
     }
 
-    // Verificar que el archivo exista antes de enviarlo
-    const filePath = `${process.cwd()}\\${outputFile}`;
-    res.download(filePath, outputFile, (err) => {
-      if (err) {
-        console.error('❌ Error al enviar el archivo CSV:', err);
-        return res.status(500).json({ error: 'Archivo generado pero no se pudo descargar' });
-      }
-    });
+    // Espera 500ms por seguridad antes de verificar existencia del archivo
+    setTimeout(() => {
+      fs.access(filePath, fs.constants.F_OK, (err) => {
+        if (err) {
+          console.error('❌ Archivo CSV no encontrado:', err);
+          return res.status(404).json({ error: 'Archivo CSV no encontrado tras exportación' });
+        }
+
+        res.download(filePath, outputFile, (err) => {
+          if (err) {
+            console.error('❌ Error al enviar el archivo CSV:', err);
+            return res.status(500).json({ error: 'Archivo generado pero no se pudo descargar' });
+          }
+        });
+      });
+    }, 500); // Delay para asegurar que el .bat haya terminado
   });
 };
+
 

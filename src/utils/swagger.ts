@@ -57,18 +57,18 @@ const options = {
       ...(process.env.NODE_ENV === 'production' 
         ? [
             {
-              url: process.env.API_BASE_URL || 'https://curious-bernie-union-196dcdb6.koyeb.app',
+              url: process.env.API_BASE_URL || 'https://curious-bernie-union-196dcdb6.koyeb.app/api',
               description: 'Servidor de Producción (Koyeb)',
             }
           ]
         : []
       ),
       {
-        url: 'http://localhost:3000',
+        url: 'http://localhost:3000/api',
         description: 'Servidor Local Desarrollo',
       },
       {
-        url: 'http://localhost:8000',
+        url: 'http://localhost:8000/api',
         description: 'Servidor Local Desarrollo (Puerto Alternativo)',
       },
     ],
