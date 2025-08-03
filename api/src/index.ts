@@ -1,5 +1,8 @@
 import cors from 'cors';
 import express, { json, urlencoded, Request } from 'express';
+import { createServer } from 'http';
+import { Server as SocketIOServer } from 'socket.io';
+import { initializeChatSocket } from './socket/socket';
 import authRoutes from './routes/auth/index';
 import universidadesRoutes from './routes/universidades/index';
 import forosRoutes from './routes/foros/index';
@@ -48,6 +51,15 @@ import adminBackupRoutes from './routes/adminBackup/index';
 
 const port = 3000;
 const app = express();
+const server = createServer(app);
+const io = new SocketIOServer(server, {
+  cors: {
+    origin: 'http://localhost:4200',
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
+});
+
 app.use(cors({
   origin: 'http://localhost:4200',
   credentials: true,
@@ -117,7 +129,9 @@ app.use('/api/report-evidences', reportEvidencesRoutes);
 app.use('/api/validation-documents', validationDocumentsRoutes);
 app.use('/api/admin-backup', adminBackupRoutes);
 
-app.listen(port, () => {
+// Inicializar Socket.IO para chat en tiempo real
+initializeChatSocket(io);
+
+server.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });
-
