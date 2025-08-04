@@ -9,6 +9,7 @@ import { exec } from 'child_process';
 import { db } from '../../db';
 import { eq } from 'drizzle-orm';
 import * as fs from 'fs';
+import path from 'path';
 import { usuariosTable } from '../../db/usuariosSchema';
 
 /**
@@ -146,34 +147,52 @@ export const runBackupBat = async (req: Request, res: Response) => {
  *       400:
  *         description: Error en la solicitud
  */
+
 export const backupPartial = async (req: Request, res: Response) => {
-  if (!(await validateUserRole(req, res, [1, 2]))) return;
-  const { tables } = req.body;
+  if (!(await validateUserRole(req, res, [1]))) return;
 
-  const allowedTables = [
-    'actividad_usuario', 'asistencias_evento', 'bloques', 'conversaciones',
-    'eventos', 'experiencia_usuario', 'foros', 'hilos', 'mensajes',
-    'oportunidades', 'paginas_colaborativas', 'participaciones_proyecto',
-    'perfiles', 'postulaciones', 'proyectos', 'proyectos_validaciones',
-    'reportes', 'respuestas_hilo', 'roles_proyecto', 'roles_usuario',
-    'seguimientos', 'taggables', 'tags', 'universidades', 'usuarios', 'versiones_bloques'
-  ];
-
-  if (!tables || !Array.isArray(tables) || tables.some((t: string) => !allowedTables.includes(t))) {
-    return res.status(400).json({ error: 'Debes especificar tablas válidas' });
+  const tablas: string[] = req.body.tables;
+  if (!tablas || !Array.isArray(tablas) || tablas.length === 0) {
+    return res.status(400).json({ error: 'Debe proporcionar al menos una tabla.' });
   }
 
-  const tableArgs = tables.join(' ');
-  const batPath = '"C:\\Users\\MSI\\Desktop\\backup_partial.bat"';
-  const command = `cmd /c ${batPath} ${tableArgs}`;
+  const tablasStr = tablas.join(' ');
+  const batPath = path.join('C:', 'Users', 'MSI', 'Desktop', 'backup_partial.bat');
 
-  exec(command, (error, stdout, stderr) => {
+  exec(`"${batPath}" ${tablasStr}`, async (error, stdout, stderr) => {
     if (error) {
+      console.error('❌ Error ejecutando backup_partial.bat:\n', stderr);
       return res.status(500).json({ error: stderr });
     }
-    res.status(200).json({ message: 'Respaldo parcial realizado', output: stdout });
+
+    const fs = await import('fs');
+    const basePath = 'C:\\Users\\MSI\\Desktop';
+    const files = fs.readdirSync(basePath)
+      .filter(f => f.startsWith('union_parcial_') && f.endsWith('.sql'))
+      .map(f => ({ name: f, time: fs.statSync(path.join(basePath, f)).mtime }))
+      .sort((a, b) => b.time.getTime() - a.time.getTime());
+
+    const latestFile = files[0]?.name;
+    if (!latestFile) {
+      return res.status(500).json({ error: 'No se encontró el archivo generado.' });
+    }
+
+    const filePath = path.join(basePath, latestFile);
+    const fileStream = fs.createReadStream(filePath);
+
+    res.setHeader('Content-Type', 'application/sql');
+    res.setHeader('Content-Disposition', `attachment; filename="${latestFile}"`);
+    fileStream.pipe(res);
+
+    // ❌ No cerrar la conexión aquí
+    // await db.$client.end(); ← esto lo quitamos
   });
 };
+
+
+
+
+
 
 /**
  * @swagger

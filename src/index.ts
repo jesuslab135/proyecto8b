@@ -17,6 +17,7 @@ import tagsRoutes from './routes/tags/index';
 import rolesUsuarioRoutes from './routes/rolesUsuario/index';
 import rolesProyectoRoutes from './routes/rolesProyecto/index';
 import actividadUsuarioRoutes from './routes/actividadUsuario/index';
+import contactRoutes from './routes/contact/contactRoutes';
 import eventosRoutes from './routes/eventos/index';
 import asistenciasEventoRoutes from './routes/asistenciasEvento/index';
 import conversacionesRoutes from './routes/conversaciones/index';
@@ -271,6 +272,7 @@ app.use(
 app.use('/api/report-evidences', reportEvidencesRoutes);
 app.use('/api/validation-documents', validationDocumentsRoutes);
 app.use('/api/admin-backup', adminBackupRoutes);
+app.use('/api/contact', contactRoutes);
 // Inicializar Socket.IO para chat en tiempo real
 initializeChatSocket(io);
 // Middleware de manejo de errores (debe ir al final)
