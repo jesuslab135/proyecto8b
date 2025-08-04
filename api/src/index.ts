@@ -45,6 +45,7 @@ import reportEvidencesRoutes from './routes/reportEvidences/index';
 import validationDocumentsRoutes from './routes/validationDocuments/index';
 import adminBackupRoutes from './routes/adminBackup/index';
 import bloquesRoutes from './routes/bloques/index';
+import contactRoutes from './routes/contact/contactRoutes';
 
 const allowedOrigins = [
   'http://localhost:4200',
@@ -126,6 +127,7 @@ app.use('/api/collaborative-page-permissions', collaborativePagePermissionsRoute
 app.use('/api/report-evidences', reportEvidencesRoutes);
 app.use('/api/validation-documents', validationDocumentsRoutes);
 app.use('/api/admin-backup', adminBackupRoutes);
+app.use('/api/contact', contactRoutes);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
