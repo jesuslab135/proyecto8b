@@ -10,7 +10,11 @@ import { db } from '../../db';
 import { eq } from 'drizzle-orm';
 import * as fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 import { usuariosTable } from '../../db/usuariosSchema';
+
 
 /**
  * Obtiene un usuario por su ID desde la base de datos.
@@ -210,14 +214,26 @@ export const backupPartial = async (req: Request, res: Response) => {
  */
 export const restoreFull = async (req: Request, res: Response) => {
   if (!(await validateUserRole(req, res, [1]))) return;
+
   const batPath = '"C:\\Users\\MSI\\Desktop\\restore_full.bat"';
   await db.$client.end();
+
   exec(batPath, (error, stdout, stderr) => {
     if (error) {
       console.error('❌ Error ejecutando restore_full.bat:', stderr);
       return res.status(500).json({ error: stderr });
     }
-    res.status(200).json({ message: '✅ Restauración completa realizada', output: stdout });
+
+    res.status(200).json({
+      message: '✅ Restauración completa realizada correctamente',
+      output: stdout,
+    });
+
+    setTimeout(() => {
+      const restartScript = path.join('C:', 'Users', 'MSI', 'Desktop', 'restart_server.bat');
+      exec(`start "" "${restartScript}"`);
+      console.log('♻️ Servidor reiniciado ejecutando restart_server.bat...');
+    }, 2000);
   });
 };
 
@@ -268,8 +284,16 @@ export const restorePartial = async (req: Request, res: Response) => {
       message: '✅ Restauración parcial realizada correctamente',
       output: stdout,
     });
+
+    console.log('♻️ Reiniciando servidor ejecutando npm run dev...');
+    setTimeout(() => {
+      const restartScript = path.join('C:', 'Users', 'MSI', 'Desktop', 'restart_server.bat');
+      exec(`start "" "${restartScript}"`);
+      console.log('♻️ Servidor reiniciado ejecutando restart_server.bat...');
+    }, 2000);
   });
 };
+
 
 /**
  * @swagger
