@@ -187,6 +187,54 @@ export async function getOportunidadesByCreator(req: Request, res: Response) {
 
 /**
  * @swagger
+ * /oportunidades/por-universidad/{universidadId}:
+ *   get:
+ *     summary: Obtener oportunidades asociadas a una universidad
+ *     tags: [oportunidades]
+ *     parameters:
+ *       - name: universidadId
+ *         in: path
+ *         required: true
+ *         description: ID de la universidad
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Lista de oportunidades asociadas a la universidad
+ *       400:
+ *         description: Parámetro inválido (universidadId debe ser un número)
+ *       404:
+ *         description: No se encontraron oportunidades para esta universidad
+ *       500:
+ *         description: Error al obtener las oportunidades
+ */
+export async function getOportunidadesByUniversidad(req: Request, res: Response) {
+  try {
+    const universidadId = parseInt(req.params.universidadId);
+    
+    if (isNaN(universidadId)) {
+      return res.status(400).json({ error: 'Parámetro inválido: universidadId debe ser un número.' });
+    }
+
+    const oportunidades = await db
+      .select()
+      .from(oportunidadesTable)
+      .where(eq(oportunidadesTable.universidad_id, universidadId));
+
+    if (oportunidades.length === 0) {
+      res.status(404).json({ error: 'No se encontraron oportunidades para esta universidad' });
+    } else {
+      res.status(200).json(oportunidades);
+    }
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al obtener las oportunidades por universidad' });
+  }
+}
+
+
+/**
+ * @swagger
  * /oportunidades/{id}:
  *   put:
  *     summary: Actualizar una oportunidad por ID
