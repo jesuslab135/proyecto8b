@@ -5,6 +5,7 @@ import { usuariosTable } from '../../db/usuariosSchema';
 import { tokensInicialesAccesoTable } from '../../db/tokensInicialesAccesoSchema';
 import { enviarTokenPorCorreo } from '../../utils/mailer'
 import { eq } from 'drizzle-orm';
+import bcrypt from 'bcryptjs';
 
 async function getUsuarioById(id: number) {
   const [usuario] = await db.select().from(usuariosTable).where(eq(usuariosTable.id, id));
