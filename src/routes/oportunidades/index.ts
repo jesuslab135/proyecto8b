@@ -5,6 +5,7 @@ import {
   deleteOportunidad,
   getOportunidad,
   getOportunidadesByCreator,
+  getOportunidadesByUniversidad,
   listOportunidades,
   updateOportunidad,
 } from './oportunidadesController';
@@ -19,7 +20,8 @@ const router = Router();
 router.post('/', validateData(insertOportunidadSchema), createOportunidad);
 router.get('/', listOportunidades);
 router.get('/:id', getOportunidad);
-router.get('/creadas-por/:userId', getOportunidadesByCreator)
+router.get('/creadas-por/:userId', getOportunidadesByCreator);
+router.get('/por-universidad/:universidadId', getOportunidadesByUniversidad);
 router.put('/:id', validateData(updateOportunidadSchema), updateOportunidad);
 router.delete('/:id', deleteOportunidad);
 

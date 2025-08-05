@@ -271,22 +271,35 @@ export async function getUsuario(req: Request, res: Response) {
  *         description: Error al actualizar usuario
  */
 export async function updateUsuario(req: Request, res: Response) {
-  try {
+   try {
     const id = parseInt(req.params.id);
-    const [updated] = await db
+    const data = req.cleanBody;
+
+    // Si viene contraseña, la hasheamos
+    if (data.contrasena) {
+      data.contrasena = await bcrypt.hash(data.contrasena, 10); // Mismo costo que en registro
+    }
+
+    const [updatedUser] = await db
       .update(usuariosTable)
-      .set(req.cleanBody)
+      .set(data)
       .where(eq(usuariosTable.id, id))
       .returning();
-    if (!updated) {
+
+    if (!updatedUser) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
-    res.status(200).json(updated);
+
+    // Eliminamos la contraseña de la respuesta
+    const { contrasena, ...safeUser } = updatedUser;
+
+    res.status(200).json(safeUser);
   } catch (error) {
-    console.error(error);
+    console.error('Error updating user:', error);
     res.status(500).json({ error: 'Error al actualizar usuario' });
   }
 }
+
 
 /**
  * @swagger
