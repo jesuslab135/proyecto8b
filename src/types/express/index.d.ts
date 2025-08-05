@@ -1,4 +1,5 @@
 // to make the file a module and avoid the TypeScript error
+// src/types/express/index.d.ts
 export {};
 
 declare global {

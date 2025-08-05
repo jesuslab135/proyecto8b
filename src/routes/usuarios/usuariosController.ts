@@ -2,8 +2,124 @@
 import { Request, Response } from 'express';
 import { db } from '../../db';
 import { usuariosTable } from '../../db/usuariosSchema';
+import { tokensInicialesAccesoTable } from '../../db/tokensInicialesAccesoSchema';
+import { enviarTokenPorCorreo } from '../../utils/mailer'
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
+
+async function getUsuarioById(id: number) {
+  const [usuario] = await db.select().from(usuariosTable).where(eq(usuariosTable.id, id));
+  return usuario;
+}
+
+export async function esAdminUni(userId: number): Promise<boolean> {
+  const usuario = await getUsuarioById(userId);
+  return usuario?.rol_id === 9;
+}
+
+
+/**
+ * @swagger
+ * /usuarios/alumnos:
+ *   post:
+ *     summary: Registrar un nuevo alumno (solo admin uni)
+ *     tags: [usuarios]
+ *     security:
+ *       - bearerAuth: []
+ *     description: |
+ *       Permite al usuario con rol `admin uni` (rol_id = 9) registrar nuevos alumnos (`rol_id = 2`).<br/>
+ *       El token de acceso es generado automáticamente por la base de datos y se envía por correo al alumno.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - correo
+ *               - nombre
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *                 example: Juan Pérez
+ *               correo:
+ *                 type: string
+ *                 example: juan@example.com
+ *               telefono:
+ *                 type: string
+ *                 example: 5551234567
+ *     responses:
+ *       201:
+ *         description: Alumno creado y token enviado por correo
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Alumno creado y token enviado por correo
+ *       400:
+ *         description: El rol enviado no es válido (debe ser 2)
+ *       403:
+ *         description: No autorizado. Solo el admin uni puede registrar alumnos.
+ *       500:
+ *         description: Error al crear alumno o al enviar el token
+ */
+
+export async function createAlumnoByAdminUni(req: Request, res: Response) {
+  try {
+    const adminId = req.userId;
+    if (!adminId || !(await esAdminUni(Number(adminId)))) {
+      return res.status(403).json({ error: 'No autorizado. Solo el admin uni puede registrar alumnos.' });
+    }
+
+    // Obtener los datos del admin para tomar su universidad_id
+    const [admin] = await db
+      .select({ universidad_id: usuariosTable.universidad_id })
+      .from(usuariosTable)
+      .where(eq(usuariosTable.id, Number(adminId)));
+
+    if (!admin?.universidad_id) {
+      return res.status(500).json({ error: 'No se pudo determinar la universidad del administrador' });
+    }
+
+    const data = req.cleanBody;
+
+    // Forzar los valores fijos
+    data.rol_id = 2;
+    data.universidad_id = admin.universidad_id;
+
+    const [alumno] = await db.insert(usuariosTable).values(data).returning();
+
+    // Buscar el token que fue generado por el trigger
+    const [tokenRow] = await db
+      .select()
+      .from(tokensInicialesAccesoTable)
+      .where(eq(tokensInicialesAccesoTable.usuario_id, alumno.id));
+
+    if (!tokenRow?.token_acceso) {
+      return res.status(500).json({ error: 'No se encontró el token generado para este alumno.' });
+    }
+
+    if (!alumno.correo) {
+      throw new Error('El correo del alumno es nulo o indefinido');
+    }
+
+    await enviarTokenPorCorreo(alumno.correo, tokenRow.token_acceso);
+    //await enviarTokenPorCorreo('lidering.esteban@gmail.com', 'tokenRow.token_acceso');
+
+    res.status(201).json({ message: 'Alumno creado y token enviado por correo', alumno });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al crear alumno' });
+  }
+}
+
+
+
+
+
 
 /**
  * @swagger
@@ -186,6 +302,7 @@ export async function updateUsuario(req: Request, res: Response) {
     res.status(500).json({ error: 'Error al actualizar usuario' });
   }
 }
+
 
 /**
  * @swagger

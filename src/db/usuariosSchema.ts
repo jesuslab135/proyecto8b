@@ -47,6 +47,27 @@ export const insertUsuarioSchema = z.object({
   last_login_at: z.date().optional()
 });
 
+export const iUAdminUniSchema = z.object({
+  nombre: z.string().max(100).optional(),
+  correo: z.string().max(150).optional(),
+  contrasena: z.string().optional(),
+  rol_id: z.number().int().optional().default(2), // rol_id por defecto para alumnos
+  universidad_id: z.number().int().optional(),
+  matricula: z.string().max(50).optional(),
+  telefono: z.string().max(20).optional(),
+  verificado: z.boolean().optional(),
+  debe_cambiar_contraseña: z.boolean().optional(),
+  github_url: z.string().optional(),
+  linkedin_url: z.string().optional(),
+  biografia: z.string().optional(),
+  cv_url: z.string().optional(),
+  cv_publico: z.boolean().optional(),
+  creado_en: z.date().optional(),
+  is_active: z.boolean().optional(),
+  updated_at: z.date().optional(),
+  last_login_at: z.date().optional()
+});
+
 export const updateUsuarioSchema = z.object({
   nombre: z.string().max(100).optional(),
   correo: z.string().max(150).optional(),

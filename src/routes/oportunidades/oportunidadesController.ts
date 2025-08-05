@@ -184,7 +184,6 @@ export async function getOportunidadesByCreator(req: Request, res: Response) {
   }
 }
 
-
 /**
  * @swagger
  * /oportunidades/por-universidad/{universidadId}:
