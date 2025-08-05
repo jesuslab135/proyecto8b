@@ -80,7 +80,7 @@ async function validateUserRole(req: Request, res: Response, allowedRoles: numbe
  */
 export const runBackupBat = async (req: Request, res: Response) => {
   if (!(await validateUserRole(req, res, [1]))) return;
-  const batPath = '"C:\\Users\\MSI\\Desktop\\backup_union.bat"';
+  const batPath = '"C:\\Users\\diaza\\OneDrive\\Escritorio\\BackupScripts\\New folder\\backup_union.bat"';
 
   exec(batPath, (error, stdout, stderr) => {
     if (error) {
@@ -161,7 +161,7 @@ export const backupPartial = async (req: Request, res: Response) => {
   }
 
   const tablasStr = tablas.join(' ');
-  const batPath = path.join('C:', 'Users', 'MSI', 'Desktop', 'backup_partial.bat');
+  const batPath = path.join('C:', 'Users', 'diaza', 'OneDrive', 'Escritorio', 'BackupScripts', 'New folder', 'backup_partial.bat');
 
   exec(`"${batPath}" ${tablasStr}`, async (error, stdout, stderr) => {
     if (error) {
@@ -170,7 +170,7 @@ export const backupPartial = async (req: Request, res: Response) => {
     }
 
     const fs = await import('fs');
-    const basePath = 'C:\\Users\\MSI\\Desktop';
+    const basePath = 'C:\\Users\\diaza\\OneDrive\\Escritorio\\BackupScripts\\New folder';
     const files = fs.readdirSync(basePath)
       .filter(f => f.startsWith('union_parcial_') && f.endsWith('.sql'))
       .map(f => ({ name: f, time: fs.statSync(path.join(basePath, f)).mtime }))
@@ -215,7 +215,7 @@ export const backupPartial = async (req: Request, res: Response) => {
 export const restoreFull = async (req: Request, res: Response) => {
   if (!(await validateUserRole(req, res, [1]))) return;
 
-  const batPath = '"C:\\Users\\MSI\\Desktop\\restore_full.bat"';
+  const batPath = '"C:\\Users\\diaza\\OneDrive\\Escritorio\\BackupScripts\\New folder\\restore_full.bat"';
   await db.$client.end();
 
   exec(batPath, (error, stdout, stderr) => {
@@ -230,7 +230,7 @@ export const restoreFull = async (req: Request, res: Response) => {
     });
 
     setTimeout(() => {
-      const restartScript = path.join('C:', 'Users', 'MSI', 'Desktop', 'restart_server.bat');
+      const restartScript = path.join('C:', 'Users', 'diaza', 'OneDrive', 'Escritorio', 'BackupScripts', 'New folder', 'restart_server.bat');
       exec(`start "" "${restartScript}"`);
       console.log('♻️ Servidor reiniciado ejecutando restart_server.bat...');
     }, 2000);
@@ -271,7 +271,7 @@ export const restoreFull = async (req: Request, res: Response) => {
 export const restorePartial = async (req: Request, res: Response) => {
   if (!(await validateUserRole(req, res, [1, 2]))) return;
 
-  const batPath = '"C:\\Users\\MSI\\Desktop\\restore_partial.bat"';
+  const batPath = '"C:\\Users\\diaza\\OneDrive\\Escritorio\\BackupScripts\\New folder\\restore_partial.bat"';
   await db.$client.end();
 
   exec(batPath, (error, stdout, stderr) => {
@@ -287,7 +287,7 @@ export const restorePartial = async (req: Request, res: Response) => {
 
     console.log('♻️ Reiniciando servidor ejecutando npm run dev...');
     setTimeout(() => {
-      const restartScript = path.join('C:', 'Users', 'MSI', 'Desktop', 'restart_server.bat');
+      const restartScript = path.join('C:', 'Users', 'diaza', 'OneDrive', 'Escritorio', 'BackupScripts', 'New folder', 'restart_server.bat');
       exec(`start "" "${restartScript}"`);
       console.log('♻️ Servidor reiniciado ejecutando restart_server.bat...');
     }, 2000);
@@ -372,10 +372,10 @@ export const exportCsv = async (req: Request, res: Response) => {
     return res.status(400).json({ error: 'Debes especificar la tabla' });
   }
 
-  const batPath = '"C:\\Users\\MSI\\Desktop\\export_table_to_csv.bat"';
+  const batPath = '"C:\\Users\\diaza\\OneDrive\\Escritorio\\BackupScripts\\New folder\\export_table_to_csv.bat"';
   const command = `cmd /c ${batPath} ${table}`;
   const outputFile = `${table}.csv`;
-  const filePath = `C:\\Users\\MSI\\Desktop\\${outputFile}`;
+  const filePath = `C:\\Users\\diaza\\OneDrive\\Escritorio\\BackupScripts\\New folder\\${outputFile}`;
 
   exec(command, (error, stdout, stderr) => {
     if (error) {

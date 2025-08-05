@@ -137,6 +137,8 @@ export async function getUsuario(req: Request, res: Response) {
  *             properties:
  *               correo:
  *                 type: string
+ *               contrasena:
+ *                 type: string
  *               nombre:
  *                 type: string
  *               apellido:
