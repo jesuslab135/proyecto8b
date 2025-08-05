@@ -5,14 +5,16 @@ import {
   deleteUsuario,
   getUsuario,
   listUsuarios,
-  updateUsuario
+  updateUsuario,
+  createAlumnoByAdminUni
 } from './usuariosController';
 import { validateData } from '../../middlewares/validationMiddleware';
-import { insertUsuarioSchema, updateUsuarioSchema } from '../../db/usuariosSchema';
+import { insertUsuarioSchema, updateUsuarioSchema, iUAdminUniSchema } from '../../db/usuariosSchema';
 
 const router = Router();
 
 router.post('/', validateData(insertUsuarioSchema), createUsuario);
+router.post('/alumnos', validateData(iUAdminUniSchema), createAlumnoByAdminUni);
 router.get('/', listUsuarios);
 router.get('/:id', getUsuario);
 router.put('/:id', validateData(updateUsuarioSchema), updateUsuario);
