@@ -217,7 +217,7 @@ app.use(
 );
 
 app.get('/', (req, res) => {
-	logger.info('Root endpoint accessed');
+	//logger.info('Root endpoint accessed');
 	res.send('Hello World!');
 });
 

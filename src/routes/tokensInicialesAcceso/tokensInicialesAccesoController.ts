@@ -82,3 +82,50 @@ export async function deleteTokenInicialAcceso(req: Request, res: Response) {
     res.status(500).json({ error: 'Error al eliminar token' });
   }
 }
+
+/**
+ * @swagger
+ * /tokens-iniciales-acceso/token-acceso:
+ *   get:
+ *     summary: Obtener un token por token_acceso
+ *     tags:
+ *       - tokensInicialesAcceso
+ *     parameters:
+ *       - name: token_acceso
+ *         in: query
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Token de acceso a buscar
+ *     responses:
+ *       200:
+ *         description: Token encontrado
+ *       404:
+ *         description: Token no encontrado
+ *       500:
+ *         description: Error al obtener el token
+ */
+
+
+export async function getTokenByTokenAcceso(req: Request, res: Response) {
+  try {
+    const token_acceso = req.query.token_acceso as string;
+
+    if (!token_acceso) {
+      return res.status(400).json({ error: 'token_acceso es requerido en la query' });
+    }
+    const [token] = await db
+      .select()
+      .from(tokensInicialesAccesoTable)
+      .where(eq(tokensInicialesAccesoTable.token_acceso, token_acceso));
+
+    if (!token) {
+      return res.status(404).json({ error: 'Token no encontrado en la bd' });
+    }
+
+    res.status(200).json(token);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Error al obtener token en la bd' });
+  }
+}

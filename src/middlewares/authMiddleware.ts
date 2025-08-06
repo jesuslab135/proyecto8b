@@ -8,6 +8,11 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
 	const clientIP = req.ip || req.connection.remoteAddress || 'Unknown';
 	const userAgent = req.get('User-Agent') || 'Unknown';
 
+	const publicPaths = [/^\/tokens-iniciales-acceso\/token-acceso/];
+	if (publicPaths.some(path => path instanceof RegExp ? path.test(req.path) : path === req.path)) {
+		return next();
+	}
+
 	logger.authentication('TOKEN_VERIFICATION_START', undefined, true, {
 		url: req.originalUrl,
 		method: req.method,
