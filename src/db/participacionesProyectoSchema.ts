@@ -16,14 +16,20 @@ export const participacionesProyectoTable = pgTable('participaciones_proyecto', 
 });
 
 // Zod Schemas
+// Permite usuario_id o email, uno de los dos requerido
 export const insertParticipacionesProyectoSchema = z.object({
   proyecto_id: z.number().int(),
-  usuario_id: z.number().int(),
+  usuario_id: z.number().int().optional(),
+  email: z.string().email().optional(), // <-- PERMITIR email
   rol_id: z.number().int(),
-  estado: z.string().max(50),
+  estado: z.string().max(50).optional(), // <-- hacerlo opcional
   invitado_por: z.number().int(),
   fecha_invitacion: z.date().optional(),
+}).refine(data => data.usuario_id !== undefined || data.email !== undefined, {
+  message: 'Se requiere usuario_id o email',
+  path: ['usuario_id', 'email'],
 });
+
 
 export const updateParticipacionesProyectoSchema = z.object({
   proyecto_id: z.number().int(),
