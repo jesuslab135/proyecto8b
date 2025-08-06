@@ -1,4 +1,5 @@
 // src/routes/usuarios/usuariosController.ts
+import jwt from 'jsonwebtoken'; 
 import { Request, Response } from 'express';
 import { db } from '../../db';
 import { usuariosTable } from '../../db/usuariosSchema';
@@ -16,6 +17,16 @@ export async function esAdminUni(userId: number): Promise<boolean> {
   const usuario = await getUsuarioById(userId);
   return usuario?.rol_id === 9;
 }
+
+const generateUserToken = (user: any) => {
+  return jwt.sign(
+    { userId: user.id, rol_id: user.rol_id },
+    'your-secret', 
+    {
+      expiresIn: '30d',
+    }
+  );
+};
 
 
 /**
@@ -107,9 +118,20 @@ export async function createAlumnoByAdminUni(req: Request, res: Response) {
     }
 
     await enviarTokenPorCorreo(alumno.correo, tokenRow.token_acceso);
-    //await enviarTokenPorCorreo('lidering.esteban@gmail.com', 'tokenRow.token_acceso');
 
-    res.status(201).json({ message: 'Alumno creado y token enviado por correo', alumno });
+    // ✅ Generar JWT de autenticación
+    const jwtToken = generateUserToken(alumno);
+
+    res.status(201).json({
+      message: 'Alumno creado y token enviado por correo',
+      alumno,
+      token: jwtToken // ✅ Incluir token en respuesta
+    });
+
+    // await enviarTokenPorCorreo(alumno.correo, tokenRow.token_acceso);
+    // //await enviarTokenPorCorreo('lidering.esteban@gmail.com', 'tokenRow.token_acceso');
+
+    // res.status(201).json({ message: 'Alumno creado y token enviado por correo', alumno });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al crear alumno' });
