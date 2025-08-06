@@ -22,6 +22,7 @@ const options = {
     security: [{ bearerAuth: [] }],
     tags: [
       { name: 'auth', description: 'Autenticación y registro de usuarios' },
+       { name: 'tokensInicialesAcceso', description: 'Operaciones de tokens iniciales de acceso' },
       { name: 'ActividadUsuario', description: 'Operaciones de actividad de usuario' },
       { name: 'asistenciasEvento', description: 'Operaciones de asistencias a eventos' },
       { name: 'bloques', description: 'Operaciones de bloques' },

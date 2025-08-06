@@ -3,6 +3,7 @@ import { Router } from 'express';
 import {
   createTokenInicialAcceso,
   deleteTokenInicialAcceso,
+  getTokenByTokenAcceso,
   getTokenInicialAcceso,
   listTokensInicialesAcceso,
   updateTokenInicialAcceso,
@@ -20,6 +21,7 @@ router.post(
   createTokenInicialAcceso
 );
 router.get('/', listTokensInicialesAcceso);
+router.get('/token-acceso', getTokenByTokenAcceso);
 router.get('/:id', getTokenInicialAcceso);
 router.put(
   '/:id',

@@ -257,8 +257,6 @@ export async function getUsuario(req: Request, res: Response) {
  *                 type: string
  *               nombre:
  *                 type: string
- *               apellido:
- *                 type: string
  *               telefono:
  *                 type: string
  *               universidad_id:
