@@ -75,7 +75,7 @@ logger.info(
 	'API Server initialization started',
 	{
 		port,
-		nodeEnv: process.env.NODE_ENV || 'production',
+		nodeEnv: process.env.NODE_ENV || 'development',
 		logLevel: process.env.LOG_LEVEL || 'INFO',
 		timestamp: new Date().toISOString(),
 		version: process.env.npm_package_version || '1.0.0',
