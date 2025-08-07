@@ -6,4 +6,7 @@ const pool = new pg.Pool({
     ssl: { rejectUnauthorized: false },
 });
 
-export const db = drizzle(pool);
+export const db = drizzle(pool, {
+  logger: true,
+  prepare: false,  // 👈 clave con PgBouncer (6543)
+});
