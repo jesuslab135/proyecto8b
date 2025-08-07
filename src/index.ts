@@ -63,11 +63,11 @@ const app = express();
 
 const server = createServer(app);
 const io = new SocketIOServer(server, {
-  cors: {
-    origin: 'http://localhost:4200',
-    methods: ['GET', 'POST'],
-    credentials: true
-  }
+	cors: {
+		origin: 'http://localhost:4200',
+		methods: ['GET', 'POST'],
+		credentials: true
+	}
 });
 
 // Logger de inicio de aplicación con información detallada del sistema
@@ -75,7 +75,7 @@ logger.info(
 	'API Server initialization started',
 	{
 		port,
-		nodeEnv: process.env.NODE_ENV || 'development',
+		nodeEnv: process.env.NODE_ENV || 'production',
 		logLevel: process.env.LOG_LEVEL || 'INFO',
 		timestamp: new Date().toISOString(),
 		version: process.env.npm_package_version || '1.0.0',
@@ -116,28 +116,28 @@ const getAllowedOrigins = () => {
 	if (process.env.ALLOW_ALL_ORIGINS === 'true') {
 		return true; // Permite cualquier origen
 	}
-	
+
 	const origins = [];
-	
+
 	// Siempre permitir localhost para desarrollo
 	origins.push('http://localhost:4200', 'http://localhost:3000', 'http://localhost:5173');
-	
+
 	// Agregar orígenes de producción si están configurados
 	if (process.env.FRONTEND_URL) {
 		origins.push(process.env.FRONTEND_URL);
 	}
-	
+
 	// Agregar orígenes adicionales desde variable de entorno
 	if (process.env.ALLOWED_ORIGINS) {
 		const additionalOrigins = process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim());
 		origins.push(...additionalOrigins);
 	}
-	
+
 	// En desarrollo, también permitir cualquier localhost
 	if (process.env.NODE_ENV !== 'production') {
 		origins.push(/^http:\/\/localhost:\d+$/);
 	}
-	
+
 	return origins;
 };
 
@@ -164,7 +164,7 @@ app.use(
 		origin: allowedOrigins === true ? true : (origin, callback) => {
 			// Permitir requests sin origin (como herramientas de testing, Postman, etc.)
 			if (!origin) return callback(null, true);
-			
+
 			// Verificar si el origin está en la lista permitida
 			const isAllowed = allowedOrigins.some(allowedOrigin => {
 				if (typeof allowedOrigin === 'string') {
@@ -174,7 +174,7 @@ app.use(
 				}
 				return false;
 			});
-			
+
 			if (isAllowed) {
 				callback(null, true);
 			} else {
@@ -198,13 +198,13 @@ app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type, X-Requested-With, Accept');
 	res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
 	res.header('Access-Control-Expose-Headers', 'Authorization');
-	
+
 	// Handle preflight requests
 	if (req.method === 'OPTIONS') {
 		res.status(200).end();
 		return;
 	}
-	
+
 	next();
 });
 
@@ -217,7 +217,7 @@ app.use(
 	})
 );
 
-app.post('/api/contact',handleContactForm);
+app.post('/api/contact', handleContactForm);
 app.use(requestLoggingMiddleware);
 
 app.get('/', (req, res) => {
@@ -283,16 +283,20 @@ initializeChatSocket(io);
 app.use(errorLoggingMiddleware);
 
 // Para Vercel, exportamos la app en lugar de usar listen directamente
-if (process.env.NODE_ENV !== 'production') {
-	server.listen(port, () => {
-		logger.info(`✅ API server successfully started on port ${port}`, {
-			port,
-			environment: process.env.NODE_ENV || 'development',
-			apiDocs: `http://localhost:${port}/api-docs`,
-			timestamp: new Date().toISOString(),
-		});
-	});
-}
+// if (process.env.NODE_ENV !== 'production') {
+// 	server.listen(port, '0.0.0.0', () => {
+// 		logger.info(`✅ API server successfully started on port ${port}`, {
+// 			port,
+// 			environment: process.env.NODE_ENV || 'development',
+// 			apiDocs: `http://localhost:${port}/api-docs`,
+// 			timestamp: new Date().toISOString(),
+// 		});
+// 	});
+// }
+
+server.listen(Number(port), () => {
+  console.log(`API server successfully started on port ${port}`);
+});
 
 
 export default app;
