@@ -284,7 +284,7 @@ app.use(errorLoggingMiddleware);
 
 // Para Vercel, exportamos la app en lugar de usar listen directamente
  if (process.env.NODE_ENV !== 'production') {
- 	server.listen(port, '0.0.0.0', () => {
+ 	server.listen(port, () => {
  		logger.info(`✅ API server successfully started on port ${port}`, {
  			port,
  			environment: process.env.NODE_ENV || 'development',
