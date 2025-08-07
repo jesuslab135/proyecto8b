@@ -14,7 +14,7 @@ import { DatabaseLogger } from '../../utils/databaseLogger';
 
 const router = Router();
 
-const generateUserToken = (user: any) => {
+export const generateUserToken = (user: any) => {
 	logger.business(
 		'JWT_TOKEN_GENERATION',
 		'Generating authentication token',

@@ -38,7 +38,7 @@ export const insertUsuarioSchema = z.object({
   debe_cambiar_contraseña: z.boolean().optional(),
   github_url: z.string().optional(),
   linkedin_url: z.string().optional(),
-  biografia: z.string().optional(),
+  // biografia: z.string().optional(),
   cv_url: z.string().optional(),
   cv_publico: z.boolean().optional(),
   creado_en: z.date().optional(),

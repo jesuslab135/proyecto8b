@@ -5,6 +5,7 @@ import { usuariosTable } from '../../db/usuariosSchema';
 import { tokensInicialesAccesoTable } from '../../db/tokensInicialesAccesoSchema';
 import { enviarTokenPorCorreo } from '../../utils/mailer'
 import { eq } from 'drizzle-orm';
+import { generateUserToken } from '../auth/index';
 import bcrypt from 'bcryptjs';
 
 async function getUsuarioById(id: number) {
@@ -166,6 +167,10 @@ export async function createAlumnoByAdminUni(req: Request, res: Response) {
 export async function createUsuario(req: Request, res: Response) {
   try {
     const { id, ...data } = req.cleanBody;
+    // Si viene contraseña, la hasheamos
+    if (data.contrasena) {
+      data.contrasena = await bcrypt.hash(data.contrasena, 10); // Mismo costo que en registro
+    }
     const [nuevo] = await db.insert(usuariosTable).values(data).returning();
     res.status(201).json(nuevo);
   } catch (error) {

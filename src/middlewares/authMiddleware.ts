@@ -8,7 +8,11 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
 	const clientIP = req.ip || req.connection.remoteAddress || 'Unknown';
 	const userAgent = req.get('User-Agent') || 'Unknown';
 
-	const publicPaths = [/^\/tokens-iniciales-acceso\/token-acceso/];
+	const publicPaths = [
+		/^\/tokens-iniciales-acceso\/token-acceso/,
+		/^\/usuarios\/\d+$/, // Nueva expresión regular para PUT /api/usuarios/:id
+		/^\/tokens-iniciales-acceso\/\d+$/
+	];
 	if (publicPaths.some(path => path instanceof RegExp ? path.test(req.path) : path === req.path)) {
 		return next();
 	}
