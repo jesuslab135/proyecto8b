@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { db } from '../../db/index';
 import { participacionesProyectoTable } from '../../db/participacionesProyectoSchema'; 
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 
 /**
  * @swagger
@@ -32,16 +32,71 @@ import { eq } from 'drizzle-orm';
  *       500:
  *         description: Error al crear la participación
  */
+import { usuariosTable } from '../../db/usuariosSchema'; // importa tu tabla de usuarios
+
 export async function createParticipacionProyecto(req: Request, res: Response) {
   try {
     const data = req.cleanBody;
-    const [nueva] = await db.insert(participacionesProyectoTable).values(data).returning();
+
+    // Si llega email, busca el usuario y usa su ID
+    if (data.email && !data.usuario_id) {
+      const [user] = await db
+        .select()
+        .from(usuariosTable)
+        .where(eq(usuariosTable.correo, data.email));
+      if (!user) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+      data.usuario_id = user.id;
+    }
+
+    // Valida que venga usuario_id y proyecto_id y los demás requeridos
+    if (!data.usuario_id || !data.proyecto_id || !data.rol_id || !data.invitado_por) {
+      return res.status(400).json({ error: 'usuario_id, proyecto_id, rol_id e invitado_por son obligatorios' });
+    }
+
+    // Completa valores default si faltan
+    if (!data.estado) data.estado = 'pendiente';
+    if (!data.fecha_invitacion) data.fecha_invitacion = new Date();
+
+    // Verifica si ya existe la participación
+    const [existing] = await db
+      .select()
+      .from(participacionesProyectoTable)
+      .where(
+        and(
+          eq(participacionesProyectoTable.usuario_id, data.usuario_id),
+          eq(participacionesProyectoTable.proyecto_id, data.proyecto_id)
+        )
+      );
+    if (existing) {
+      return res.status(400).json({ error: 'Usuario ya invitado o participa en este proyecto' });
+    }
+
+    // SOLO los campos válidos (esto es lo que arregla todo)
+    const insertData = {
+      usuario_id: data.usuario_id,
+      proyecto_id: data.proyecto_id,
+      rol_id: data.rol_id,
+      invitado_por: data.invitado_por,
+      estado: data.estado,
+      fecha_invitacion: data.fecha_invitacion,
+    };
+
+    // Log para debug
+    console.log('Insertando participación:', insertData);
+
+    // Ahora sí, inserta solo lo permitido
+    const [nueva] = await db.insert(participacionesProyectoTable).values(insertData).returning();
+
     res.status(201).json(nueva);
   } catch (e) {
     console.error(e);
-    res.status(500).json({ error: 'Error al crear la participaciones de proyecto' });
+    res.status(500).json({ error: 'Error al crear la participación de proyecto' });
   }
 }
+
+
 
 /**
  * @swagger

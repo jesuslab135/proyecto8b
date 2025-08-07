@@ -23,6 +23,7 @@ router.post(
 router.get('/', listTokensInicialesAcceso);
 router.get('/token-acceso', getTokenByTokenAcceso);
 router.get('/:id', getTokenInicialAcceso);
+
 router.put(
   '/:id',
   validateData(updateTokenAccesoSchema),

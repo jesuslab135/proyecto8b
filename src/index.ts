@@ -56,6 +56,7 @@ import reportEvidencesRoutes from './routes/reportEvidences/index';
 import validationDocumentsRoutes from './routes/validationDocuments/index';
 import adminBackupRoutes from './routes/adminBackup/index';
 import bloquesRoutes from './routes/bloques/index';
+import { handleContactForm } from './routes/contact/contactController';
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -108,7 +109,6 @@ logger.debug(
 	}
 );
 
-app.use(requestLoggingMiddleware);
 
 // Configuración CORS con logging - PERMISIVA PARA DESARROLLO/PROYECTO ESCOLAR
 const getAllowedOrigins = () => {
@@ -142,6 +142,7 @@ const getAllowedOrigins = () => {
 };
 
 const allowedOrigins = getAllowedOrigins();
+
 
 logger.debug(
 	'Setting up CORS configuration',
@@ -216,8 +217,11 @@ app.use(
 	})
 );
 
+app.post('/api/contact',handleContactForm);
+app.use(requestLoggingMiddleware);
+
 app.get('/', (req, res) => {
-	logger.info('Root endpoint accessed');
+	//logger.info('Root endpoint accessed');
 	res.send('Hello World!');
 });
 
@@ -289,6 +293,7 @@ if (process.env.NODE_ENV !== 'production') {
 		});
 	});
 }
+
 
 export default app;
 
