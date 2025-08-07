@@ -96,7 +96,7 @@ export async function getPermisoProyecto(
  */
 export async function createProyecto(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const { id, ...data } = req.cleanBody;
     const [nuevoProyecto] = await db.insert(proyectosTable).values(data).returning();
     res.status(201).json(nuevoProyecto);
   } catch (e) {

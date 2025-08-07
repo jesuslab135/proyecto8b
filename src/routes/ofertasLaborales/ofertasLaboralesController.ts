@@ -40,7 +40,7 @@ import { eq } from 'drizzle-orm';
  */
 export async function createOfertaLaboral(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const {id, ...data} = req.cleanBody;
     const [nuevaOferta] = await db.insert(ofertasLaboralesTable).values(data).returning();
     res.status(201).json(nuevaOferta);
   } catch (e) {

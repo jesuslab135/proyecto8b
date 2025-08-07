@@ -34,7 +34,7 @@ import { eq } from 'drizzle-orm';
  */
 export async function createRespuestaHilo(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const { id, ...data } = req.cleanBody;
     const [nueva] = await db.insert(respuestasHiloTable).values(data).returning();
     res.status(201).json(nueva);
   } catch (e) {

@@ -34,7 +34,7 @@ import { eq } from 'drizzle-orm';
  */
 export async function createSeguimiento(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const { id, ...data } = req.cleanBody;
 
     if ((data.seguido_usuario_id && data.seguido_proyecto_id) || (!data.seguido_usuario_id && !data.seguido_proyecto_id)) {
       return res.status(400).json({ error: 'Debes especificar solo uno: seguido_usuario_id o seguido_proyecto_id' });

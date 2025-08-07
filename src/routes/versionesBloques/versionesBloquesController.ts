@@ -35,7 +35,7 @@ import { eq } from 'drizzle-orm';
  */
 export async function createVersionBloque(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const { id, ...data } = req.cleanBody;
     const [nueva] = await db.insert(versionesBloquesTable).values(data).returning();
     res.status(201).json(nueva);
   } catch (e) {

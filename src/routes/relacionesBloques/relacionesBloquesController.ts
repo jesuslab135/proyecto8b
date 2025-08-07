@@ -34,7 +34,7 @@ import { eq } from 'drizzle-orm';
  */
 export async function createRelacionBloque(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const { id, ...data } = req.cleanBody;
     const [nuevaRelacion] = await db.insert(relacionesBloquesTable).values(data).returning();
     res.status(201).json(nuevaRelacion);
   } catch (e) {

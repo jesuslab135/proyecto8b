@@ -32,7 +32,7 @@ import { eq } from 'drizzle-orm';
  */
 export async function createAsistenciaEvento(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const {id, ...data} = req.cleanBody;
     const [nuevaAsistencia] = await db.insert(asistenciasEventoTable).values(data).returning();
     res.status(201).json(nuevaAsistencia);
   } catch (e) {

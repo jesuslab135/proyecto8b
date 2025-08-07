@@ -44,7 +44,7 @@ import { eq } from 'drizzle-orm';
  */
 export async function createReporte(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const { id, ...data } = req.cleanBody;
     const [nuevoReporte] = await db.insert(reportesTable).values(data).returning();
     res.status(201).json(nuevoReporte);
   } catch (e) {

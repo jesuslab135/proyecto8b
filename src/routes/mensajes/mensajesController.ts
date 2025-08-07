@@ -35,7 +35,7 @@ import { eq } from 'drizzle-orm';
  */
 export async function createMensaje(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const {id, ...data} = req.cleanBody;
     const [nuevoMensaje] = await db.insert(mensajesTable).values(data).returning();
     res.status(201).json(nuevoMensaje);
   } catch (e) {

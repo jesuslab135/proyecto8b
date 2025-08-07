@@ -33,7 +33,7 @@ import { eq } from 'drizzle-orm';
  */
 export async function createProyectoValidacion(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const { id, ...data } = req.cleanBody;
     const [nuevaValidacion] = await db.insert(proyectosValidacionesTable).values(data).returning();
     res.status(201).json(nuevaValidacion);
   } catch (e) {

@@ -33,7 +33,7 @@ import { eq } from 'drizzle-orm';
  */
 export async function createPostulacion(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const { id, ...data } = req.cleanBody;
     const [nueva] = await db.insert(postulacionesTable).values(data).returning();
     res.status(201).json(nueva);
   } catch (e) {

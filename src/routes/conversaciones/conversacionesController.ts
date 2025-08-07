@@ -34,7 +34,7 @@ import { eq, and } from 'drizzle-orm';
  */
 export async function createConversacion(req: Request, res: Response) {
   try {
-    const { usuario_1_id, usuario_2_id } = req.cleanBody;
+    const { id, usuario_1_id, usuario_2_id } = req.cleanBody;
 
     const existing = await db
       .select()

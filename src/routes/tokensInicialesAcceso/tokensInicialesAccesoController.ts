@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm';
 
 export async function createTokenInicialAcceso(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const { id, ...data } = req.cleanBody;
     const [nuevo] = await db.insert(tokensInicialesAccesoTable).values(data).returning();
     res.status(201).json(nuevo);
   } catch (e) {

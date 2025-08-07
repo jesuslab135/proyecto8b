@@ -36,7 +36,7 @@ import { usuariosTable } from '../../db/usuariosSchema'; // importa tu tabla de 
 
 export async function createParticipacionProyecto(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const {id, ...data} = req.cleanBody;
 
     // Si llega email, busca el usuario y usa su ID
     if (data.email && !data.usuario_id) {

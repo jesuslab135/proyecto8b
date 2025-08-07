@@ -165,7 +165,7 @@ export async function createAlumnoByAdminUni(req: Request, res: Response) {
  */
 export async function createUsuario(req: Request, res: Response) {
   try {
-    const data = req.cleanBody;
+    const { id, ...data } = req.cleanBody;
     const [nuevo] = await db.insert(usuariosTable).values(data).returning();
     res.status(201).json(nuevo);
   } catch (error) {

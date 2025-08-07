@@ -40,7 +40,7 @@ const getUserId = (req: Request) => req.userId;
 export async function createBloque(req: Request, res: Response, next: NextFunction) {
   try {
     const pageId = Number(req.params.pageId);
-    const data = req.cleanBody;
+    const {id, ...data} = req.cleanBody;
     data.pagina_id = pageId;
     data.creado_por = getUserId(req);
     
