@@ -283,20 +283,20 @@ initializeChatSocket(io);
 app.use(errorLoggingMiddleware);
 
 // Para Vercel, exportamos la app en lugar de usar listen directamente
-// if (process.env.NODE_ENV !== 'production') {
-// 	server.listen(port, '0.0.0.0', () => {
-// 		logger.info(`✅ API server successfully started on port ${port}`, {
-// 			port,
-// 			environment: process.env.NODE_ENV || 'development',
-// 			apiDocs: `http://localhost:${port}/api-docs`,
-// 			timestamp: new Date().toISOString(),
-// 		});
-// 	});
-// }
+ if (process.env.NODE_ENV !== 'production') {
+ 	server.listen(port, '0.0.0.0', () => {
+ 		logger.info(`✅ API server successfully started on port ${port}`, {
+ 			port,
+ 			environment: process.env.NODE_ENV || 'development',
+ 			apiDocs: `http://localhost:${port}/api-docs`,
+ 			timestamp: new Date().toISOString(),
+ 		});
+ 	});
+ }
 
-server.listen(Number(port), () => {
-  console.log(`API server successfully started on port ${port}`);
-});
+//server.listen(Number(port), () => {
+  //console.log(`API server successfully started on port ${port}`);
+//});
 
 
 export default app;
