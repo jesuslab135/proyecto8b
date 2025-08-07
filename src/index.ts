@@ -282,17 +282,30 @@ initializeChatSocket(io);
 // Middleware de manejo de errores (debe ir al final)
 app.use(errorLoggingMiddleware);
 
-// Para Vercel, exportamos la app en lugar de usar listen directamente
- if (process.env.NODE_ENV !== 'production') {
- 	server.listen(port, () => {
- 		logger.info(`✅ API server successfully started on port ${port}`, {
- 			port,
- 			environment: process.env.NODE_ENV || 'development',
- 			apiDocs: `http://localhost:${port}/api-docs`,
- 			timestamp: new Date().toISOString(),
- 		});
- 	});
- }
+// Para desarrollo local y Koyeb, manejar el servidor correctamente
+if (process.env.NODE_ENV !== 'production') {
+	// Solo en desarrollo local
+	server.listen(port, () => {
+		logger.info(`✅ API server successfully started on port ${port}`, {
+			port,
+			environment: process.env.NODE_ENV || 'development',
+			apiDocs: `http://localhost:${port}/api-docs`,
+			systemInfo: `http://localhost:${port}/api/system-info`,
+			timestamp: new Date().toISOString(),
+		});
+	});
+} else {
+	// En producción (Koyeb), también iniciamos el servidor
+	server.listen(port, () => {
+		logger.info(`✅ API server successfully started on port ${port}`, {
+			port,
+			environment: process.env.NODE_ENV || 'production',
+			apiDocs: `Production API Docs available`,
+			systemInfo: `${process.env.API_BASE_URL}/../system-info`,
+			timestamp: new Date().toISOString(),
+		});
+	});
+}
 
 //server.listen(Number(port), () => {
   //console.log(`API server successfully started on port ${port}`);
