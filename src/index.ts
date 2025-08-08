@@ -61,10 +61,19 @@ import { handleContactForm } from './routes/contact/contactController';
 const port = process.env.PORT || 3000;
 const app = express();
 
+// const server = createServer(app);
+// const io = new SocketIOServer(server, {
+// 	cors: {
+// 		origin: 'http://localhost:4200',
+// 		methods: ['GET', 'POST'],
+// 		credentials: true
+// 	}
+// });
+
 const server = createServer(app);
 const io = new SocketIOServer(server, {
 	cors: {
-		origin: 'http://localhost:4200',
+		origin: ['https://union-frontend.vercel.app/','https://satisfied-teressa-union8b2025-99a36190.koyeb.app/api'],
 		methods: ['GET', 'POST'],
 		credentials: true
 	}
