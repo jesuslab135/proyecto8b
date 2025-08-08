@@ -129,7 +129,14 @@ const getAllowedOrigins = () => {
 	const origins = [];
 
 	// Siempre permitir localhost para desarrollo
-	origins.push('http://localhost:4200', 'http://localhost:3000', 'http://localhost:5173');
+	origins.push(
+		'http://localhost:4200',
+		'http://localhost:3000',
+		'http://localhost:5173'
+	);
+
+	// AGREGAR FRONTEND DE VERCEL DIRECTAMENTE (TEMPORAL)
+	origins.push('https://union-frontend.vercel.app');
 
 	// Agregar orígenes de producción si están configurados
 	if (process.env.FRONTEND_URL) {
@@ -138,7 +145,9 @@ const getAllowedOrigins = () => {
 
 	// Agregar orígenes adicionales desde variable de entorno
 	if (process.env.ALLOWED_ORIGINS) {
-		const additionalOrigins = process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim());
+		const additionalOrigins = process.env.ALLOWED_ORIGINS.split(',').map(
+			(origin) => origin.trim()
+		);
 		origins.push(...additionalOrigins);
 	}
 
