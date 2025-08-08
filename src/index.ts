@@ -73,9 +73,9 @@ const app = express();
 const server = createServer(app);
 const io = new SocketIOServer(server, {
 	cors: {
-		origin: ['https://union-frontend.vercel.app/','https://satisfied-teressa-union8b2025-99a36190.koyeb.app/api'],
-		methods: ['GET', 'POST'],
-		credentials: true
+	origin: true, 
+	credentials: true,
+	methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
 	}
 });
 
